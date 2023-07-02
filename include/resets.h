@@ -101,7 +101,7 @@ namespace risk_free_rate
 
 	inline auto resets::operator[](const std::chrono::year_month_day& ymd) const -> double
 	{
-		const auto o = _ts[ymd];
+		const auto& o = _ts[ymd];
 		if (o)
 			return from_percent(*o);
 		else
