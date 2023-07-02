@@ -65,7 +65,7 @@ namespace risk_free_rate
 		resets& operator=(const resets&) = default;
 		resets& operator=(resets&&) noexcept = default;
 
-		explicit resets(storage ts, const coupon_schedule::day_count* dc);
+		explicit resets(storage ts, const coupon_schedule::day_count* const dc);
 
 	public:
 
@@ -91,7 +91,7 @@ namespace risk_free_rate
 
 
 
-	inline resets::resets(storage ts, const coupon_schedule::day_count* dc) :
+	inline resets::resets(storage ts, const coupon_schedule::day_count* const dc) :
 		_ts{ std::move(ts) },
 		_dc{ dc }
 	{
