@@ -52,7 +52,7 @@ namespace risk_free_rate
 
 	public:
 
-		using storage = gregorian::time_series<std::optional<double>>; // or should we consider some ratio? (s.t. rounding would be explicit)
+		using storage = gregorian::_time_series<std::optional<double>>; // or should we consider some ratio? (s.t. rounding would be explicit)
 
 	public:
 
