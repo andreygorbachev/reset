@@ -56,15 +56,6 @@ namespace risk_free_rate
 
 	public:
 
-		resets() noexcept = delete;
-		resets(const resets&) = default;
-		resets(resets&&) noexcept = default;
-
-		~resets() noexcept = default;
-
-		resets& operator=(const resets&) = default;
-		resets& operator=(resets&&) noexcept = default;
-
 		explicit resets(storage ts, fin_calendar::day_count<double> dc); // why does it not use default?
 
 	public:
