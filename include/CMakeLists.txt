@@ -1,4 +1,4 @@
-project("reset")
+project(reset)
 
 add_library(${PROJECT_NAME} INTERFACE
   round.h

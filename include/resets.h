@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <day_count_interface.h>
+#include <day_count.h>
 
 #include <time_series.h>
 
@@ -65,17 +65,18 @@ namespace risk_free_rate
 		resets& operator=(const resets&) = default;
 		resets& operator=(resets&&) noexcept = default;
 
-		explicit resets(storage ts, const coupon_schedule::day_count* const dc);
+		explicit resets(storage ts, fin_calendar::day_count<double> dc); // why does it not use default?
 
 	public:
 
 		auto operator[](const std::chrono::year_month_day& ymd) const -> double;
 		// this also converts from percentages and throws an exception for missing resets - is it what we want?
 
+
 	public:
 
 		auto get_time_series() const noexcept -> const storage&;
-		auto get_day_count() const noexcept -> const coupon_schedule::day_count*;
+		auto get_day_count() const noexcept -> const fin_calendar::day_count<double>&;
 
 	public:
 
@@ -83,17 +84,17 @@ namespace risk_free_rate
 
 	private:
 
-		storage _ts;
+		storage ts_;
 
-		const coupon_schedule::day_count* _dc;
+		fin_calendar::day_count<double> dc_;
 
 	};
 
 
 
-	inline resets::resets(storage ts, const coupon_schedule::day_count* const dc) :
-		_ts{ std::move(ts) },
-		_dc{ dc }
+	inline resets::resets(storage ts, fin_calendar::day_count<double> dc) :
+		ts_{ std::move(ts) },
+		dc_{ dc }
 	{
 	}
 
@@ -101,7 +102,7 @@ namespace risk_free_rate
 
 	inline auto resets::operator[](const std::chrono::year_month_day& ymd) const -> double
 	{
-		const auto& o = _ts[ymd];
+		const auto& o = ts_[ymd];
 		if (o)
 			return from_percent(*o);
 		else
@@ -111,19 +112,19 @@ namespace risk_free_rate
 
 	inline auto resets::get_time_series() const noexcept -> const storage&
 	{
-		return _ts;
+		return ts_;
 	}
 
-	inline auto resets::get_day_count() const noexcept -> const coupon_schedule::day_count*
+	inline auto resets::get_day_count() const noexcept -> const fin_calendar::day_count<double>&
 	{
-		return _dc;
+		return dc_;
 	}
 
 
 	inline auto resets::last_reset_year_month_day() const noexcept -> std::chrono::year_month_day
 	{
-		auto result = _ts.get_period().get_until();
-		while (!_ts[result])
+		auto result = ts_.get_period().get_until();
+		while (!ts_[result])
 			result = std::chrono::sys_days{ result } - std::chrono::days{ 1 };
 
 		return result;

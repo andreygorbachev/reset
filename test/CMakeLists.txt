@@ -1,13 +1,4 @@
 project(reset-test)
-#project(test)
-
-include(FetchContent)
-FetchContent_Declare(
-  googletest
-  GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG        v1.14.0
-)
-FetchContent_MakeAvailable(googletest)
 
 add_executable(${PROJECT_NAME}
   round.cpp
@@ -16,12 +7,11 @@ add_executable(${PROJECT_NAME}
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
   reset
-  Calendar::calendar
-  CouponSchedule::coupon-schedule
+  calendar
+  day-count
   GTest::gtest_main
 )
-# should coupon-schedule come in via reset?
+# should day-count come in via reset?
 
 include(GoogleTest)
-gtest_discover_tests(${PROJECT_NAME}
-)
+gtest_discover_tests(${PROJECT_NAME})
