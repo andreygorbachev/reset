@@ -9,6 +9,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
   reset
   calendar
   day-count
+  Boost::multiprecision
   GTest::gtest_main
 )
 # should day-count come in via reset?

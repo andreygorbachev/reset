@@ -26,6 +26,8 @@
 
 #include <time_series.h>
 
+#include <boost/multiprecision/cpp_dec_float.hpp>
+
 #include <cmath>
 #include <memory>
 #include <optional>
@@ -35,14 +37,15 @@
 namespace risk_free_rate
 {
 
-	constexpr auto from_percent(const double val) noexcept -> double // is there a standard way to do this?
+
+	constexpr auto from_percent(const auto val) noexcept // is there a standard way to do this?
 	{
-		return val / 100.0;
+		return val / 100;
 	}
 
-	constexpr auto to_percent(const double val) noexcept -> double // is there a standard way to do this?
+	constexpr auto to_percent(const auto val) noexcept // is there a standard way to do this?
 	{
-		return val * 100.0;
+		return val * 100;
 	}
 
 
@@ -52,22 +55,22 @@ namespace risk_free_rate
 
 	public:
 
-		using storage = gregorian::_time_series<std::optional<double>>; // or should we consider some ratio? (s.t. rounding would be explicit)
+		using storage = gregorian::_time_series<std::optional<boost::multiprecision::cpp_dec_float_50>>;
 
 	public:
 
-		explicit resets(storage ts, fin_calendar::day_count<double> dc); // why does it not use default?
+		explicit resets(storage ts, fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50> dc); // why does it not use default?
 
 	public:
 
-		auto operator[](const std::chrono::year_month_day& ymd) const -> double;
+		auto operator[](const std::chrono::year_month_day& ymd) const -> boost::multiprecision::cpp_dec_float_50;
 		// this also converts from percentages and throws an exception for missing resets - is it what we want?
 
 
 	public:
 
 		auto get_time_series() const noexcept -> const storage&;
-		auto get_day_count() const noexcept -> const fin_calendar::day_count<double>&;
+		auto get_day_count() const noexcept -> const fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50>&;
 
 	public:
 
@@ -77,13 +80,13 @@ namespace risk_free_rate
 
 		storage ts_;
 
-		fin_calendar::day_count<double> dc_;
+		fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50> dc_;
 
 	};
 
 
 
-	inline resets::resets(storage ts, fin_calendar::day_count<double> dc) :
+	inline resets::resets(storage ts, fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50> dc) :
 		ts_{ std::move(ts) },
 		dc_{ dc }
 	{
@@ -91,7 +94,7 @@ namespace risk_free_rate
 
 
 
-	inline auto resets::operator[](const std::chrono::year_month_day& ymd) const -> double
+	inline auto resets::operator[](const std::chrono::year_month_day& ymd) const -> boost::multiprecision::cpp_dec_float_50
 	{
 		const auto& o = ts_[ymd];
 		if (o)
@@ -106,7 +109,7 @@ namespace risk_free_rate
 		return ts_;
 	}
 
-	inline auto resets::get_day_count() const noexcept -> const fin_calendar::day_count<double>&
+	inline auto resets::get_day_count() const noexcept -> const fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50>&
 	{
 		return dc_;
 	}

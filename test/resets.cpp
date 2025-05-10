@@ -26,6 +26,8 @@
 
 #include <time_series.h>
 
+#include <boost/multiprecision/cpp_dec_float.hpp>
+
 #include <gtest/gtest.h>
 
 #include <chrono>
@@ -37,6 +39,8 @@ using namespace fin_calendar;
 
 using namespace gregorian;
 
+using namespace boost::multiprecision;
+
 using namespace std;
 using namespace std::chrono;
 
@@ -46,34 +50,34 @@ namespace risk_free_rate
 
 	TEST(resets, constructor)
 	{
-		auto ts = _time_series<optional<double>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
+		auto ts = _time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 
-		const auto rs = resets{ move(ts), actual_365_fixed{} };
+		const auto rs = resets{ move(ts), actual_365_fixed<cpp_dec_float_50>{} };
 
-		const auto expected1 = _time_series<optional<double>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
-		const auto expected2 = day_count<double>{ actual_365_fixed{} }; // why double is not deduced here?
+		const auto expected1 = _time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
+		const auto expected2 = day_count<cpp_dec_float_50>{ actual_365_fixed<cpp_dec_float_50>{} }; // why double is not deduced here?
 		EXPECT_EQ(expected1, rs.get_time_series());
 //		EXPECT_EQ(expected2, rs.get_day_count());
 	}
 
 	TEST(resets, operator_square_brackets)
 	{
-		auto ts = _time_series<optional<double>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
-		ts[2023y / January / 3d] = 3.4269;
+		auto ts = _time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
+		ts[2023y / January / 3d] = cpp_dec_float_50{ "3.4269" };
 
-		const auto rs = resets{ move(ts), actual_365_fixed{} };
+		const auto rs = resets{ move(ts), actual_365_fixed<cpp_dec_float_50>{} };
 
-		EXPECT_EQ(0.034269, rs[2023y / January / 3d]);
+		EXPECT_EQ(cpp_dec_float_50{ "0.034269" }, rs[2023y / January / 3d]);
 
 		EXPECT_THROW(rs[2023y / January / 1d], out_of_range);
 	}
 
 	TEST(resets, last_reset_year_month_day)
 	{
-		auto ts = _time_series<optional<double>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
-		ts[2023y / January / 3d] = 3.4269;
+		auto ts = _time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
+		ts[2023y / January / 3d] = cpp_dec_float_50{ "3.4269" };
 
-		const auto rs = resets{ move(ts), actual_365_fixed{} };
+		const auto rs = resets{ move(ts), actual_365_fixed<cpp_dec_float_50>{} };
 
 		EXPECT_EQ(2023y / January / 3d, rs.last_reset_year_month_day());
 	}
