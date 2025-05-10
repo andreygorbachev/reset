@@ -1,4 +1,4 @@
-# risk-free-rate
+# resets
 
 Resets are expected to be setup once and read many times.
 
