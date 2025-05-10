@@ -89,7 +89,7 @@ namespace reset
 		if (o)
 			return from_percent(*o);
 		else
-			throw std::out_of_range{ "Request is not consistent with publication calendar" };
+			throw std::out_of_range{ "Request is not consistent with publication calendar" }; // we should handle days where reset is expected but not supplied (previous one should be returned)
 	}
 
 
