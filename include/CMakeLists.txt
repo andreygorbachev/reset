@@ -1,7 +1,7 @@
 project(reset)
 
 add_library(${PROJECT_NAME} INTERFACE
-  round.h
+  resets_math.h
   resets.h
 )
 

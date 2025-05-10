@@ -1,7 +1,7 @@
 project(reset-test)
 
 add_executable(${PROJECT_NAME}
-  round.cpp
+  resets_math.cpp
   resets.cpp
 )
 

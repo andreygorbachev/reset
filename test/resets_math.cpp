@@ -24,7 +24,7 @@
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
-#include <round.h>
+#include <resets_math.h>
 
 #include <gtest/gtest.h>
 
@@ -36,43 +36,43 @@ using namespace std;
 namespace reset
 {
 
-	TEST(math, round_dp1)
+	TEST(resets_math, round_dp1)
 	{
 		EXPECT_EQ(1.01, round_dp(1.011111, 2u));
 	}
 
-	TEST(math, round_dp2)
+	TEST(resets_math, round_dp2)
 	{
 		EXPECT_EQ(cpp_dec_float_50{ "1.01" }, round_dp(cpp_dec_float_50{ "1.011111" }, 2u));
 	}
 
-	TEST(math, trunc_dp1)
+	TEST(resets_math, trunc_dp1)
 	{
 		EXPECT_EQ(1.01, trunc_dp(1.011111, 2u));
 	}
 
-	TEST(math, trunc_dp2)
+	TEST(resets_math, trunc_dp2)
 	{
 		EXPECT_EQ(cpp_dec_float_50{ "1.01" }, trunc_dp(cpp_dec_float_50{ "1.011111" }, 2u));
 	}
 
 
-	TEST(math, from_percent1)
+	TEST(resets_math, from_percent1)
 	{
 		EXPECT_EQ(0.01, from_percent(1.0));
 	}
 
-	TEST(math, from_percent2)
+	TEST(resets_math, from_percent2)
 	{
 		EXPECT_EQ(cpp_dec_float_50{ "0.01" }, from_percent(cpp_dec_float_50{ "1.0" }));
 	}
 
-	TEST(math, to_percent1)
+	TEST(resets_math, to_percent1)
 	{
 		EXPECT_EQ(1.0, to_percent(0.01));
 	}
 
-	TEST(math, to_percent2)
+	TEST(resets_math, to_percent2)
 	{
 		EXPECT_EQ(cpp_dec_float_50{ "1.0" }, to_percent(cpp_dec_float_50{ "0.01" }));
 	}
