@@ -34,7 +34,7 @@
 #include <stdexcept>
 
 
-namespace risk_free_rate
+namespace reset
 {
 
 

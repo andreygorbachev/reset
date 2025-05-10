@@ -25,7 +25,7 @@
 #include <cmath>
 
 
-namespace risk_free_rate
+namespace reset
 {
 
 	inline auto round(const double x, const unsigned decimal_places) -> double

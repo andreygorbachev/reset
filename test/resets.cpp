@@ -45,7 +45,7 @@ using namespace std;
 using namespace std::chrono;
 
 
-namespace risk_free_rate
+namespace reset
 {
 
 	TEST(resets, constructor)

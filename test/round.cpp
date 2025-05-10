@@ -26,7 +26,7 @@
 
 
 
-namespace risk_free_rate
+namespace reset
 {
 
 	TEST(compounded_index, round)
