@@ -22,6 +22,8 @@
 
 #pragma once
 
+#include "round.h"
+
 #include <day_count.h>
 
 #include <time_series.h>
@@ -36,19 +38,6 @@
 
 namespace reset
 {
-
-
-	constexpr auto from_percent(const auto val) noexcept // is there a standard way to do this?
-	{
-		return val / 100;
-	}
-
-	constexpr auto to_percent(const auto val) noexcept // is there a standard way to do this?
-	{
-		return val * 100;
-	}
-
-
 
 	class resets
 	{

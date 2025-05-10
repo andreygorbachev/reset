@@ -40,4 +40,14 @@ namespace reset
 		return trunc(x * p) / p;
 	}
 
+
+	constexpr auto from_percent(const auto val) noexcept // is there a standard way to do this?
+	{
+		return val / 100;
+	}
+
+	constexpr auto to_percent(const auto val) noexcept // is there a standard way to do this?
+	{
+		return val * 100;
+	}
 }

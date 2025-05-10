@@ -82,15 +82,4 @@ namespace reset
 		EXPECT_EQ(2023y / January / 3d, rs.last_reset_year_month_day());
 	}
 
-
-	TEST(resets, from_percent)
-	{
-		EXPECT_EQ(0.01, from_percent(1.0));
-	}
-
-	TEST(resets, to_percent)
-	{
-		EXPECT_EQ(1.0, to_percent(0.01));
-	}
-
 }

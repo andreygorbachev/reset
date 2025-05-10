@@ -56,4 +56,25 @@ namespace reset
 		EXPECT_EQ(cpp_dec_float_50{ "1.01" }, trunc_dp(cpp_dec_float_50{ "1.011111" }, 2u));
 	}
 
+
+	TEST(math, from_percent1)
+	{
+		EXPECT_EQ(0.01, from_percent(1.0));
+	}
+
+	TEST(math, from_percent2)
+	{
+		EXPECT_EQ(cpp_dec_float_50{ "0.01" }, from_percent(cpp_dec_float_50{ "1.0" }));
+	}
+
+	TEST(math, to_percent1)
+	{
+		EXPECT_EQ(1.0, to_percent(0.01));
+	}
+
+	TEST(math, to_percent2)
+	{
+		EXPECT_EQ(cpp_dec_float_50{ "1.0" }, to_percent(cpp_dec_float_50{ "0.01" }));
+	}
+
 }
