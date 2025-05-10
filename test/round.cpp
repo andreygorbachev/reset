@@ -20,18 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include <cmath>
+
+#include <boost/multiprecision/cpp_dec_float.hpp>
+
 #include <round.h>
 
 #include <gtest/gtest.h>
 
+using namespace boost::multiprecision;
+
+using namespace std;
 
 
 namespace reset
 {
 
-	TEST(compounded_index, round)
+	TEST(math, round_dp1)
 	{
-		EXPECT_EQ(1.01, round(1.011111, 2u));
+		EXPECT_EQ(1.01, round_dp(1.011111, 2u));
+	}
+
+	TEST(math, round_dp2)
+	{
+		EXPECT_EQ(cpp_dec_float_50{ "1.01" }, round_dp(cpp_dec_float_50{ "1.011111" }, 2u));
+	}
+
+	TEST(math, trunc_dp1)
+	{
+		EXPECT_EQ(1.01, trunc_dp(1.011111, 2u));
+	}
+
+	TEST(math, trunc_dp2)
+	{
+		EXPECT_EQ(cpp_dec_float_50{ "1.01" }, trunc_dp(cpp_dec_float_50{ "1.011111" }, 2u));
 	}
 
 }

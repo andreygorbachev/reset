@@ -22,16 +22,22 @@
 
 #pragma once
 
-#include <cmath>
-
 
 namespace reset
 {
 
-	inline auto round(const double x, const unsigned decimal_places) -> double
+	template<typename T>
+	constexpr auto round_dp(const T x, const unsigned decimal_places) -> T
 	{
-		const auto p = std::pow(10.0, decimal_places);
-		return std::round(x * p) / p;
+		const auto p = pow(T{ 10 }, decimal_places);
+		return round(x * p) / p;
+	}
+
+	template<typename T>
+	constexpr auto trunc_dp(const T x, const unsigned decimal_places) -> T
+	{
+		const auto p = pow(T{ 10 }, decimal_places);
+		return trunc(x * p) / p;
 	}
 
 }
