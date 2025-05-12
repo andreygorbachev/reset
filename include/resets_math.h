@@ -41,12 +41,12 @@ namespace reset
 	}
 
 
-	constexpr auto from_percent(const auto val) noexcept // is there a standard way to do this?
+	constexpr auto from_percent(const auto val)
 	{
 		return val / 100;
 	}
 
-	constexpr auto to_percent(const auto val) noexcept // is there a standard way to do this?
+	constexpr auto to_percent(const auto val)
 	{
 		return val * 100;
 	}
