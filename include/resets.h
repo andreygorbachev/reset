@@ -48,7 +48,7 @@ namespace reset
 
 	public:
 
-		explicit resets(storage ts, fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50> dc); // why does it not use default?
+		explicit resets(storage ts, fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50> dc);
 
 	public:
 
