@@ -78,7 +78,7 @@ namespace reset
 				dc
 			);
 
-			i *= resets::observation{ "1" } + rate * year_fraction;
+			i *= resets::observation{ "1" } + rate * year_fraction; // should these have some kind of units?
 
 			start = d;
 		}
