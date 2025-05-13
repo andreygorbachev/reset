@@ -80,8 +80,8 @@ namespace reset
 				dc
 			);
 
-			const auto _1 = boost::multiprecision::cpp_dec_float_50{ "1" };
-			i *= _1 + rate * year_fraction; // should these have some kind of units?
+			const auto one = boost::multiprecision::cpp_dec_float_50{ "1" };
+			i *= one + rate * year_fraction; // should these have some kind of units?
 
 			start = d;
 		}
