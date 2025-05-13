@@ -29,6 +29,7 @@
 #include <day_count.h>
 
 #include "resets.h"
+#include "resets_math.h"
 // do we need more includes for clarity?
 
 
@@ -81,6 +82,9 @@ namespace reset
 
 			start = d;
 		}
+
+		// hard code rounding to start with
+		i = round_dp(i, 8);
 
 		return i;
 	}
