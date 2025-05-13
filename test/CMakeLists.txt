@@ -4,6 +4,7 @@ add_executable(${PROJECT_NAME}
   resets_math.cpp
   resets.cpp
   index.cpp
+  setup.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE

@@ -1,6 +1,6 @@
 // The MIT License (MIT)
 //
-// Copyright (c) 2023 Andrey Gorbachev
+// Copyright (c) 2025 Andrey Gorbachev
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -20,34 +20,36 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <index.h>
+#pragma once
+
+#include <utility>
+
+#include <period.h>
+
+#include <actual_360.h>
+
 #include <resets.h>
-
-#include <gtest/gtest.h>
-
-#include "setup.h"
-
-using namespace std;
-using namespace std::chrono;
 
 
 namespace reset
 {
 
-	TEST(index, index1)
+	inline auto make_SOFR_resets() -> resets
 	{
 		// from "Statement Regarding Publication of SOFR Averages and a SOFR Index"
 
-		const auto resets = make_SOFR_resets();
+		using namespace std::chrono;
+		using namespace gregorian;
+		using namespace fin_calendar;
 
-		EXPECT_EQ(resets::observation{"1.00000000"}, index(resets, 2018y / April / 2d));
-	}
+		/*const*/ auto rs = resets::storage{ days_period{2018y / April / 3d, 2018y / April / 9d} }; // should we write code to use initialiser for _time_series?
+		rs[2018y / April / 3d] = resets::observation{ "1.80" };
+		rs[2018y / April / 4d] = resets::observation{ "1.83" };
+		rs[2018y / April / 5d] = resets::observation{ "1.74" };
+		rs[2018y / April / 6d] = resets::observation{ "1.75" };
+		rs[2018y / April / 9d] = resets::observation{ "1.75" };
 
-	TEST(index, index2)
-	{
-		// don't allow for an index to be generated before it actually exists
-
-		const auto resets = make_SOFR_resets();
+		return resets{ std::move(rs), actual_360<resets::observation>{} };
 	}
 
 }
