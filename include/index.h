@@ -37,6 +37,7 @@ namespace reset
 		// for now assume 1 as a starting point and no rounding
 	)
 	{
+		return 1.0;
 	}
 
 }

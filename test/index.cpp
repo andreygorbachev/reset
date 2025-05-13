@@ -20,15 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include <utility>
+
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
+#include <period.h>
+
+#include <actual_360.h>
+
 #include <index.h>
+#include <resets.h>
 
 #include <gtest/gtest.h>
 
 using namespace boost::multiprecision;
 
 using namespace std;
+using namespace std::chrono;
+using namespace fin_calendar;
+using namespace gregorian;
 
 
 namespace reset
@@ -37,8 +47,18 @@ namespace reset
 	TEST(index, index1)
 	{
 		// from "Statement Regarding Publication of SOFR Averages and a SOFR Index"
-	
-//		EXPECT_EQ(0.0, compound());
+
+		// factor out into a setup function? (so here the rs can be const)
+		/*const*/ auto rs = resets::storage{ days_period{2018y / April / 3d, 2018y / April / 9d} }; // should we write code to use initialiser for _time_series?
+		rs[2018y / April / 3d] = resets::observation{ "1.80" };
+		rs[2018y / April / 4d] = resets::observation{ "1.83" };
+		rs[2018y / April / 5d] = resets::observation{ "1.74" };
+		rs[2018y / April / 6d] = resets::observation{ "1.75" };
+		rs[2018y / April / 9d] = resets::observation{ "1.75" };
+
+		const auto resets = reset::resets{ move(rs), actual_360<resets::observation>{} };
+
+		EXPECT_EQ(resets::observation{"1.00000000"}, index(resets, 2018y / April / 2d));
 	}
 
 }
