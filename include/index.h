@@ -78,7 +78,8 @@ namespace reset
 				dc
 			);
 
-			i *= resets::observation{ "1" } + rate * year_fraction; // should these have some kind of units?
+			const auto _1 = resets::observation{ "1" };
+			i *= _1 + rate * year_fraction; // should these have some kind of units?
 
 			start = d;
 		}
