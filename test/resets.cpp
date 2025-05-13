@@ -55,7 +55,7 @@ namespace reset
 		const auto rs = resets{ move(ts), actual_365_fixed<cpp_dec_float_50>{} };
 
 		const auto expected1 = _time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
-		const auto expected2 = day_count<cpp_dec_float_50>{ actual_365_fixed<cpp_dec_float_50>{} }; // why double is not deduced here?
+		const auto expected2 = day_count<cpp_dec_float_50>{ actual_365_fixed<cpp_dec_float_50>{} };
 		EXPECT_EQ(expected1, rs.get_time_series());
 //		EXPECT_EQ(expected2, rs.get_day_count());
 	}

@@ -44,22 +44,26 @@ namespace reset
 
 	public:
 
-		using storage = gregorian::_time_series<std::optional<boost::multiprecision::cpp_dec_float_50>>;
+		using observation = boost::multiprecision::cpp_dec_float_50;
+
+		using storage = gregorian::_time_series<std::optional<observation>>;
+
+		using day_count = fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50>;
 
 	public:
 
-		explicit resets(storage ts, fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50> dc);
+		explicit resets(storage ts, day_count dc);
 
 	public:
 
-		auto operator[](const std::chrono::year_month_day& ymd) const -> boost::multiprecision::cpp_dec_float_50;
+		auto operator[](const std::chrono::year_month_day& ymd) const -> observation;
 		// this also converts from percentages and throws an exception for missing resets - is it what we want?
 
 
 	public:
 
 		auto get_time_series() const noexcept -> const storage&;
-		auto get_day_count() const noexcept -> const fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50>&;
+		auto get_day_count() const noexcept -> const day_count&;
 
 	public:
 
@@ -69,13 +73,13 @@ namespace reset
 
 		storage ts_;
 
-		fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50> dc_;
+		day_count dc_;
 
 	};
 
 
 
-	inline resets::resets(storage ts, fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50> dc) :
+	inline resets::resets(storage ts, day_count dc) :
 		ts_{ std::move(ts) },
 		dc_{ dc }
 	{
@@ -83,7 +87,7 @@ namespace reset
 
 
 
-	inline auto resets::operator[](const std::chrono::year_month_day& ymd) const -> boost::multiprecision::cpp_dec_float_50
+	inline auto resets::operator[](const std::chrono::year_month_day& ymd) const -> observation
 	{
 		const auto& o = ts_[ymd];
 		if (o)
@@ -98,7 +102,7 @@ namespace reset
 		return ts_;
 	}
 
-	inline auto resets::get_day_count() const noexcept -> const fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50>&
+	inline auto resets::get_day_count() const noexcept -> const day_count&
 	{
 		return dc_;
 	}
