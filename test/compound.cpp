@@ -36,6 +36,8 @@ namespace reset
 
 	TEST(compound, compound1)
 	{
+		// from "Statement Regarding Publication of SOFR Averages and a SOFR Index"
+	
 //		EXPECT_EQ(0.0, compound());
 	}
 

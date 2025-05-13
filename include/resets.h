@@ -73,7 +73,7 @@ namespace reset
 
 		storage ts_;
 
-		day_count dc_;
+		day_count dc_; // is this the right place for this? (does SONIA compounded index has a day count?)
 
 	};
 

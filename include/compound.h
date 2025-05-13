@@ -24,13 +24,19 @@
 
 #include <chrono>
 
+#include "resets.h"
+
 
 namespace reset
 {
 
-	auto compound(const std::chrono::year_month_day& start, const std::chrono::year_month_day& end)
+	// maybe this needs a better name? - compute a compounded RFR index from the underlying resets
+	auto index(
+		const resets& r,
+		const std::chrono::year_month_day& ymd
+		// for now assume 1 as a starting point and no rounding
+	)
 	{
-
 	}
 
 }
