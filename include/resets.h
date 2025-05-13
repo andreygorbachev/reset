@@ -40,7 +40,7 @@
 namespace reset
 {
 
-	class resets
+	class resets // at the moment we are not thinking about revisions
 	{
 
 	public:
