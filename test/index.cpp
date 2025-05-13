@@ -22,7 +22,7 @@
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
-#include <compound.h>
+#include <index.h>
 
 #include <gtest/gtest.h>
 
@@ -34,7 +34,7 @@ using namespace std;
 namespace reset
 {
 
-	TEST(compound, compound1)
+	TEST(index, index1)
 	{
 		// from "Statement Regarding Publication of SOFR Averages and a SOFR Index"
 	
