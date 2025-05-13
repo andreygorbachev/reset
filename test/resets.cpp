@@ -52,9 +52,9 @@ namespace reset
 	{
 		auto ts = _time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 
-		auto pc = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
+		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto rs = resets{ move(ts), move(pc), actual_365_fixed<cpp_dec_float_50>{} };
+		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{} };
 
 		const auto expected1 = _time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 		const auto expected2 = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
@@ -69,9 +69,9 @@ namespace reset
 		auto ts = _time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 		ts[2023y / January / 3d] = cpp_dec_float_50{ "3.4269" };
 
-		auto pc = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
+		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto rs = resets{ move(ts), move(pc), actual_365_fixed<cpp_dec_float_50>{} };
+		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{} };
 
 		EXPECT_EQ(cpp_dec_float_50{ "0.034269" }, rs[2023y / January / 3d]);
 
@@ -83,9 +83,9 @@ namespace reset
 		auto ts = _time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 		ts[2023y / January / 3d] = cpp_dec_float_50{ "3.4269" };
 
-		auto pc = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
+		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto rs = resets{ move(ts), move(pc), actual_365_fixed<cpp_dec_float_50>{} };
+		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{} };
 
 		EXPECT_EQ(2023y / January / 3d, rs.last_reset_year_month_day());
 	}

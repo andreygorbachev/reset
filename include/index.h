@@ -24,7 +24,12 @@
 
 #include <chrono>
 
+#include <calendar.h>
+
+#include <day_count.h>
+
 #include "resets.h"
+// do we need more includes for clarity?
 
 
 namespace reset
@@ -40,14 +45,42 @@ namespace reset
 		// should throw an exception if we requested an index before a business day before the first reset
 		// but we do not have information about relevant calendar at the moment
 
-		const auto& pc = r.get_publication_calendar();
+		const auto& c = r.get_calendar();
 		const auto& dc = r.get_day_count();
 
-		const auto schedule = pc.make_business_days_schedule(
+		const auto schedule = c.make_business_days_schedule(
 			gregorian::days_period{ r.get_time_series().get_period().get_from(), ymd }
 		); // is this a wrong data structure?
+		// assert that it is not empty?
 
-		const auto i = resets::observation{ "1" };
+		const auto& dates = schedule.get_dates();
+
+		auto i = resets::observation{ "1" };
+
+		// not very elegant to start with
+		auto start = std::chrono::year_month_day{};
+		for (const auto& d : dates)
+		{
+			if (d == *dates.cbegin())
+			{
+				start = d;
+				continue;
+			}
+
+			const auto rate = r[start];
+
+			const auto& end = d;
+
+			const auto year_fraction = fin_calendar::fraction(
+				start,
+				end,
+				dc
+			);
+
+			i *= resets::observation{ "1" } + rate * year_fraction;
+
+			start = d;
+		}
 
 		return i;
 	}

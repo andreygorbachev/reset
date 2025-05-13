@@ -47,7 +47,7 @@ namespace reset
 
 		using observation = boost::multiprecision::cpp_dec_float_50;
 
-		using storage = gregorian::_time_series<std::optional<observation>>;
+		using storage = gregorian::_time_series<std::optional<observation>>; // this is for value dates not publication dates
 
 		using calendar = gregorian::calendar;
 
@@ -55,7 +55,7 @@ namespace reset
 
 	public:
 
-		explicit resets(storage ts, calendar pc, day_count dc);
+		explicit resets(storage ts, calendar c, day_count dc);
 
 	public:
 
@@ -67,7 +67,7 @@ namespace reset
 	public:
 
 		auto get_time_series() const noexcept -> const storage&;
-		auto get_publication_calendar() const noexcept -> const calendar&;
+		auto get_calendar() const noexcept -> const calendar&;
 		auto get_day_count() const noexcept -> const day_count&;
 
 	public:
@@ -78,7 +78,7 @@ namespace reset
 
 		storage ts_;
 
-		calendar pc_;
+		calendar c_;
 
 		day_count dc_; // is this the right place for this? (does SONIA compounded index has a day count?)
 
@@ -86,9 +86,9 @@ namespace reset
 
 
 
-	inline resets::resets(storage ts, calendar pc, day_count dc) :
+	inline resets::resets(storage ts, calendar c, day_count dc) :
 		ts_{ std::move(ts) },
-		pc_{ std::move(pc) },
+		c_{ std::move(c) },
 		dc_{ dc }
 	{
 	}
@@ -110,9 +110,9 @@ namespace reset
 		return ts_;
 	}
 
-	inline auto resets::get_publication_calendar() const noexcept -> const calendar&
+	inline auto resets::get_calendar() const noexcept -> const calendar&
 	{
-		return pc_;
+		return c_;
 	}
 
 	inline auto resets::get_day_count() const noexcept -> const day_count&

@@ -55,10 +55,10 @@ namespace reset
 		const auto resets = make_SOFR_resets();
 
 		// don't allow for an index to be generated before it actually exists
-//		EXPECT_THROW(index(resets, 2018y / April /1d), out_of_range); // Sunday, so maybe not the best test?
+//		EXPECT_THROW(index(resets, 2018y / March / 29d), out_of_range); // the last business day before the SOFR started
 
 		// don't allow for an index to be generated on a non-business day
-//		EXPECT_THROW(index(resets, 2018y / April / 7d), out_of_range); // Sunday, so maybe not the best test?
+//		EXPECT_THROW(index(resets, 2018y / April / 7d), out_of_range);
 	}
 
 }
