@@ -47,8 +47,6 @@ namespace reset
 		// but we do not have information about relevant calendar at the moment
 
 		const auto& c = r.get_calendar();
-		const auto& dc = r.get_day_count();
-
 		const auto schedule = c.make_business_days_schedule(
 			gregorian::days_period{ r.get_time_series().get_period().get_from(), ymd }
 		); // is this a wrong data structure?
@@ -71,6 +69,8 @@ namespace reset
 			const auto rate = r[start];
 
 			const auto& end = d;
+
+			const auto& dc = r.get_day_count();
 
 			const auto year_fraction = fin_calendar::fraction(
 				start,
