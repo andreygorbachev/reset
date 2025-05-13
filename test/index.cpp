@@ -22,6 +22,8 @@
 
 #include <stdexcept>
 
+#include <boost/multiprecision/cpp_dec_float.hpp>
+
 #include <index.h>
 #include <resets.h>
 
@@ -31,6 +33,7 @@
 
 using namespace std;
 using namespace std::chrono;
+using namespace boost::multiprecision;
 
 
 namespace reset
@@ -41,24 +44,26 @@ namespace reset
 		// from "Statement Regarding Publication of SOFR Averages and a SOFR Index"
 
 		const auto resets = make_SOFR_resets();
+		const auto initial_value = cpp_dec_float_50{ "1" };
 
-//		EXPECT_EQ(resets::observation{ "1.00000000" }, index(resets, 2018y / April / 2d));
-		EXPECT_EQ(resets::observation{ "1.00005000" }, index(resets, 2018y / April / 3d));
-		EXPECT_EQ(resets::observation{ "1.00010084" }, index(resets, 2018y / April / 4d));
-		EXPECT_EQ(resets::observation{ "1.00014917" }, index(resets, 2018y / April / 5d));
-		EXPECT_EQ(resets::observation{ "1.00019779" }, index(resets, 2018y / April / 6d));
-//		EXPECT_EQ(resets::observation{ "1.00034365" }, index(resets, 2018y / April / 9d));
+//		EXPECT_EQ(resets::observation{ "1.00000000" }, index(resets, initial_value, 2018y / April / 2d));
+		EXPECT_EQ(resets::observation{ "1.00005000" }, index(resets, initial_value, 2018y / April / 3d));
+		EXPECT_EQ(resets::observation{ "1.00010084" }, index(resets, initial_value, 2018y / April / 4d));
+		EXPECT_EQ(resets::observation{ "1.00014917" }, index(resets, initial_value, 2018y / April / 5d));
+		EXPECT_EQ(resets::observation{ "1.00019779" }, index(resets, initial_value, 2018y / April / 6d));
+//		EXPECT_EQ(resets::observation{ "1.00034365" }, index(resets, initial_value, 2018y / April / 9d));
 	}
 
 	TEST(index, index2)
 	{
 		const auto resets = make_SOFR_resets();
+		const auto initial_value = cpp_dec_float_50{ "1" };
 
 		// don't allow for an index to be generated before it actually exists
-//		EXPECT_THROW(index(resets, 2018y / March / 29d), out_of_range); // the last business day before the SOFR started
+//		EXPECT_THROW(index(resets, initial_value, 2018y / March / 29d), out_of_range); // the last business day before the SOFR started
 
 		// don't allow for an index to be generated on a non-business day
-//		EXPECT_THROW(index(resets, 2018y / April / 7d), out_of_range);
+//		EXPECT_THROW(index(resets, initial_value, 2018y / April / 7d), out_of_range);
 	}
 
 }

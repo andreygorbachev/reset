@@ -24,6 +24,8 @@
 
 #include <chrono>
 
+#include <boost/multiprecision/cpp_dec_float.hpp>
+
 #include <calendar.h>
 
 #include <day_count.h>
@@ -39,8 +41,8 @@ namespace reset
 	// maybe this needs a better name? - compute a compounded RFR index from the underlying resets
 	auto index(
 		const resets& r,
+		const boost::multiprecision::cpp_dec_float_50 initial_value,
 		const std::chrono::year_month_day& ymd
-		// for now assume 1 as a starting point and no rounding
 	)
 	{
 		// should throw an exception if we requested an index before a business day before the first reset
@@ -54,7 +56,7 @@ namespace reset
 
 		const auto& dates = schedule.get_dates();
 
-		auto i = resets::observation{ "1" };
+		auto i = initial_value;
 
 		// not very elegant to start with
 		auto start = std::chrono::year_month_day{};
@@ -78,7 +80,7 @@ namespace reset
 				dc
 			);
 
-			const auto _1 = resets::observation{ "1" };
+			const auto _1 = boost::multiprecision::cpp_dec_float_50{ "1" };
 			i *= _1 + rate * year_fraction; // should these have some kind of units?
 
 			start = d;
