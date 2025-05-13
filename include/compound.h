@@ -22,33 +22,15 @@
 
 #pragma once
 
+#include <chrono>
+
 
 namespace reset
 {
 
-	template<typename T>
-	constexpr auto round_dp(const T x, const unsigned decimal_places) -> T
+	auto compound(const std::chrono::year_month_day& start, const std::chrono::year_month_day& end)
 	{
-		const auto p = pow(T{ 10 }, decimal_places);
-		return round(x * p) / p;
-	}
 
-	template<typename T>
-	constexpr auto trunc_dp(const T x, const unsigned decimal_places) -> T
-	{
-		const auto p = pow(T{ 10 }, decimal_places);
-		return trunc(x * p) / p;
-	}
-
-
-	constexpr auto from_percent(const auto val)
-	{
-		return val / 100;
-	}
-
-	constexpr auto to_percent(const auto val)
-	{
-		return val * 100;
 	}
 
 }

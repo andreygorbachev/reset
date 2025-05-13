@@ -3,6 +3,7 @@ project(reset-test)
 add_executable(${PROJECT_NAME}
   resets_math.cpp
   resets.cpp
+  compound.cpp
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
