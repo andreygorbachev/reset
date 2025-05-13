@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include <stdexcept>
+
 #include <index.h>
 #include <resets.h>
 
@@ -45,9 +47,13 @@ namespace reset
 
 	TEST(index, index2)
 	{
-		// don't allow for an index to be generated before it actually exists
-
 		const auto resets = make_SOFR_resets();
+
+		// don't allow for an index to be generated before it actually exists
+//		EXPECT_THROW(index(resets, 2018y / April /1d), out_of_range); // Sunday, so maybe not the best test?
+
+		// don't allow for an index to be generated on a non-business day
+//		EXPECT_THROW(index(resets, 2018y / April / 7d), out_of_range); // Sunday, so maybe not the best test?
 	}
 
 }

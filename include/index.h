@@ -37,7 +37,12 @@ namespace reset
 		// for now assume 1 as a starting point and no rounding
 	)
 	{
-		return 1.0;
+		// should throw an exception if we requested an index before a business day before the first reset
+		// but we do not have information about relevant calendar at the moment
+
+		const auto i = resets::observation{ "1" };
+
+		return i;
 	}
 
 }
