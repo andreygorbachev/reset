@@ -42,14 +42,16 @@ namespace reset
 		using namespace gregorian;
 		using namespace fin_calendar;
 
-		/*const*/ auto rs = resets::storage{ days_period{2018y / April / 3d, 2018y / April / 9d} }; // should we write code to use initialiser for _time_series?
-		rs[2018y / April / 3d] = resets::observation{ "1.80" };
-		rs[2018y / April / 4d] = resets::observation{ "1.83" };
-		rs[2018y / April / 5d] = resets::observation{ "1.74" };
-		rs[2018y / April / 6d] = resets::observation{ "1.75" };
-		rs[2018y / April / 9d] = resets::observation{ "1.75" };
+		auto ts = resets::storage{ days_period{2018y / April / 3d, 2018y / April / 9d} }; // should we write code to use initialiser for _time_series?
+		ts[2018y / April / 3d] = resets::observation{ "1.80" };
+		ts[2018y / April / 4d] = resets::observation{ "1.83" };
+		ts[2018y / April / 5d] = resets::observation{ "1.74" };
+		ts[2018y / April / 6d] = resets::observation{ "1.75" };
+		ts[2018y / April / 9d] = resets::observation{ "1.75" };
 
-		return resets{ std::move(rs), actual_360<resets::observation>{} };
+		auto pc = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
+
+		return resets{ std::move(ts), std::move(pc), actual_360<resets::observation>{} };
 	}
 
 }

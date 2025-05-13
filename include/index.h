@@ -40,6 +40,8 @@ namespace reset
 		// should throw an exception if we requested an index before a business day before the first reset
 		// but we do not have information about relevant calendar at the moment
 
+		const auto& dc = r.get_day_count();
+
 		const auto i = resets::observation{ "1" };
 
 		return i;

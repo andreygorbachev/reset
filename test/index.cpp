@@ -42,7 +42,12 @@ namespace reset
 
 		const auto resets = make_SOFR_resets();
 
-		EXPECT_EQ(resets::observation{"1.00000000"}, index(resets, 2018y / April / 2d));
+		EXPECT_EQ(resets::observation{ "1.00000000" }, index(resets, 2018y / April / 2d));
+		EXPECT_EQ(resets::observation{ "1.00005000" }, index(resets, 2018y / April / 3d));
+		EXPECT_EQ(resets::observation{ "1.00010084" }, index(resets, 2018y / April / 4d));
+		EXPECT_EQ(resets::observation{ "1.00014917" }, index(resets, 2018y / April / 5d));
+		EXPECT_EQ(resets::observation{ "1.00019779" }, index(resets, 2018y / April / 6d));
+		EXPECT_EQ(resets::observation{ "1.00034365" }, index(resets, 2018y / April / 9d));
 	}
 
 	TEST(index, index2)

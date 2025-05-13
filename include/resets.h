@@ -27,6 +27,7 @@
 #include <day_count.h>
 
 #include <time_series.h>
+#include <calendar.h>
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
@@ -48,21 +49,25 @@ namespace reset
 
 		using storage = gregorian::_time_series<std::optional<observation>>;
 
+		using calendar = gregorian::calendar;
+
 		using day_count = fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50>;
 
 	public:
 
-		explicit resets(storage ts, day_count dc);
+		explicit resets(storage ts, calendar pc, day_count dc);
 
 	public:
 
 		auto operator[](const std::chrono::year_month_day& ymd) const -> observation;
-		// this also converts from percentages and throws an exception for missing resets - is it what we want?
-
+		// this converts from percentages
+		// and throws an exception for missing resets - is it what we want?
+		// what should we do for the resets which meant to be published but are not available (and the prevous business day resets should be used instead)?
 
 	public:
 
 		auto get_time_series() const noexcept -> const storage&;
+		auto get_publication_calendar() const noexcept -> const calendar&;
 		auto get_day_count() const noexcept -> const day_count&;
 
 	public:
@@ -73,14 +78,17 @@ namespace reset
 
 		storage ts_;
 
+		calendar pc_;
+
 		day_count dc_; // is this the right place for this? (does SONIA compounded index has a day count?)
 
 	};
 
 
 
-	inline resets::resets(storage ts, day_count dc) :
+	inline resets::resets(storage ts, calendar pc, day_count dc) :
 		ts_{ std::move(ts) },
+		pc_{ std::move(pc) },
 		dc_{ dc }
 	{
 	}
@@ -100,6 +108,11 @@ namespace reset
 	inline auto resets::get_time_series() const noexcept -> const storage&
 	{
 		return ts_;
+	}
+
+	inline auto resets::get_publication_calendar() const noexcept -> const calendar&
+	{
+		return pc_;
 	}
 
 	inline auto resets::get_day_count() const noexcept -> const day_count&
