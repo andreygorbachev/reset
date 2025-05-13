@@ -84,7 +84,7 @@ namespace reset
 		}
 
 		// hard code rounding to start with
-		i = round_dp(i, 8);
+		i = round_dp(i, 8u);
 
 		return i;
 	}
