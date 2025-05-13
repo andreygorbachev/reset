@@ -40,7 +40,12 @@ namespace reset
 		// should throw an exception if we requested an index before a business day before the first reset
 		// but we do not have information about relevant calendar at the moment
 
+		const auto& pc = r.get_publication_calendar();
 		const auto& dc = r.get_day_count();
+
+		const auto schedule = pc.make_business_days_schedule(
+			gregorian::days_period{ r.get_time_series().get_period().get_from(), ymd }
+		); // is this a wrong data structure?
 
 		const auto i = resets::observation{ "1" };
 
