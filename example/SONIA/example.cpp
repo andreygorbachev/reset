@@ -73,7 +73,7 @@ int main()
 	detail.final_rounding = 8u;
 
 //	const auto date = 2025y / May / 13d;
-	const auto date = 2018y / April / 24d;
+	const auto date = 2025y / May / 12d;
 
 	cout
 		<< fixed

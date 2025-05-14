@@ -82,7 +82,7 @@ namespace reset
 
 		day_count dc_; // is this the right place for this? (does SONIA compounded index has a day count?)
 
-	};
+	}; // should there be a different class for indices?
 
 
 
