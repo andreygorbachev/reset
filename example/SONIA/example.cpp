@@ -20,8 +20,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include "parser.h"
+
+#include <resets.h>
+
+#include <chrono>
+#include <iostream>
+
+using namespace std;
+using namespace std::chrono;
+
+using namespace reset;
+
+
+
+inline auto parse_csv_resets_SONIA() -> resets
+{
+	// from https://www.bankofengland.co.uk/markets/sonia-benchmark
+	return parse_csv_resets(
+		"..\\..\\..\\example\\SONIA\\data\\SONIA.csv",
+		1997y / January / 1d,
+		2025y / May / 13d
+	); // or set a working directory?
+}
+
+inline auto parse_csv_resets_SONIA_compounded_index() -> resets
+{
+	// from https://www.bankofengland.co.uk/markets/sonia-benchmark
+	return parse_csv_resets(
+		"..\\..\\..\\example\\SONIA\\data\\SONIA Compounded Index.csv",
+		2018y / April / 23d,
+		2025y / May / 13d
+	); // or set a working directory?
+}
+
+
 
 int main()
 {
+	const auto SONIA = parse_csv_resets_SONIA();
+
+	const auto SONIA_compounded_index = parse_csv_resets_SONIA_compounded_index();
+
 	return 0;
 }
