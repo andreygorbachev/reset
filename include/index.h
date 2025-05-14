@@ -41,7 +41,8 @@ namespace reset
 
 	struct index_detail
 	{
-		boost::multiprecision::cpp_dec_float_50 initial_value = boost::multiprecision::cpp_dec_float_50{ "1" };
+		boost::multiprecision::cpp_dec_float_50 initial_value{ "1" };
+		std::chrono::year_month_day initial_date{};
 		std::optional<unsigned int> step_rounding = std::nullopt;
 		std::optional<unsigned int> final_rounding = std::nullopt;
 	};
@@ -82,7 +83,7 @@ namespace reset
 
 		const auto& c = r.get_calendar();
 		const auto schedule = c.make_business_days_schedule(
-			gregorian::days_period{ r.get_time_series().get_period().get_from(), ymd }
+			gregorian::days_period{ detail.initial_date, ymd }
 		); // is this a wrong data structure?
 		// assert that it is not empty?
 

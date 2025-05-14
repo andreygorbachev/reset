@@ -47,6 +47,7 @@ namespace reset
 
 		auto detail = index_detail{};
 		detail.initial_value = cpp_dec_float_50{ "1" };
+		detail.initial_date = 2018y / April / 2d;
 		detail.final_rounding = 8u;
 
 //		EXPECT_EQ(resets::observation{ "1.00000000" }, index(resets, 2018y / April / 2d, detail));
