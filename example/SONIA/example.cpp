@@ -27,6 +27,7 @@
 
 #include <chrono>
 #include <iostream>
+#include <iomanip>
 
 using namespace std;
 using namespace std::chrono;
@@ -75,6 +76,8 @@ int main()
 	const auto date = 2018y / April / 24d;
 
 	cout
+		<< fixed
+		<< setprecision(8)
 		<< "For "
 		<< date
 		<< " SONIA Compounded Index is "
