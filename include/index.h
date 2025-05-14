@@ -46,6 +46,29 @@ namespace reset
 		std::optional<unsigned int> final_rounding = std::nullopt;
 	};
 
+	auto index_step_(
+		auto i,
+		const std::chrono::year_month_day& start,
+		const std::chrono::year_month_day& end,
+		const resets& r,
+		const index_detail& detail
+	)
+	{
+		const auto rate = r[start];
+
+		const auto& dc = r.get_day_count();
+
+		const auto year_fraction = fin_calendar::fraction(start, end, dc);
+
+		const auto one = boost::multiprecision::cpp_dec_float_50{ "1" };
+		i *= one + rate * year_fraction; // should these have some kind of units?
+
+		if (detail.step_rounding)
+			i = round_dp(i, *detail.step_rounding);
+
+		return i;
+	}
+
 
 	// maybe this needs a better name? - compute a compounded RFR index from the underlying resets
 	auto index(
@@ -77,23 +100,9 @@ namespace reset
 				continue;
 			}
 
-			const auto rate = r[start];
-
 			const auto& end = d;
 
-			const auto& dc = r.get_day_count();
-
-			const auto year_fraction = fin_calendar::fraction(
-				start,
-				end,
-				dc
-			);
-
-			const auto one = boost::multiprecision::cpp_dec_float_50{ "1" };
-			i *= one + rate * year_fraction; // should these have some kind of units?
-
-			if (detail.step_rounding)
-				i = round_dp(i, *detail.step_rounding);
+			i = index_step_(i, start, end, r, detail);
 
 			start = d;
 		}
