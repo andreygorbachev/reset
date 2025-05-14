@@ -23,6 +23,7 @@
 #pragma once
 
 #include <chrono>
+#include <optional>
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
@@ -38,11 +39,19 @@
 namespace reset
 {
 
+	struct index_detail
+	{
+		boost::multiprecision::cpp_dec_float_50 initial_value = boost::multiprecision::cpp_dec_float_50{ "1" };
+		std::optional<unsigned int> step_rounding = std::nullopt;
+		std::optional<unsigned int> final_rounding = std::nullopt;
+	};
+
+
 	// maybe this needs a better name? - compute a compounded RFR index from the underlying resets
 	auto index(
 		const resets& r,
-		const boost::multiprecision::cpp_dec_float_50 initial_value,
-		const std::chrono::year_month_day& ymd
+		const std::chrono::year_month_day& ymd,
+		const index_detail& detail = index_detail{}
 	)
 	{
 		// should throw an exception if we requested an index before a business day before the first reset
@@ -56,7 +65,7 @@ namespace reset
 
 		const auto& dates = schedule.get_dates();
 
-		auto i = initial_value;
+		auto i = detail.initial_value;
 
 		// not very elegant to start with
 		auto start = std::chrono::year_month_day{};
@@ -83,11 +92,16 @@ namespace reset
 			const auto one = boost::multiprecision::cpp_dec_float_50{ "1" };
 			i *= one + rate * year_fraction; // should these have some kind of units?
 
+			if (detail.step_rounding)
+				i = round_dp(i, *detail.step_rounding);
+
 			start = d;
 		}
 
-		// hard code rounding to start with
-		return round_dp(i, 8u);
+		if(detail.final_rounding)
+			i = round_dp(i, *detail.final_rounding);
+
+		return i;
 	}
 
 }
