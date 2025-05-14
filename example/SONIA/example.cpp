@@ -81,7 +81,7 @@ int main()
 		<< "For "
 		<< date
 		<< " SONIA Compounded Index is "
-		<< SONIA_compounded_index[date] * 100 // ned a different accessor? (or handle 100 is some other way)
+		<< SONIA_compounded_index[date] * 100 // need a different accessor? (or handle 100 is some other way)
 		<< " and the same computed value is "
 		<< index(SONIA, date, detail);
 
