@@ -23,12 +23,15 @@
 #include "parser.h"
 
 #include <resets.h>
+#include <index.h>
 
 #include <chrono>
 #include <iostream>
 
 using namespace std;
 using namespace std::chrono;
+
+using namespace boost::multiprecision;
 
 using namespace reset;
 
@@ -61,6 +64,21 @@ int main()
 	const auto SONIA = parse_csv_resets_SONIA();
 
 	const auto SONIA_compounded_index = parse_csv_resets_SONIA_compounded_index();
+
+	auto detail = index_detail{};
+	detail.initial_value = cpp_dec_float_50{ "100" };
+	detail.step_rounding = 18u;
+	detail.final_rounding = 8u;
+
+	const auto date = 2025y / May / 13d;
+
+	cout
+		<< "For "
+		<< date
+		<< " SONIA Compounded Index is "
+		<< SONIA_compounded_index[date] * 100 // ned a different accessor? (or handle 100 is some other way)
+		<< " and the same computed value is "
+		<< index(SONIA, date, detail);
 
 	return 0;
 }

@@ -92,9 +92,20 @@ inline auto _parse_csv_resets_storage(
 
 inline auto _make_calendar(const reset::resets::storage& ts)
 {
+	const auto& fu = ts.get_period();
+
+	auto hols = gregorian::schedule::dates{};
+	for (
+		auto d = fu.get_from();
+		d <= fu.get_until();
+		d = std::chrono::sys_days{ d } + std::chrono::days{ 1 }
+	)
+		if (ts[d] == std::nullopt)
+			hols.insert(d);
+
 	return gregorian::calendar{
-		gregorian::SaturdaySundayWeekend,
-		gregorian::schedule{ ts.get_period(), {}}
+		gregorian::NoWeekend,
+		gregorian::schedule{ fu, hols }
 	};
 }
 
