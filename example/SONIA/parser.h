@@ -57,7 +57,9 @@ inline auto _parse_observation(std::istream& fs)
 
 	using namespace std::string_literals;
 
-	return reset::resets::observation{ o.substr(1uz, o.length() - 2uz) }; // we ignore the first and last characters (quotes)
+	return reset::resets::observation{
+		o.substr(1uz, o.length() - 2uz)
+	}; // we ignore the first and last characters (quotes)
 }
 
 
