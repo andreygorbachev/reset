@@ -90,6 +90,15 @@ inline auto _parse_csv_resets_storage(
 }
 
 
+inline auto _make_calendar(const reset::resets::storage& ts)
+{
+	return gregorian::calendar{
+		gregorian::SaturdaySundayWeekend,
+		gregorian::schedule{ ts.get_period(), {}}
+	};
+}
+
+
 inline auto parse_csv_resets(
 	const std::string& fileName,
 	const std::chrono::year_month_day& from, // these could also be read from the file
@@ -104,10 +113,7 @@ inline auto parse_csv_resets(
 
 	auto ts = _parse_csv_resets_storage(fs, from, until);
 
-	auto c = gregorian::calendar{
-		gregorian::SaturdaySundayWeekend,
-		gregorian::schedule{ gregorian::days_period{ from, until }, {} }
-	};
+	auto c = _make_calendar(ts);
 
 	const auto dc = fin_calendar::actual_365_fixed<boost::multiprecision::cpp_dec_float_50>{};
 
