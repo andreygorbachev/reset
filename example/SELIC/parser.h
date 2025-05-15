@@ -76,7 +76,7 @@ inline auto _parse_csv_resets_storage(
 		const auto ymd = _parse_date(fs);
 
 		auto s = std::string{};
-		std::getline(fs, s, ','); // skip the comma
+		std::getline(fs, s, ';'); // skip the delimiter
 
 		const auto observation = _parse_observation(fs);
 
