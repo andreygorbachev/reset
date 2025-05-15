@@ -68,6 +68,8 @@ namespace reset
 		// test the factor rounding
 	}
 
+	// tests for "brazi" and trunc?
+
 	TEST(index, index4)
 	{
 		const auto resets = make_SOFR_resets();

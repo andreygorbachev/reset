@@ -43,6 +43,7 @@ namespace reset
 	{
 		boost::multiprecision::cpp_dec_float_50 initial_value{ "1" };
 		std::chrono::year_month_day initial_date{};
+		bool brazil = false; // this needs to be better - maybe "calendar"/"business" compounding enum?
 		std::optional<unsigned int> factor_trunc = std::nullopt;
 		std::optional<unsigned int> factor_round = std::nullopt;
 		std::optional<unsigned int> step_trunc = std::nullopt;
@@ -67,8 +68,9 @@ namespace reset
 		const auto year_fraction = fin_calendar::fraction(start, end, dc);
 
 		const auto one = T{ "1" };
-//		auto factor = T{ one + rate * year_fraction }; // should these have some kind of units?
-		auto factor = T{ pow(one + rate, year_fraction) }; // should these have some kind of units?
+		auto factor = detail.brazil ?
+			T{ pow(one + rate, year_fraction) } :
+			T{ one + rate * year_fraction }; // should these have some kind of units?
 
 		if (detail.factor_trunc)
 			factor = trunc_dp(factor, *detail.factor_trunc);
