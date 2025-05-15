@@ -35,6 +35,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <utility>
+#include <algorithm>
 
 
 inline auto _parse_date(std::istream& fs)

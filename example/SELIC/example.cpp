@@ -59,6 +59,7 @@ int main()
 	auto detail = index_detail{};
 	detail.initial_value = cpp_dec_float_50{ "1000" };
 	detail.initial_date = 2000y / July / 1d;
+	detail.factor_rounding = 8u;
 
 	const auto date = 2014y / March / 21d;
 

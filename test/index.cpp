@@ -65,6 +65,11 @@ namespace reset
 
 	TEST(index, index3)
 	{
+		// test the factor rounding
+	}
+
+	TEST(index, index4)
+	{
 		const auto resets = make_SOFR_resets();
 
 		// don't allow for an index to be generated before it actually exists

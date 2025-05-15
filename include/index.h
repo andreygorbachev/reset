@@ -43,6 +43,7 @@ namespace reset
 	{
 		boost::multiprecision::cpp_dec_float_50 initial_value{ "1" };
 		std::chrono::year_month_day initial_date{};
+		std::optional<unsigned int> factor_rounding = std::nullopt;
 		std::optional<unsigned int> step_rounding = std::nullopt;
 		std::optional<unsigned int> final_rounding = std::nullopt;
 	};
