@@ -27,7 +27,7 @@
 #include <period.h>
 
 #include <day_count.h>
-#include <actual_365_fixed.h>
+#include <calculation_252.h>
 
 #include <string>
 #include <chrono>
@@ -129,7 +129,7 @@ inline auto parse_csv_resets(
 
 	auto c = _make_calendar(ts);
 
-	const auto dc = fin_calendar::actual_365_fixed<boost::multiprecision::cpp_dec_float_50>{};
+	const auto dc = fin_calendar::calculation_252<boost::multiprecision::cpp_dec_float_50>{ c }; // think more about copies of calendar
 
 	return reset::resets{ std::move(ts), std::move(c), dc };
 }
