@@ -134,4 +134,9 @@ namespace reset
 		return i;
 	}
 
+// we can also compute all the index values at the same time for all publication dates up to ymd
+// adjusent_difference for year fraction
+// partial_sum for daily compounding
+// transform for final rounding
+
 }
