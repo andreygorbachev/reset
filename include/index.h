@@ -43,9 +43,12 @@ namespace reset
 	{
 		boost::multiprecision::cpp_dec_float_50 initial_value{ "1" };
 		std::chrono::year_month_day initial_date{};
-		std::optional<unsigned int> factor_rounding = std::nullopt;
-		std::optional<unsigned int> step_rounding = std::nullopt;
-		std::optional<unsigned int> final_rounding = std::nullopt;
+		std::optional<unsigned int> factor_trunc = std::nullopt;
+		std::optional<unsigned int> factor_round = std::nullopt;
+		std::optional<unsigned int> step_trunc = std::nullopt;
+		std::optional<unsigned int> step_round = std::nullopt;
+		std::optional<unsigned int> final_trunc = std::nullopt;
+		std::optional<unsigned int> final_round = std::nullopt;
 	};
 
 	auto index_step_(
@@ -65,8 +68,11 @@ namespace reset
 		const auto one = boost::multiprecision::cpp_dec_float_50{ "1" };
 		i *= one + rate * year_fraction; // should these have some kind of units?
 
-		if (detail.step_rounding)
-			i = round_dp(i, *detail.step_rounding);
+		if (detail.step_trunc)
+			i = trunc_dp(i, *detail.step_trunc);
+
+		if (detail.step_round)
+			i = round_dp(i, *detail.step_round);
 
 		return i;
 	}
@@ -109,8 +115,11 @@ namespace reset
 			start = d;
 		}
 
-		if(detail.final_rounding)
-			i = round_dp(i, *detail.final_rounding);
+		if (detail.final_trunc)
+			i = trunc_dp(i, *detail.final_trunc);
+
+		if(detail.final_round)
+			i = round_dp(i, *detail.final_round);
 
 		return i;
 	}

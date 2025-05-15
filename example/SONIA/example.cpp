@@ -69,8 +69,8 @@ int main()
 	auto detail = index_detail{};
 	detail.initial_value = cpp_dec_float_50{ "100" };
 	detail.initial_date = 2018y / April / 23d;
-	detail.step_rounding = 18u;
-	detail.final_rounding = 8u;
+	detail.step_round = 18u;
+	detail.final_round = 8u;
 
 //	const auto date = 2025y / May / 13d;
 	const auto date = 2025y / May / 12d;
