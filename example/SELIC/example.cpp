@@ -64,7 +64,7 @@ int main()
 
 	cout
 		<< fixed
-		<< setprecision(8)
+		<< setprecision(6)
 		<< "For "
 		<< date
 		<< " VNA is "
