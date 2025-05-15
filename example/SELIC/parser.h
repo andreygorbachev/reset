@@ -52,10 +52,12 @@ inline auto _parse_date(std::istream& fs)
 
 inline auto _parse_observation(std::istream& fs)
 {
+	using namespace std::string_literals;
+
 	auto o = std::string{};
 	std::getline(fs, o);
 
-	using namespace std::string_literals;
+	std::replace(o.begin(), o.end(), ',', '.'); // instead of looking into locales
 
 	return reset::resets::observation{
 		o.substr(1uz, o.length() - 2uz)
