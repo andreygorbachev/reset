@@ -51,13 +51,14 @@ namespace reset
 		std::optional<unsigned int> final_round = std::nullopt;
 	};
 
+	template<typename T>
 	auto index_step_(
-		auto i,
+		T i,
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const resets& r,
 		const index_detail& detail
-	)
+	) -> T
 	{
 		const auto rate = r[start];
 
@@ -65,8 +66,16 @@ namespace reset
 
 		const auto year_fraction = fin_calendar::fraction(start, end, dc);
 
-		const auto one = boost::multiprecision::cpp_dec_float_50{ "1" };
-		i *= one + rate * year_fraction; // should these have some kind of units?
+		const auto one = T{ "1" };
+		auto factor = T{ one + rate * year_fraction }; // should these have some kind of units?
+
+		if (detail.factor_trunc)
+			factor = trunc_dp(factor, *detail.factor_trunc);
+
+		if (detail.factor_round)
+			factor = round_dp(factor, *detail.factor_round);
+
+		i *= factor; // factor out one more substep?
 
 		if (detail.step_trunc)
 			i = trunc_dp(i, *detail.step_trunc);
