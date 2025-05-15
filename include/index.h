@@ -67,7 +67,8 @@ namespace reset
 		const auto year_fraction = fin_calendar::fraction(start, end, dc);
 
 		const auto one = T{ "1" };
-		auto factor = T{ one + rate * year_fraction }; // should these have some kind of units?
+//		auto factor = T{ one + rate * year_fraction }; // should these have some kind of units?
+		auto factor = T{ pow(one + rate, year_fraction) }; // should these have some kind of units?
 
 		if (detail.factor_trunc)
 			factor = trunc_dp(factor, *detail.factor_trunc);
