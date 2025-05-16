@@ -44,8 +44,11 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(googletest)
 
 add_subdirectory(include)
-add_subdirectory(test)
-add_subdirectory(example)
+
+if(NOT RESET_MINIMAL)
+  add_subdirectory(test)
+  add_subdirectory(example)
+endif()
 
 #set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
 #export(PACKAGE Reset)
