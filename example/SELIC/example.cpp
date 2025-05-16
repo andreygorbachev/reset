@@ -77,6 +77,7 @@ int main()
 		<< endl;
 
 	// from "Metodologia de Cálculo dos Títulos Públicos Federais Ofertados nos Leilões Primários"
+	// and "Methodology for Calculating Federal Government Bonds Offered in Primary Auctions"
 
 	const auto date2 = 2008y / May / 20d; // but computation for 21'st uses SELIC Target rather than SELIC Effective, which is probably wrong
 
