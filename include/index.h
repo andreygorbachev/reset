@@ -80,13 +80,13 @@ namespace reset
 		return factor;
 	}
 
-	inline auto index_step_(
-		boost::multiprecision::cpp_dec_float_50 i,
+	inline void index_step_(
+		boost::multiprecision::cpp_dec_float_50& i,
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const resets& r,
 		const index_detail& detail
-	) -> boost::multiprecision::cpp_dec_float_50
+	)
 	{
 		i *= index_factor_(i, start, end, r, detail);
 
@@ -95,8 +95,6 @@ namespace reset
 
 		if (detail.step_round)
 			i = round_dp(i, *detail.step_round);
-
-		return i;
 	}
 
 
@@ -132,7 +130,7 @@ namespace reset
 
 			const auto& end = d;
 
-			i = index_step_(i, start, end, r, detail);
+			index_step_(i, start, end, r, detail);
 
 			start = d;
 		}
