@@ -41,7 +41,7 @@ namespace reset
 
 	struct index_detail
 	{
-		boost::multiprecision::cpp_dec_float_50 initial_value{ "1" };
+		boost::multiprecision::cpp_dec_float_50 initial_value{ 1 };
 		std::chrono::year_month_day initial_date{};
 		bool brazil = false; // this needs to be better - maybe "calendar"/"business" compounding enum?
 		std::optional<unsigned int> factor_trunc = std::nullopt;
@@ -66,7 +66,7 @@ namespace reset
 
 		const auto year_fraction = fin_calendar::fraction(start, end, dc);
 
-		const auto one = boost::multiprecision::cpp_dec_float_50{ "1" };
+		const auto one = boost::multiprecision::cpp_dec_float_50{ 1 };
 		auto factor = detail.brazil ?
 			boost::multiprecision::cpp_dec_float_50{ pow(one + rate, year_fraction) } : // we are also missing rounding for Brazil year_fraction at the moment
 			boost::multiprecision::cpp_dec_float_50{ one + rate * year_fraction }; // should these have some kind of units?
