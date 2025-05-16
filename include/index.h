@@ -88,9 +88,7 @@ namespace reset
 		const index_detail& detail
 	) -> boost::multiprecision::cpp_dec_float_50
 	{
-		const auto factor = index_factor_(i, start, end, r, detail);
-
-		i *= factor;
+		i *= index_factor_(i, start, end, r, detail);
 
 		if (detail.step_trunc)
 			i = trunc_dp(i, *detail.step_trunc);
