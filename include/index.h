@@ -52,7 +52,7 @@ namespace reset
 		std::optional<unsigned int> final_round = std::nullopt;
 	};
 
-	inline auto index_step_(
+	inline auto index_factor_(
 		boost::multiprecision::cpp_dec_float_50 i,
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
@@ -77,7 +77,20 @@ namespace reset
 		if (detail.factor_round)
 			factor = round_dp(factor, *detail.factor_round);
 
-		i *= factor; // factor out one more substep?
+		return factor;
+	}
+
+	inline auto index_step_(
+		boost::multiprecision::cpp_dec_float_50 i,
+		const std::chrono::year_month_day& start,
+		const std::chrono::year_month_day& end,
+		const resets& r,
+		const index_detail& detail
+	) -> boost::multiprecision::cpp_dec_float_50
+	{
+		const auto factor = index_factor_(i, start, end, r, detail);
+
+		i *= factor;
 
 		if (detail.step_trunc)
 			i = trunc_dp(i, *detail.step_trunc);
