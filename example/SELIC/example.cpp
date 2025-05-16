@@ -52,8 +52,6 @@ inline auto parse_csv_resets_SELIC() -> resets
 
 int main()
 {
-	// from https://wilsonfreitas.github.io/posts/pricing-brazilian-government-bonds-lft.html
-
 	const auto SELIC = parse_csv_resets_SELIC();
 
 	auto detail = index_detail{};
@@ -63,17 +61,35 @@ int main()
 	detail.factor_round = 8u;
 	detail.final_trunc = 6u;
 
-	const auto date = 2014y / March / 21d;
+	// from https://wilsonfreitas.github.io/posts/pricing-brazilian-government-bonds-lft.html
+
+	const auto date1 = 2014y / March / 21d;
 
 	cout
 		<< fixed
 		<< setprecision(6)
 		<< "For "
-		<< date
+		<< date1
 		<< " VNA is "
 		<< cpp_dec_float_50{ "6023.149269" }
 		<< " and the same computed value is "
-		<< index(SELIC, date, detail);
+		<< index(SELIC, date1, detail)
+		<< endl;
+
+	// from "Metodologia de Cálculo dos Títulos Públicos Federais Ofertados nos Leilões Primários"
+
+	const auto date2 = 2008y / May / 20d; // but computation for 21'st users SELIC Target rather than SELIC Effective, which is probably wrong
+
+	cout
+		<< fixed
+		<< setprecision(6)
+		<< "For "
+		<< date2
+		<< " VNA is "
+		<< cpp_dec_float_50{ "3449.694215" }
+		<< " and the same computed value is "
+		<< index(SELIC, date2, detail)
+		<< endl;
 
 	return 0;
 }
