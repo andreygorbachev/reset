@@ -78,7 +78,7 @@ int main()
 
 	// from "Metodologia de Cálculo dos Títulos Públicos Federais Ofertados nos Leilões Primários"
 
-	const auto date2 = 2008y / May / 20d; // but computation for 21'st users SELIC Target rather than SELIC Effective, which is probably wrong
+	const auto date2 = 2008y / May / 20d; // but computation for 21'st uses SELIC Target rather than SELIC Effective, which is probably wrong
 
 	cout
 		<< fixed
@@ -86,7 +86,7 @@ int main()
 		<< "For "
 		<< date2
 		<< " VNA is "
-		<< cpp_dec_float_50{ "3449.694215" }
+		<< cpp_dec_float_50{ "3449.694215" } // for some reason the English version of the same document has different values
 		<< " and the same computed value is "
 		<< index(SELIC, date2, detail)
 		<< endl;
