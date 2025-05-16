@@ -41,14 +41,16 @@ namespace reset
 	}
 
 
-	constexpr auto from_percent(const auto val)
+	template<typename T>
+	constexpr auto from_percent(const T val) -> T
 	{
-		return val / 100;
+		return val / T{ 100 };
 	}
 
-	constexpr auto to_percent(const auto val)
+	template<typename T>
+	constexpr auto to_percent(const T val) -> T
 	{
-		return val * 100;
+		return val * T{ 100 };
 	}
 
 }
