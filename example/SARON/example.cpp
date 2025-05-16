@@ -62,7 +62,8 @@ int main()
 	detail.initial_date = 1999y / June / 30d;
 	detail.final_round = 4u;
 
-	const auto date = 2020y / February / 17d;
+//	const auto date = 2020y / February / 17d;
+	const auto date = 2020y / January / 24d; // then things don't work
 
 	cout
 		<< fixed
@@ -70,7 +71,7 @@ int main()
 		<< "For "
 		<< date
 		<< " SARON Compounded Index is "
-		<< SARON_compounded_index[date] * 100 // need a different accessor? (or handle 100 is some other way)
+		<< SARON_compounded_index[date] * 100 // need a different accessor? (or handle 100 in some other way)
 		<< " and the same computed value is "
 		<< index(SARON, date, detail);
 
