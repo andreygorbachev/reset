@@ -27,14 +27,14 @@ namespace reset
 {
 
 	template<typename T>
-	constexpr auto round_dp(const T x, const unsigned decimal_places) -> T
+	constexpr auto round_dp(const T x, const unsigned int decimal_places) -> T
 	{
 		const auto p = pow(T{ 10 }, decimal_places);
 		return round(x * p) / p;
 	}
 
 	template<typename T>
-	constexpr auto trunc_dp(const T x, const unsigned decimal_places) -> T
+	constexpr auto trunc_dp(const T x, const unsigned int decimal_places) -> T
 	{
 		const auto p = pow(T{ 10 }, decimal_places);
 		return trunc(x * p) / p;
