@@ -57,7 +57,7 @@ int main()
 	const auto SELIC = parse_csv_resets_SELIC();
 
 	auto detail = index_detail{};
-	detail.initial_value = cpp_dec_float_50{ "1000" };
+	detail.initial_value = cpp_dec_float_50{ 1000 };
 	detail.initial_date = 2000y / July / 1d;
 	detail.brazil = true;
 	detail.factor_round = 8u;

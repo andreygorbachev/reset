@@ -69,7 +69,7 @@ int main()
 	// more clarify would be welcome there on how rounding is done daily (*)
 
 	auto detail = index_detail{};
-	detail.initial_value = cpp_dec_float_50{ "100" };
+	detail.initial_value = cpp_dec_float_50{ 100 };
 	detail.initial_date = 2018y / April / 23d;
 	detail.step_round = 18u;
 	detail.final_round = 8u;

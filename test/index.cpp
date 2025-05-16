@@ -46,7 +46,7 @@ namespace reset
 		const auto resets = make_SOFR_resets();
 
 		auto detail = index_detail{};
-		detail.initial_value = cpp_dec_float_50{ "1" };
+		detail.initial_value = cpp_dec_float_50{ 1 };
 		detail.initial_date = 2018y / April / 2d;
 		detail.final_round = 8u;
 
