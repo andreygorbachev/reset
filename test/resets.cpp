@@ -38,6 +38,7 @@
 using namespace fin_calendar;
 
 using namespace gregorian;
+using namespace gregorian::util;
 
 using namespace boost::multiprecision;
 
@@ -50,13 +51,13 @@ namespace reset
 
 	TEST(resets, constructor)
 	{
-		auto ts = _time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
+		auto ts = time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
 		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{} };
 
-		const auto expected1 = _time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
+		const auto expected1 = time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 		const auto expected2 = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 		const auto expected3 = day_count<cpp_dec_float_50>{ actual_365_fixed<cpp_dec_float_50>{} };
 		EXPECT_EQ(expected1, rs.get_time_series());
@@ -66,7 +67,7 @@ namespace reset
 
 	TEST(resets, operator_square_brackets)
 	{
-		auto ts = _time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
+		auto ts = time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 		ts[2023y / January / 3d] = cpp_dec_float_50{ "3.4269" };
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
@@ -80,7 +81,7 @@ namespace reset
 
 	TEST(resets, last_reset_year_month_day)
 	{
-		auto ts = _time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
+		auto ts = time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 		ts[2023y / January / 3d] = cpp_dec_float_50{ "3.4269" };
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };

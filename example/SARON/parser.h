@@ -78,8 +78,8 @@ inline auto _parse_csv_resets_storage_x2(
 	const std::chrono::year_month_day& until
 ) -> std::tuple<reset::resets::storage, reset::resets::storage>
 {
-	auto result1 = reset::resets::storage{ gregorian::days_period{ from, until } };
-	auto result2 = reset::resets::storage{ gregorian::days_period{ from, until } };
+	auto result1 = reset::resets::storage{ gregorian::util::days_period{ from, until } };
+	auto result2 = reset::resets::storage{ gregorian::util::days_period{ from, until } };
 
 	for (;;)
 	{

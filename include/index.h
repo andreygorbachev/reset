@@ -27,6 +27,8 @@
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
+#include <period.h>
+
 #include <calendar.h>
 
 #include <day_count.h>
@@ -110,7 +112,7 @@ namespace reset
 
 		const auto& c = r.get_calendar();
 		const auto schedule = c.make_business_days_schedule(
-			gregorian::days_period{ detail.initial_date, ymd }
+			gregorian::util::days_period{ detail.initial_date, ymd }
 		); // is this a wrong data structure?
 		// assert that it is not empty?
 

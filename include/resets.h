@@ -27,6 +27,7 @@
 #include <day_count.h>
 
 #include <time_series.h>
+
 #include <calendar.h>
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
@@ -47,7 +48,7 @@ namespace reset
 
 		using observation = boost::multiprecision::cpp_dec_float_50;
 
-		using storage = gregorian::_time_series<std::optional<observation>>; // this is for value dates not publication dates
+		using storage = gregorian::util::time_series<std::optional<observation>>; // this is for value dates not publication dates
 
 		using calendar = gregorian::calendar;
 

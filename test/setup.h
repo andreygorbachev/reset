@@ -40,6 +40,7 @@ namespace reset
 
 		using namespace std::chrono;
 		using namespace gregorian;
+		using namespace gregorian::util;
 		using namespace fin_calendar;
 
 		auto ts = resets::storage{ days_period{2018y / April / 2d, 2018y / April / 6d} }; // should we write code to use initialiser for _time_series?

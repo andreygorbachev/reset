@@ -69,7 +69,7 @@ inline auto _parse_csv_resets_storage(
 	const std::chrono::year_month_day& until
 ) -> reset::resets::storage
 {
-	auto result = reset::resets::storage{ gregorian::days_period{ from, until } };
+	auto result = reset::resets::storage{ gregorian::util::days_period{ from, until } };
 
 	for (;;)
 	{
