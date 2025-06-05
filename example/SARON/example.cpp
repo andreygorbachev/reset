@@ -41,7 +41,6 @@ using namespace reset;
 
 inline auto parse_csv_resets_SARON_and_SARON_compounded_index() -> pair<resets, resets>
 {
-	// from https://www.bankofengland.co.uk/markets/sonia-benchmark
 	return parse_csv_resets_x2(
 		"..\\..\\..\\example\\SARON\\data\\saron_compound_calculator.csv",
 		1999y / June / 30d,
