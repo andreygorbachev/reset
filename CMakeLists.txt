@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS Off)
 
 include(FetchContent)
 
-set(GREGORIAN_CALENDAR_MINIMAL TRUE)
+set(GREGORIAN_CALENDAR_MINIMAL On)
 
 FetchContent_Declare(
   calendar
@@ -17,7 +17,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(calendar)
 
-set(FIN_CALENDAR_MINIMAL TRUE)
+set(FIN_CALENDAR_MINIMAL On)
 
 FetchContent_Declare(
   fin-calendar
@@ -27,7 +27,7 @@ FetchContent_Declare(
 FetchContent_MakeAvailable(fin-calendar)
 
 set(BOOST_INCLUDE_LIBRARIES multiprecision)
-set(BOOST_MP_STANDALONE TRUE) # this is still not working
+set(BOOST_MP_STANDALONE On) # this is still not working
 
 FetchContent_Declare(
   Boost
