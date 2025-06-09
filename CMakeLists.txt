@@ -26,15 +26,19 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(fin-calendar)
 
-set(BOOST_INCLUDE_LIBRARIES multiprecision)
-set(BOOST_MP_STANDALONE On) # this is still not working
-
 FetchContent_Declare(
-  Boost
-  GIT_REPOSITORY https://github.com/boostorg/boost.git
+  Boost_config
+  GIT_REPOSITORY https://github.com/boostorg/config.git
   GIT_TAG        boost-1.88.0
 )
-FetchContent_MakeAvailable(Boost)
+FetchContent_MakeAvailable(Boost_config)
+
+FetchContent_Declare(
+  Boost_multiprecision
+  GIT_REPOSITORY https://github.com/boostorg/multiprecision.git
+  GIT_TAG boost-1.88.0
+)
+FetchContent_MakeAvailable(Boost_multiprecision)
 
 set(BUILD_GMOCK Off)
 
