@@ -36,6 +36,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(Boost)
 
+set(BUILD_GMOCK Off)
+
 FetchContent_Declare(
   googletest
   GIT_REPOSITORY https://github.com/google/googletest.git
