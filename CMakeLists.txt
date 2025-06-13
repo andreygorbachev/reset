@@ -50,6 +50,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
+enable_testing()
+
 add_subdirectory(include)
 
 if(NOT RESET_MINIMAL)
