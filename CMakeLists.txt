@@ -22,7 +22,7 @@ set(FIN_CALENDAR_MINIMAL On)
 # how can we use just day-count and not the rest of fin-calendar?
 FetchContent_Declare(
   fin-calendar
-  GIT_REPOSITORY https://github.com/andreygorbachev/fin-calendar.git
+  GIT_REPOSITORY https://github.com/andreygorbachev/fin_calendar.git
   GIT_TAG        main
 )
 FetchContent_MakeAvailable(fin-calendar)
