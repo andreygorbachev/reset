@@ -8,7 +8,7 @@ set(CMAKE_CXX_EXTENSIONS Off)
 
 include(FetchContent)
 
-set(GREGORIAN_CALENDAR_MINIMAL On)
+set(CALENDAR_BUILD_TESTS_AND_EXAMPLES Off)
 
 FetchContent_Declare(
   calendar
@@ -17,7 +17,7 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(calendar)
 
-set(FIN_CALENDAR_MINIMAL On)
+set(FIN-CALENDAR_BUILD_TESTS_AND_EXAMPLES Off)
 
 # how can we use just day-count and not the rest of fin-calendar?
 FetchContent_Declare(
@@ -50,13 +50,17 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(googletest)
 
-enable_testing()
+option(RESET_BUILD_TESTS_AND_EXAMPLES "Build all of reset's own tests and examples." On)
 
 add_subdirectory(include)
 
-if(NOT RESET_MINIMAL)
+if(${RESET_BUILD_TESTS_AND_EXAMPLES})
+
+  enable_testing()
+
   add_subdirectory(test)
   add_subdirectory(example)
+
 endif()
 
 #set(CMAKE_EXPORT_PACKAGE_REGISTRY ON)
