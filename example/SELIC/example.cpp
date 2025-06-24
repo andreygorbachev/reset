@@ -42,7 +42,7 @@ inline auto parse_csv_resets_SELIC() -> resets
 {
 	// from https://api.bcb.gov.br/dados/serie/bcdata.sgs.1178/dados?formato=csv&dataInicial=01/07/2000&dataFinal=dd/mm/yyyy
 	return parse_csv_resets(
-		"..\\..\\..\\example\\SELIC\\data\\SELIC Effective.csv",
+		"SELIC Effective.csv",
 		2000y / July / 1d,
 		2014y / July / 1d
 	); // or set a working directory?

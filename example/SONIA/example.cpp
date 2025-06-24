@@ -42,7 +42,7 @@ inline auto parse_csv_resets_SONIA() -> resets
 {
 	// from https://www.bankofengland.co.uk/markets/sonia-benchmark
 	return parse_csv_resets(
-		"..\\..\\..\\example\\SONIA\\data\\SONIA.csv",
+		"SONIA.csv",
 		1997y / January / 1d,
 		2025y / May / 13d
 	); // or set a working directory?
@@ -52,7 +52,7 @@ inline auto parse_csv_resets_SONIA_compounded_index() -> resets
 {
 	// from https://www.bankofengland.co.uk/markets/sonia-benchmark
 	return parse_csv_resets(
-		"..\\..\\..\\example\\SONIA\\data\\SONIA Compounded Index.csv",
+		"SONIA Compounded Index.csv",
 		2018y / April / 23d,
 		2025y / May / 13d
 	); // or set a working directory?
