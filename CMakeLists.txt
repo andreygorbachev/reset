@@ -9,15 +9,13 @@ set(CMAKE_CXX_EXTENSIONS Off)
 include(FetchContent)
 
 set(CALENDAR_BUILD_TESTS_AND_EXAMPLES Off)
+set(FIN-CALENDAR_BUILD_TESTS_AND_EXAMPLES Off)
 
 FetchContent_Declare(
   calendar
   GIT_REPOSITORY https://github.com/andreygorbachev/calendar.git
   GIT_TAG        main
 )
-FetchContent_MakeAvailable(calendar)
-
-set(FIN-CALENDAR_BUILD_TESTS_AND_EXAMPLES Off)
 
 # how can we use just day-count and not the rest of fin-calendar?
 FetchContent_Declare(
@@ -25,7 +23,11 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/andreygorbachev/fin_calendar.git
   GIT_TAG        main
 )
-FetchContent_MakeAvailable(fin-calendar)
+
+FetchContent_MakeAvailable(
+  calendar
+  fin-calendar
+)
 
 FetchContent_Declare(
   Boost_config
@@ -39,7 +41,11 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/boostorg/multiprecision.git
   GIT_TAG        boost-1.88.0
 )
-FetchContent_MakeAvailable(Boost_multiprecision)
+
+FetchContent_MakeAvailable(
+  Boost_config
+  Boost_multiprecision
+)
 
 set(BUILD_GMOCK Off)
 
