@@ -34,7 +34,6 @@ FetchContent_Declare(
   GIT_REPOSITORY https://github.com/boostorg/config.git
   GIT_TAG        boost-1.88.0
 )
-FetchContent_MakeAvailable(Boost_config)
 
 FetchContent_Declare(
   Boost_multiprecision
@@ -47,20 +46,21 @@ FetchContent_MakeAvailable(
   Boost_multiprecision
 )
 
-set(BUILD_GMOCK Off)
-
-FetchContent_Declare(
-  googletest
-  GIT_REPOSITORY https://github.com/google/googletest.git
-  GIT_TAG        v1.17.0
-)
-FetchContent_MakeAvailable(googletest)
-
 option(RESET_BUILD_TESTS_AND_EXAMPLES "Build all of reset's own tests and examples." On)
 
 add_subdirectory(include)
 
 if(${RESET_BUILD_TESTS_AND_EXAMPLES})
+
+  set(BUILD_GMOCK Off)
+
+  FetchContent_Declare(
+    googletest
+    GIT_REPOSITORY https://github.com/google/googletest.git
+    GIT_TAG        v1.17.0
+  )
+
+  FetchContent_MakeAvailable(googletest)
 
   enable_testing()
 
