@@ -68,7 +68,7 @@ namespace reset
 
 		const auto year_fraction = fin_calendar::fraction(start, end, dc);
 
-		const auto one = boost::multiprecision::cpp_dec_float_50{ 1 };
+		const auto one = boost::multiprecision::cpp_dec_float_50{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
 		auto factor = detail.brazil ?
 			boost::multiprecision::cpp_dec_float_50{ pow(one + rate, year_fraction) } : // we are also missing rounding for Brazil year_fraction at the moment
 			boost::multiprecision::cpp_dec_float_50{ one + rate * year_fraction }; // should these have some kind of units?
