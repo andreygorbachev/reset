@@ -68,7 +68,7 @@ int main()
 
 	const auto SONIA_compounded_index = parse_csv_resets_SONIA_compounded_index();
 	// I think BoE website does not fully describe the compounded index
-	// more clarify would be welcome there on how rounding is done daily (*)
+	// more clarity would be welcome there on how rounding is done daily (*)
 
 	auto detail = index_detail{};
 	detail.initial_value = cpp_dec_float_50{ 100 };
