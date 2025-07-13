@@ -63,6 +63,7 @@ inline auto parse_csv_resets_SONIA_compounded_index() -> resets
 int main()
 {
 	// we can also use the calendar to check that we have resets for each business day
+	// (but we'll have to make sure that the static_data calendars cover this need)
 
 	const auto SONIA = parse_csv_resets_SONIA();
 
