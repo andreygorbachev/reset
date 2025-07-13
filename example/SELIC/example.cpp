@@ -45,7 +45,7 @@ inline auto parse_csv_resets_SELIC() -> resets
 		"SELIC Effective.csv",
 		2000y / July / 1d,
 		2014y / July / 1d
-	); // or set a working directory?
+	);
 }
 
 

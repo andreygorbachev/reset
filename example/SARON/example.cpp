@@ -45,7 +45,7 @@ inline auto parse_csv_resets_SARON_and_SARON_compounded_index() -> pair<resets, 
 		"saron_compound_calculator.csv",
 		1999y / June / 30d,
 		2020y / February / 17d
-	); // or set a working directory?
+	);
 }
 
 

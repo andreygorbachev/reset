@@ -45,7 +45,7 @@ inline auto parse_csv_resets_SONIA() -> resets
 		"SONIA.csv",
 		1997y / January / 1d,
 		2025y / May / 13d
-	); // or set a working directory?
+	);
 }
 
 inline auto parse_csv_resets_SONIA_compounded_index() -> resets
@@ -55,7 +55,7 @@ inline auto parse_csv_resets_SONIA_compounded_index() -> resets
 		"SONIA Compounded Index.csv",
 		2018y / April / 23d,
 		2025y / May / 13d
-	); // or set a working directory?
+	);
 }
 
 
