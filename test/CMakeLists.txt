@@ -17,6 +17,7 @@ add_executable(${PROJECT_NAME}
   resets_math.cpp
   resets.cpp
   index.cpp
+  rate.cpp
   setup.h
 )
 
