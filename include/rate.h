@@ -23,6 +23,7 @@
 #pragma once
 
 #include <variant>
+#include <utility>
 
 
 namespace reset
@@ -30,6 +31,7 @@ namespace reset
 
 	// separate these into separate files and maybe into a separate sub-library
 	// if we need just 2 conventions we might want to just have 1 class with a flag
+	// as all have rate_ should we consider a common base class?
 
 	template<typename T = double>
 	class simple final
@@ -37,19 +39,36 @@ namespace reset
 
 	public:
 
-		auto interest(
-		) const noexcept -> T;
-
-	};
-
-	template<typename T = double>
-	class compounded final
-	{
+		explicit simple(T rate);
 
 	public:
 
 		auto interest(
-		) const noexcept -> T;
+		) const -> T;
+
+	private:
+
+		T rate_; // do we need a getter?
+
+	};
+
+
+	template<typename T = double>
+	class compound final // compound or compounded?
+	{
+
+	public:
+
+		explicit compound(T rate);
+
+	public:
+
+		auto interest(
+		) const -> T;
+
+	private:
+
+		T rate_; // do we need a getter?
 
 	};
 
@@ -57,7 +76,7 @@ namespace reset
 	template<typename T = double>
 	using rate = std::variant<
 		simple<T>,
-		compounded<T>
+		compound<T>
 	>;
 
 
@@ -72,6 +91,20 @@ namespace reset
 		);
 
 		return i;
+	}
+
+
+	template<typename T>
+	simple<T>::simple(T rate) :
+		rate_{ std::move(rate) }
+	{
+	}
+
+
+	template<typename T>
+	compound<T>::compound(T rate) :
+		rate_{ std::move(rate) }
+	{
 	}
 
 }

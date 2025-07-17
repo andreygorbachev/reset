@@ -36,12 +36,12 @@ namespace reset
 
 	TEST(rate, rate1)
 	{
-		const auto r = rate<double>{ simple{} };
+		const auto r = rate<double>{ simple{ 5.0 } };
 	}
 
 	TEST(rate, rate2)
 	{
-		const auto r = rate<double>{ compounded{} };
+		const auto r = rate<double>{ compound{ 5.0 } };
 	}
 
 }
