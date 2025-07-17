@@ -23,6 +23,7 @@
 #pragma once
 
 #include <variant>
+#include <chrono>
 #include <utility>
 
 
@@ -44,6 +45,8 @@ namespace reset
 	public:
 
 		auto interest(
+			const std::chrono::year_month_day& start, // following day_count we pass these separately, rather than as a period
+			const std::chrono::year_month_day& end
 		) const -> T;
 
 	private:
@@ -64,6 +67,8 @@ namespace reset
 	public:
 
 		auto interest(
+			const std::chrono::year_month_day& start,
+			const std::chrono::year_month_day& end
 		) const -> T;
 
 	private:
@@ -82,11 +87,13 @@ namespace reset
 
 	template<typename T = double>
 	auto interest(
+		const std::chrono::year_month_day& start,
+		const std::chrono::year_month_day& end,
 		const rate<T>& r
 	) -> T
 	{
 		const auto i = std::visit(
-			[&](const auto& r) { return r.interest(); },
+			[&](const auto& r) { return r.interest(start, end); },
 			r
 		);
 
