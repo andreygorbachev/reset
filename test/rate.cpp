@@ -34,14 +34,20 @@ using namespace boost::multiprecision;
 namespace reset
 {
 
-	TEST(rate, rate1)
+	TEST(simple, simple)
 	{
-		const auto r = rate<double>{ simple{ 5.0 } };
+		const auto r = simple<double>{ 5.0 };
 	}
 
-	TEST(rate, rate2)
+	TEST(compound, compound)
 	{
-		const auto r = rate<double>{ compound{ 5.0 } };
+		const auto r = compound<double>{ 5.0 };
+	}
+
+	TEST(rate, rate)
+	{
+		const auto r1 = rate<double>{ simple<double>{ 5.0 } };
+		const auto r2 = rate<double>{ compound<double>{ 5.0 } };
 	}
 
 }
