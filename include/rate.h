@@ -29,6 +29,7 @@ namespace reset
 {
 
 	// separate these into separate files and maybe into a separate sub-library
+	// if we need just 2 conventions we might want to just have 1 class with a flag
 
 	template<typename T = double>
 	class simple final
