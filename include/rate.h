@@ -26,6 +26,8 @@
 #include <chrono>
 #include <utility>
 
+#include <day_count.h>
+
 
 namespace reset
 {
@@ -46,7 +48,8 @@ namespace reset
 
 		auto interest(
 			const std::chrono::year_month_day& start, // following day_count we pass these separately, rather than as a period
-			const std::chrono::year_month_day& end
+			const std::chrono::year_month_day& end,
+			const fin_calendar::day_count<T>& dc
 		) const -> T;
 
 	private:
@@ -68,7 +71,8 @@ namespace reset
 
 		auto interest(
 			const std::chrono::year_month_day& start,
-			const std::chrono::year_month_day& end
+			const std::chrono::year_month_day& end,
+			const fin_calendar::day_count<T>& dc
 		) const -> T;
 
 	private:
@@ -82,18 +86,19 @@ namespace reset
 	using rate = std::variant<
 		simple<T>,
 		compound<T>
-	>;
+	>; // per unit of currency
 
 
 	template<typename T = double>
 	auto interest(
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
+		const fin_calendar::day_count<T>& dc,
 		const rate<T>& r
 	) -> T
 	{
 		const auto i = std::visit(
-			[&](const auto& r) { return r.interest(start, end); },
+			[&](const auto& r) { return r.interest(start, end, dc); },
 			r
 		);
 
