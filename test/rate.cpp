@@ -44,8 +44,8 @@ namespace reset
 		const auto r = simple<double>{ 5.0 };
 
 		const auto i = r.interest(
-			year_month_day{ 2023y / January / 1 },
-			year_month_day{ 2023y / January / 2 },
+			year_month_day{ 2023y / January / 1d },
+			year_month_day{ 2023y / January / 2d },
 			actual_365_fixed{}
 		);
 	}
@@ -55,28 +55,28 @@ namespace reset
 		const auto r = compound<double>{ 5.0 };
 
 		const auto i = r.interest(
-			year_month_day{ 2023y / January / 1 },
-			year_month_day{ 2023y / January / 2 },
+			year_month_day{ 2023y / January / 1d },
+			year_month_day{ 2023y / January / 2d },
 			actual_365_fixed{}
 		);
 	}
 
 	TEST(rate, rate)
 	{
-		const auto dc1 = actual_365_fixed<double>{};
 		const auto r1 = rate<double>{ simple{ 5.0 } };
+		const auto dc1 = actual_365_fixed<double>{};
 		const auto i1 = interest(
-			year_month_day{ 2023y / January / 1 },
-			year_month_day{ 2023y / January / 2 },
+			year_month_day{ 2023y / January / 1d },
+			year_month_day{ 2023y / January / 2d },
 			day_count<double>{ dc1 }, // how can we use default template parameter here?
 			r1
 		);
 
-		const auto dc2 = actual_365_fixed<double>{};
 		const auto r2 = rate<double>{ compound{ 5.0 } };
+		const auto dc2 = actual_365_fixed<double>{};
 		const auto i2 = interest(
-			year_month_day{ 2023y / January / 1 },
-			year_month_day{ 2023y / January / 2 },
+			year_month_day{ 2023y / January / 1d },
+			year_month_day{ 2023y / January / 2d },
 			day_count<double>{ dc2 }, // how can we use default template parameter here?
 			r2
 		);
