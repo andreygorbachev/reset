@@ -112,11 +112,31 @@ namespace reset
 	{
 	}
 
+	template<typename T>
+	auto simple<T>::interest(
+		const std::chrono::year_month_day& start, // following day_count we pass these separately, rather than as a period
+		const std::chrono::year_month_day& end,
+		const fin_calendar::day_count<T>& dc
+	) const -> T
+	{
+		return 0; // temp only
+	}
+
 
 	template<typename T>
 	compound<T>::compound(T rate) :
 		rate_{ std::move(rate) }
 	{
+	}
+
+	template<typename T>
+	auto compound<T>::interest(
+		const std::chrono::year_month_day& start, // following day_count we pass these separately, rather than as a period
+		const std::chrono::year_month_day& end,
+		const fin_calendar::day_count<T>& dc
+	) const -> T
+	{
+		return 0; // temp only
 	}
 
 }
