@@ -52,7 +52,7 @@ using namespace gregorian::util;
 
 auto make_resets()
 {
-	const/*expr*/ auto daily_rate = cpp_dec_float_50{ 5 }; // we assume that all rates are always 5%
+	const/*expr*/ auto daily_rate = cpp_dec_float_50{ "7.33" }; // we assume that all rates are always the same
 
 	auto ts = time_series<optional<cpp_dec_float_50>>{ days_period{ 2025y / FirstDayOfJanuary, 2125y / LastDayOfDecember } };
 
@@ -93,7 +93,7 @@ int main()
 	for (
 		auto d = f;
 		d <= u;
-		d = sys_days{ d } + days{ 1 }
+		d = sys_days{ d } + days{ 100 }
 	) // as we do not cache the previous step, we can spread below over multiple threads
 	{
 		cout
