@@ -39,9 +39,9 @@ using namespace fin_calendar;
 namespace reset
 {
 
-	TEST(simple, simple)
+	TEST(simple_annualized, interest)
 	{
-		const auto r = simple{ 6.0 };
+		const auto r = simple_annualized{ 6.0 };
 
 		const auto i = r.interest(
 			year_month_day{ 2025y / January / 1d },
@@ -53,9 +53,9 @@ namespace reset
 		EXPECT_EQ(expected, i);
 	}
 
-	TEST(compound, compound)
+	TEST(compound_annualized, interest)
 	{
-		const auto r = compound{ 5.0 };
+		const auto r = compound_annualized{ 5.0 };
 
 		const auto i = r.interest(
 			year_month_day{ 2023y / January / 1d },
@@ -66,7 +66,7 @@ namespace reset
 
 	TEST(rate, rate)
 	{
-		const auto r1 = rate<>{ simple{ 5.0 } };
+		const auto r1 = rate<>{ simple_annualized{ 5.0 } };
 		const auto dc1 = actual_365_fixed<double>{};
 		const auto i1 = interest(
 			year_month_day{ 2023y / January / 1d },
@@ -75,7 +75,7 @@ namespace reset
 			r1
 		);
 
-		const auto r2 = rate<>{ compound{ 5.0 } };
+		const auto r2 = rate<>{ compound_annualized{ 5.0 } };
 		const auto dc2 = actual_365_fixed<double>{};
 		const auto i2 = interest(
 			year_month_day{ 2023y / January / 1d },

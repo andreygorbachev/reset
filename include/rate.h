@@ -41,12 +41,12 @@ namespace reset
 	// we might want to allow for roundin/truncation of the interest amount
 
 	template<typename T = double>
-	class simple final
+	class simple_annualized final
 	{
 
 	public:
 
-		explicit simple(T rate);
+		explicit simple_annualized(T rate);
 
 	public:
 
@@ -58,18 +58,18 @@ namespace reset
 
 	private:
 
-		T rate_; // do we need a getter?
+		T rate_; // do we need a getter? // or maybe we do not want to store the rate? (and only store the convention)
 
 	};
 
 
 	template<typename T = double>
-	class compound final // compound or compounded?
+	class compound_annualized final // compound or compounded?
 	{
 
 	public:
 
-		explicit compound(T rate);
+		explicit compound_annualized(T rate);
 
 	public:
 
@@ -88,8 +88,8 @@ namespace reset
 
 	template<typename T = double>
 	using rate = std::variant<
-		simple<T>,
-		compound<T>
+		simple_annualized<T>,
+		compound_annualized<T>
 	>; // per unit of currency
 
 
@@ -111,13 +111,13 @@ namespace reset
 
 
 	template<typename T>
-	simple<T>::simple(T rate) :
+	simple_annualized<T>::simple_annualized(T rate) :
 		rate_{ std::move(rate) }
 	{
 	}
 
 	template<typename T>
-	auto simple<T>::interest(
+	auto simple_annualized<T>::interest(
 		const std::chrono::year_month_day& start, // following day_count we pass these separately, rather than as a period
 		const std::chrono::year_month_day& end,
 		const fin_calendar::day_count<T>& dc
@@ -128,13 +128,13 @@ namespace reset
 
 
 	template<typename T>
-	compound<T>::compound(T rate) :
+	compound_annualized<T>::compound_annualized(T rate) :
 		rate_{ std::move(rate) }
 	{
 	}
 
 	template<typename T>
-	auto compound<T>::interest(
+	auto compound_annualized<T>::interest(
 		const std::chrono::year_month_day& start, // following day_count we pass these separately, rather than as a period
 		const std::chrono::year_month_day& end,
 		const fin_calendar::day_count<T>& dc
