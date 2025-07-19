@@ -28,13 +28,17 @@
 
 #include <day_count.h>
 
+#include "resets_math.h"
+
 
 namespace reset
 {
 
 	// separate these into separate files and maybe into a separate sub-library
 	// if we need just 2 conventions we might want to just have 1 class with a flag
-	// as all have rate_ should we consider a common base class?
+	// as all have rate_ should we consider a common base class? (also looks like all these classes have a common structure)
+
+	// we might want to allow for roundin/truncation of the interest amount
 
 	template<typename T = double>
 	class simple final
@@ -119,7 +123,7 @@ namespace reset
 		const fin_calendar::day_count<T>& dc
 	) const -> T
 	{
-		return 0; // temp only
+		return from_percent(rate_) * fin_calendar::fraction(start, end, dc);
 	}
 
 

@@ -41,13 +41,16 @@ namespace reset
 
 	TEST(simple, simple)
 	{
-		const auto r = simple<double>{ 5.0 };
+		const auto r = simple<double>{ 6.0 };
 
 		const auto i = r.interest(
-			year_month_day{ 2023y / January / 1d },
-			year_month_day{ 2023y / January / 2d },
+			year_month_day{ 2025y / January / 1d },
+			year_month_day{ 2025y / January / 31d },
 			actual_365_fixed{}
 		);
+
+		const auto expected = 6.0 / 100.0 * 30.0 / 365.0;
+		EXPECT_EQ(expected, i);
 	}
 
 	TEST(compound, compound)
