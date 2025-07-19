@@ -23,6 +23,7 @@
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
 #include <chrono>
+#include <cmath>
 
 #include <day_count.h>
 
@@ -55,13 +56,16 @@ namespace reset
 
 	TEST(compound_annualized, interest)
 	{
-		const auto r = compound_annualized{ 5.0 };
+		const auto r = compound_annualized{ 6.0 };
 
 		const auto i = r.interest(
-			year_month_day{ 2023y / January / 1d },
-			year_month_day{ 2023y / January / 2d },
-			actual_365_fixed{}
+			year_month_day{ 2025y / January / 1d },
+			year_month_day{ 2025y / January / 31d },
+			actual_365_fixed{} // should really do calculation/252
 		);
+
+		const auto expected = pow(1.0 + 6.0 / 100.0, 30.0 / 365.0) - 1.0;
+		EXPECT_EQ(expected, i);
 	}
 
 	TEST(rate, rate)

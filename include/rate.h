@@ -140,7 +140,8 @@ namespace reset
 		const fin_calendar::day_count<T>& dc
 	) const -> T
 	{
-		return 0; // temp only
+		constexpr auto unit_notional = T{ 1 };
+		return pow(unit_notional + from_percent(rate_), fin_calendar::fraction(start, end, dc)) - unit_notional;
 	}
 
 }
