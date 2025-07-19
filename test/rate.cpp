@@ -41,7 +41,7 @@ namespace reset
 
 	TEST(simple, simple)
 	{
-		const auto r = simple<double>{ 6.0 };
+		const auto r = simple{ 6.0 };
 
 		const auto i = r.interest(
 			year_month_day{ 2025y / January / 1d },
@@ -55,7 +55,7 @@ namespace reset
 
 	TEST(compound, compound)
 	{
-		const auto r = compound<double>{ 5.0 };
+		const auto r = compound{ 5.0 };
 
 		const auto i = r.interest(
 			year_month_day{ 2023y / January / 1d },
