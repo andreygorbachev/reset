@@ -86,19 +86,21 @@ int main()
 	auto detail2 = detail1;
 	detail2.step_round = nullopt; // with the index without daily rounding
 
+	cout
+		<< fixed
+		<< setprecision(8);
+		
 	for (
 		auto d = f;
 		d <= u;
 		d = sys_days{ d } + days{ 365 }
-	) // as we do not cache the previous step, we can spread below over multiple threads
+	) // as we do not cache the previous step, we can spread the below over multiple threads
 	{
 		const auto i1 = index(r, d, detail1);
 		const auto i2 = index(r, d, detail2);
 
 		if (i1 != i2)
 			cout
-				<< fixed
-				<< setprecision(8)
 				<< "For "
 				<< d
 				<< " Index with step_round is "
