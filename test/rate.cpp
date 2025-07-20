@@ -70,7 +70,7 @@ namespace reset
 			calculation_252{ c }
 		);
 
-		const auto expected = pow(1.0 + 6.0 / 100.0, 21.0 / 252.0) - 1.0; // we hav 21 business days in that period
+		const auto expected = pow(1.0 + 6.0 / 100.0, 21.0 / 252.0) - 1.0; // we have 21 business days in that period
 		EXPECT_EQ(expected, i);
 	}
 
