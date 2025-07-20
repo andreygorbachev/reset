@@ -52,9 +52,9 @@ using namespace gregorian::util;
 
 auto make_resets()
 {
-	const/*expr*/ auto daily_rate = cpp_dec_float_50{ "7.33" }; // we assume that all rates are always the same
+	const/*expr*/ auto daily_rate = cpp_dec_float_50{ "3.17" }; // we assume that all rates are always the same
 
-	auto ts = time_series<optional<cpp_dec_float_50>>{ days_period{ 2025y / FirstDayOfJanuary, 2125y / LastDayOfDecember } };
+	auto ts = time_series<optional<cpp_dec_float_50>>{ days_period{ 2025y / FirstDayOfJanuary, 2525y / LastDayOfDecember } };
 
 	auto cal = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } }; // we ignore bank holidays
 
@@ -64,12 +64,8 @@ auto make_resets()
 		d <= u;
 		d = sys_days{ d } + days{ 1 }
 	)
-	{
 		if (cal.is_business_day(d))
-		{
 			ts[d] = daily_rate;
-		}
-	}
 
 	return resets{ move(ts), move(cal), actual_365_fixed<cpp_dec_float_50>{} };
 }
@@ -84,7 +80,7 @@ int main()
 	auto detail1 = index_detail{};
 	detail1.initial_value = cpp_dec_float_50{ 100 };
 	detail1.initial_date = f;
-	detail1.step_round = 18u; // we compate the index with daily rounding
+	detail1.step_round = 18u; // we compare the index with daily rounding
 	detail1.final_round = 8u;
 
 	auto detail2 = detail1;
@@ -93,19 +89,23 @@ int main()
 	for (
 		auto d = f;
 		d <= u;
-		d = sys_days{ d } + days{ 100 }
+		d = sys_days{ d } + days{ 365 }
 	) // as we do not cache the previous step, we can spread below over multiple threads
 	{
-		cout
-			<< fixed
-			<< setprecision(8)
-			<< "For "
-			<< d
-			<< " Index with step_round is "
-			<< index(r, d, detail1)
-			<< " and Index without step_round is "
-			<< index(r, d, detail2)
-			<< endl;
+		const auto i1 = index(r, d, detail1);
+		const auto i2 = index(r, d, detail2);
+
+		if (i1 != i2)
+			cout
+				<< fixed
+				<< setprecision(8)
+				<< "For "
+				<< d
+				<< " Index with step_round is "
+				<< i1
+				<< " and Index without step_round is "
+				<< i2
+				<< endl;
 	}
 
 	return 0;
