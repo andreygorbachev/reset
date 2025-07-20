@@ -78,21 +78,21 @@ namespace reset
 	{
 		const auto& c = locate_calendar("America/ANBIMA"s);
 
-		const auto r1 = rate<>{ simple_annualized{ 5.0 } };
-		const auto dc1 = actual_365_fixed<double>{};
+		const auto r1 = rate<cpp_dec_float_50>{ simple_annualized<cpp_dec_float_50>{ 5 } };
+		const auto dc1 = actual_365_fixed<cpp_dec_float_50>{};
 		const auto i1 = interest(
 			year_month_day{ 2023y / January / 1d },
 			year_month_day{ 2023y / January / 2d },
-			day_count<>{ dc1 },
+			day_count<cpp_dec_float_50>{ dc1 },
 			r1
 		);
 
-		const auto r2 = rate<>{ compound_annualized{ 5.0 } };
-		const auto dc2 = calculation_252<double>{ c };
+		const auto r2 = rate<cpp_dec_float_50>{ compound_annualized<cpp_dec_float_50>{ 5 } };
+		const auto dc2 = calculation_252<cpp_dec_float_50>{ c };
 		const auto i2 = interest(
 			year_month_day{ 2023y / January / 1d },
 			year_month_day{ 2023y / January / 2d },
-			day_count<>{ dc2 },
+			day_count<cpp_dec_float_50>{ dc2 },
 			r2
 		);
 	}
