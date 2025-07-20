@@ -25,6 +25,8 @@
 #include <chrono>
 #include <cmath>
 
+#include <static_data.h>
+
 #include <day_count.h>
 
 #include <rate.h>
@@ -35,6 +37,8 @@ using namespace std;
 using namespace std::chrono;
 using namespace boost::multiprecision;
 using namespace fin_calendar;
+using namespace gregorian;
+using namespace gregorian::static_data;
 
 
 namespace reset
@@ -56,20 +60,24 @@ namespace reset
 
 	TEST(compound_annualized, interest)
 	{
+		const auto& c = locate_calendar("America/ANBIMA"s);
+
 		const auto r = compound_annualized{ 6.0 };
 
 		const auto i = r.interest(
 			year_month_day{ 2025y / January / 1d },
 			year_month_day{ 2025y / January / 31d },
-			actual_365_fixed{} // should really do calculation/252
+			calculation_252{ c }
 		);
 
-		const auto expected = pow(1.0 + 6.0 / 100.0, 30.0 / 365.0) - 1.0;
+		const auto expected = pow(1.0 + 6.0 / 100.0, 21.0 / 252.0) - 1.0; // we hav 21 business days in that period
 		EXPECT_EQ(expected, i);
 	}
 
 	TEST(rate, rate)
 	{
+		const auto& c = locate_calendar("America/ANBIMA"s);
+
 		const auto r1 = rate<>{ simple_annualized{ 5.0 } };
 		const auto dc1 = actual_365_fixed<double>{};
 		const auto i1 = interest(
@@ -80,7 +88,7 @@ namespace reset
 		);
 
 		const auto r2 = rate<>{ compound_annualized{ 5.0 } };
-		const auto dc2 = actual_365_fixed<double>{};
+		const auto dc2 = calculation_252<double>{ c };
 		const auto i2 = interest(
 			year_month_day{ 2023y / January / 1d },
 			year_month_day{ 2023y / January / 2d },
