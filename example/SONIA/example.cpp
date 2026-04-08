@@ -25,15 +25,28 @@
 #include <resets.h>
 #include <index.h>
 
+#include <static_data.h>
+#include <calendar.h>
+#include <schedule.h>
+#include <period.h>
+
 #include <chrono>
 #include <iostream>
 #include <iomanip>
 #include <ios>
+#include <algorithm>
+#include <vector>
+#include <iterator>
 
 using namespace std;
 using namespace std::chrono;
+using namespace std::ranges;
 
 using namespace boost::multiprecision;
+
+using namespace gregorian;
+using namespace gregorian::util;
+using namespace gregorian::static_data;
 
 using namespace reset;
 
@@ -45,7 +58,7 @@ static auto parse_csv_resets_SONIA() -> resets
 	return parse_csv_resets(
 		"SONIA.csv",
 		1997y / January / 1d,
-		2025y / May / 13d
+		2025y / May / 12d
 	);
 }
 
@@ -63,9 +76,6 @@ static auto parse_csv_resets_SONIA_compounded_index() -> resets
 
 int main()
 {
-	// we can also use the calendar to check that we have resets for each business day
-	// (but we'll have to make sure that the static_data calendars cover this need)
-
 	const auto SONIA = parse_csv_resets_SONIA();
 
 	const auto SONIA_compounded_index = parse_csv_resets_SONIA_compounded_index();
@@ -81,6 +91,7 @@ int main()
 //	const auto date = 2025y / May / 13d;
 	const auto date = 2025y / May / 12d;
 
+	// check the latest data available in this example
 	cout
 		<< fixed
 		<< setprecision(8)
@@ -92,9 +103,33 @@ int main()
 		<< index(SONIA, date, detail)
 		<< endl;
 
-	const auto& calendar = SONIA.get_calendar();
-	for (auto d = detail.initial_date; d <= date; d = sys_days{ d } + days{ 1 })
-		if (calendar.is_business_day(d) && SONIA_compounded_index[d] * 100 != index(SONIA, d, detail))
+	// check the SONIA dates
+	const auto& SONIA_calendar = SONIA.get_calendar();
+	const auto& London_calendar = locate_calendar("Europe/London", date);
+	const auto common_period = SONIA_calendar.get_schedule().get_period() & London_calendar.get_schedule().get_period();
+	if (calendar{ SONIA_calendar.get_weekend(), schedule{ common_period, SONIA_calendar.get_schedule().get_dates() } } ==
+		calendar{ London_calendar.get_weekend(), schedule{ common_period, London_calendar.get_schedule().get_dates() } }
+	)
+		cout << "SONIA calendar and London calendar match" << endl;
+	else
+	{
+		cout << "SONIA calendar and London calendar do not match" << endl;
+
+		auto diffs = vector<year_month_day>{};
+		ranges::set_symmetric_difference(
+			SONIA_calendar.make_business_days_schedule(common_period).get_dates(),
+			London_calendar.make_business_days_schedule(common_period).get_dates(),
+			back_inserter(diffs)
+		);
+		cout << "The following dates are in one calendar but not in the other:" << endl;
+		for(const auto& d : diffs)
+			cout << d << endl;
+	}
+
+	// look for inconsistencies in the data
+	const auto dates = SONIA_calendar.make_business_days_schedule( days_period{ detail.initial_date, date } );
+	for (const auto& d : dates.get_dates())
+		if (SONIA_compounded_index[d] * 100 != index(SONIA, d, detail))
 			cout
 				<< "For "
 				<< d

@@ -24,6 +24,8 @@
 
 #include <resets.h>
 
+#include <calendar.h>
+#include <schedule.h>
 #include <period.h>
 
 #include <day_count.h>
@@ -35,6 +37,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <utility>
+#include <optional>
 
 
 inline auto _parse_date(std::istream& fs)
