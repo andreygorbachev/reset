@@ -60,7 +60,7 @@ namespace reset
 
 	TEST(compound_annualized, interest)
 	{
-		const auto& c = locate_calendar("America/ANBIMA"s);
+		const auto& c = locate_calendar("America/ANBIMA"s, 2025y / January / 1d);
 
 		const auto r = compound_annualized{ 6.0 };
 
@@ -76,7 +76,7 @@ namespace reset
 
 	TEST(rate, rate)
 	{
-		const auto& c = locate_calendar("America/ANBIMA"s);
+		const auto& c = locate_calendar("America/ANBIMA"s, 2023y / January / 1d);
 
 		const auto r1 = rate<cpp_dec_float_50>{ simple_annualized<cpp_dec_float_50>{ 5 } };
 		const auto dc1 = actual_365_fixed<cpp_dec_float_50>{};
