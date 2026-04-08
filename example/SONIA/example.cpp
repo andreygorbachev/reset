@@ -89,7 +89,20 @@ int main()
 		<< " SONIA Compounded Index is "
 		<< SONIA_compounded_index[date] * 100 // need a different accessor? (or handle 100 in some other way)
 		<< " and the same computed value is "
-		<< index(SONIA, date, detail);
+		<< index(SONIA, date, detail)
+		<< endl;
+
+	const auto& calendar = SONIA.get_calendar();
+	for (auto d = detail.initial_date; d <= date; d = sys_days{ d } + days{ 1 })
+		if (calendar.is_business_day(d) && SONIA_compounded_index[d] * 100 != index(SONIA, d, detail))
+			cout
+				<< "For "
+				<< d
+				<< " SONIA Compounded Index is "
+				<< SONIA_compounded_index[d] * 100
+				<< " and the same computed value is "
+				<< index(SONIA, d, detail)
+				<< endl;
 
 	return 0;
 }
