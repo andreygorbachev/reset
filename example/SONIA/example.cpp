@@ -132,7 +132,7 @@ int main()
 	const auto common_period_2 = SONIA_compounded_index_calendar.get_schedule().get_period() & London_calendar.get_schedule().get_period();
 	if (calendar{ SONIA_compounded_index_calendar.get_weekend(), schedule{ common_period_2, SONIA_compounded_index_calendar.get_schedule().get_dates() } } ==
 		calendar{ London_calendar.get_weekend(), schedule{ common_period_2, London_calendar.get_schedule().get_dates() } }
-		)
+	)
 		cout << "SONIA Compounded Index calendar and London calendar match" << endl;
 	else
 	{
