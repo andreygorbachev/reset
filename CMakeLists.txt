@@ -32,13 +32,13 @@ FetchContent_MakeAvailable(
 FetchContent_Declare(
   Boost_config
   GIT_REPOSITORY https://github.com/boostorg/config.git
-  GIT_TAG        boost-1.88.0
+  GIT_TAG        boost-1.90.0
 )
 
 FetchContent_Declare(
   Boost_multiprecision
   GIT_REPOSITORY https://github.com/boostorg/multiprecision.git
-  GIT_TAG        boost-1.88.0
+  GIT_TAG        boost-1.90.0
 )
 
 FetchContent_MakeAvailable(
