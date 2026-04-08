@@ -127,7 +127,7 @@ int main()
 			cout << d << endl;
 	}
 
-	// check the SONIA compounding index dates
+	// check the SONIA Compounded Index dates
 	const auto& SONIA_compounded_index_calendar = SONIA_compounded_index.get_calendar();
 	const auto common_period_2 = SONIA_compounded_index_calendar.get_schedule().get_period() & London_calendar.get_schedule().get_period();
 	if (calendar{ SONIA_compounded_index_calendar.get_weekend(), schedule{ common_period_2, SONIA_compounded_index_calendar.get_schedule().get_dates() } } ==
