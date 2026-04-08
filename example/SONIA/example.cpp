@@ -28,6 +28,7 @@
 #include <chrono>
 #include <iostream>
 #include <iomanip>
+#include <ios>
 
 using namespace std;
 using namespace std::chrono;
@@ -38,7 +39,7 @@ using namespace reset;
 
 
 
-inline auto parse_csv_resets_SONIA() -> resets
+static auto parse_csv_resets_SONIA() -> resets
 {
 	// from https://www.bankofengland.co.uk/markets/sonia-benchmark
 	return parse_csv_resets(
@@ -48,7 +49,7 @@ inline auto parse_csv_resets_SONIA() -> resets
 	);
 }
 
-inline auto parse_csv_resets_SONIA_compounded_index() -> resets
+static auto parse_csv_resets_SONIA_compounded_index() -> resets
 {
 	// from https://www.bankofengland.co.uk/markets/sonia-benchmark
 	return parse_csv_resets(

@@ -28,7 +28,7 @@
 #include <chrono>
 #include <iostream>
 #include <iomanip>
-#include <tuple>
+#include <ios>
 
 using namespace std;
 using namespace std::chrono;
@@ -39,7 +39,7 @@ using namespace reset;
 
 
 
-inline auto parse_csv_resets_SARON_and_SARON_compounded_index() -> pair<resets, resets>
+static auto parse_csv_resets_SARON_and_SARON_compounded_index() -> pair<resets, resets>
 {
 	return parse_csv_resets_x2(
 		"saron_compound_calculator.csv",

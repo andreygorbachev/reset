@@ -28,6 +28,7 @@
 #include <chrono>
 #include <iostream>
 #include <iomanip>
+#include <ios>
 
 using namespace std;
 using namespace std::chrono;
@@ -38,7 +39,7 @@ using namespace reset;
 
 
 
-inline auto parse_csv_resets_SELIC() -> resets
+static auto parse_csv_resets_SELIC() -> resets
 {
 	// from https://api.bcb.gov.br/dados/serie/bcdata.sgs.1178/dados?formato=csv&dataInicial=01/07/2000&dataFinal=dd/mm/yyyy
 	return parse_csv_resets(
