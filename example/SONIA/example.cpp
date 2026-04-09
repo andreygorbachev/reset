@@ -116,11 +116,11 @@ int main()
 	{
 		cout << "SONIA calendar and London calendar do not match" << endl;
 
-		auto diffs = vector<year_month_day>{};
+		auto diffs = schedule::dates{};
 		ranges::set_symmetric_difference(
 			SONIA_calendar.make_business_days_schedule(common_period_1).get_dates(),
 			London_calendar.make_business_days_schedule(common_period_1).get_dates(),
-			back_inserter(diffs)
+			inserter(diffs, diffs.begin())
 		);
 		cout << "The following dates are in one calendar but not in the other:" << endl;
 		for(const auto& d : diffs)
@@ -138,11 +138,11 @@ int main()
 	{
 		cout << "SONIA Compounded Index calendar and London calendar do not match" << endl;
 
-		auto diffs = vector<year_month_day>{};
+		auto diffs = schedule::dates{};
 		ranges::set_symmetric_difference(
 			SONIA_compounded_index_calendar.make_business_days_schedule(common_period_2).get_dates(),
 			London_calendar.make_business_days_schedule(common_period_2).get_dates(),
-			back_inserter(diffs)
+			inserter(diffs, diffs.begin())
 		);
 		cout << "The following dates are in one calendar but not in the other:" << endl;
 		for (const auto& d : diffs)
