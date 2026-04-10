@@ -35,7 +35,6 @@
 #include <iomanip>
 #include <ios>
 #include <algorithm>
-#include <vector>
 #include <iterator>
 
 using namespace std;
