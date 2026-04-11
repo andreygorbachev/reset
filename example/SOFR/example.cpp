@@ -81,10 +81,11 @@ int main()
 
 	const auto SOFR_compounded_index = parse_csv_resets_SOFR_compounded_index();
 
+	// from https://www.newyorkfed.org/markets/opolicy/operating_policy_200212
 	auto detail = index_detail{};
 	detail.initial_value = cpp_dec_float_50{ 1 };
 	detail.initial_date = 2018y / April / 2d;
-	detail.final_round = 8u; // from https://www.newyorkfed.org/markets/opolicy/operating_policy_200212
+	detail.final_round = 8u;
 
 //	const auto date = 2026y / April / 10d;
 	const auto date = 2026y / April / 9d;
@@ -109,10 +110,10 @@ int main()
 	if (calendar{ SOFR_calendar.get_weekend(), schedule{ common_period_1, SOFR_calendar.get_schedule().get_dates() } } ==
 		calendar{ USA_calendar.get_weekend(), schedule{ common_period_1, USA_calendar.get_schedule().get_dates() } }
 	)
-		cout << "SOFR calendar and London calendar match" << endl;
+		cout << "SOFR calendar and USA calendar match" << endl;
 	else
 	{
-		cout << "SOFR calendar and London calendar do not match" << endl;
+		cout << "SOFR calendar and USA calendar do not match" << endl;
 
 		auto diffs = schedule::dates{};
 		ranges::set_symmetric_difference(
@@ -131,10 +132,10 @@ int main()
 	if (calendar{ SOFR_compounded_index_calendar.get_weekend(), schedule{ common_period_2, SOFR_compounded_index_calendar.get_schedule().get_dates() } } ==
 		calendar{ USA_calendar.get_weekend(), schedule{ common_period_2, USA_calendar.get_schedule().get_dates() } }
 	)
-		cout << "SOFR Compounded Index calendar and London calendar match" << endl;
+		cout << "SOFR Compounded Index calendar and USA calendar match" << endl;
 	else
 	{
-		cout << "SOFR Compounded Index calendar and London calendar do not match" << endl;
+		cout << "SOFR Compounded Index calendar and USA calendar do not match" << endl;
 
 		auto diffs = schedule::dates{};
 		ranges::set_symmetric_difference(
@@ -146,10 +147,17 @@ int main()
 		for (const auto& d : diffs)
 			cout << d << endl;
 	}
-/*
+
 	// look for inconsistencies in the data
-	const auto dates = SOFR_compounded_index_calendar.make_business_days_schedule( days_period{ detail.initial_date, date } );
+	const auto dates = SOFR_compounded_index_calendar.make_business_days_schedule(
+		SOFR_compounded_index.get_time_series().get_period()
+	);
 	for (const auto& d : dates.get_dates())
+	{
+		if (d == *dates.get_dates().crbegin())
+			break;
+		// temporary only, unit we sort out start/end of RFR/RFR Index
+
 		if (SOFR_compounded_index[d] * 100 != index(SOFR, d, detail))
 			cout
 				<< "For "
@@ -159,6 +167,7 @@ int main()
 				<< " and the same computed value is "
 				<< index(SOFR, d, detail)
 				<< endl;
-*/
+	}
+
 	return 0;
 }

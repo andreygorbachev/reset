@@ -149,8 +149,15 @@ int main()
 	}
 
 	// look for inconsistencies in the data
-	const auto dates = SONIA_compounded_index_calendar.make_business_days_schedule( days_period{ detail.initial_date, date } );
+	const auto dates = SONIA_compounded_index_calendar.make_business_days_schedule(
+		SONIA_compounded_index.get_time_series().get_period()
+	);
 	for (const auto& d : dates.get_dates())
+	{
+		if (d == *dates.get_dates().crbegin())
+			break;
+		// temporary only, until we sort out start/end of RFR/RFR Index
+
 		if (SONIA_compounded_index[d] * 100 != index(SONIA, d, detail))
 			cout
 				<< "For "
@@ -160,6 +167,7 @@ int main()
 				<< " and the same computed value is "
 				<< index(SONIA, d, detail)
 				<< endl;
+	}
 
 	return 0;
 }
