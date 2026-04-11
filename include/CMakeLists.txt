@@ -4,6 +4,7 @@ add_library(${PROJECT_NAME} INTERFACE
   resets_math.h
   resets.h
   index.h
+  average.h
   rate.h
 )
 
