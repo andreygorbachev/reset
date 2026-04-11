@@ -80,15 +80,14 @@ int main()
 	const auto SOFR = parse_csv_resets_SOFR();
 
 	const auto SOFR_compounded_index = parse_csv_resets_SOFR_compounded_index();
-/*
-	auto detail = index_detail{};
-	detail.initial_value = cpp_dec_float_50{ 100 };
-	detail.initial_date = 2018y / April / 23d;
-	detail.step_round = 18u;
-	detail.final_round = 8u;
 
-//	const auto date = 2025y / May / 13d;
-	const auto date = 2025y / May / 12d;
+	auto detail = index_detail{};
+	detail.initial_value = cpp_dec_float_50{ 1 };
+	detail.initial_date = 2018y / April / 2d;
+	detail.final_round = 8u; // from https://www.newyorkfed.org/markets/opolicy/operating_policy_200212
+
+//	const auto date = 2026y / April / 10d;
+	const auto date = 2026y / April / 9d;
 
 	// check the latest data available in this example
 	cout
@@ -101,7 +100,7 @@ int main()
 		<< " and the same computed value is "
 		<< index(SOFR, date, detail)
 		<< endl;
-
+/*
 	const auto& London_calendar = locate_calendar("Europe/London", date);
 
 	// check the SOFR dates
