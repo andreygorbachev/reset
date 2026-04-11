@@ -27,6 +27,7 @@
 #include <calendar.h>
 #include <schedule.h>
 #include <period.h>
+#include <weekend.h>
 
 #include <day_count.h>
 #include <actual_365_fixed.h>

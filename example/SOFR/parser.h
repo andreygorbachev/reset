@@ -27,9 +27,10 @@
 #include <calendar.h>
 #include <schedule.h>
 #include <period.h>
+#include <weekend.h>
 
 #include <day_count.h>
-#include <actual_365_fixed.h>
+#include <actual_360.h>
 
 #include <string>
 #include <chrono>
@@ -45,7 +46,7 @@ inline auto _parse_date(std::istream& fs)
 	auto ymd = std::chrono::year_month_day{};
 
 #ifdef _MSC_BUILD 
-	std::chrono::from_stream(fs, "\"%d %b %y\"", ymd);
+	std::chrono::from_stream(fs, "%m/%d/%Y", ymd);
 #else
 	throw std::domain_error{ "Not implemented" };
 #endif
@@ -56,13 +57,11 @@ inline auto _parse_date(std::istream& fs)
 inline auto _parse_observation(std::istream& fs)
 {
 	auto o = std::string{};
-	std::getline(fs, o);
+	std::getline(fs, o, ',');
 
 	using namespace std::string_literals;
 
-	return reset::resets::observation{
-		o.substr(1uz, o.length() - 2uz)
-	}; // we ignore the first and last characters (quotes)
+	return reset::resets::observation{ o };
 }
 
 
@@ -79,11 +78,14 @@ inline auto _parse_csv_resets_storage(
 		const auto ymd = _parse_date(fs);
 
 		auto s = std::string{};
-		std::getline(fs, s, ','); // skip the comma
+		std::getline(fs, s, ','); // skip ","
+		std::getline(fs, s, ','); // skip "SOFR,"
 
 		const auto observation = _parse_observation(fs);
 
 		result[ymd] = observation;
+
+		std::getline(fs, s); // skip the rest
 
 		if (fs.eof())
 			break;
@@ -129,7 +131,7 @@ inline auto parse_csv_resets(
 
 	auto c = _make_calendar(ts);
 
-	const auto dc = fin_calendar::actual_365_fixed<boost::multiprecision::cpp_dec_float_50>{};
+	const auto dc = fin_calendar::actual_360<boost::multiprecision::cpp_dec_float_50>{};
 
 	return reset::resets{ std::move(ts), std::move(c), dc };
 }

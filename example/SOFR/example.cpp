@@ -75,8 +75,8 @@ static auto parse_csv_resets_SOFR_compounded_index() -> resets
 
 int main()
 {
-/*	const auto SOFR = parse_csv_resets_SOFR();
-
+	const auto SOFR = parse_csv_resets_SOFR();
+/*
 	const auto SOFR_compounded_index = parse_csv_resets_SOFR_compounded_index();
 	// I think BoE website does not fully describe the compounded index
 	// more clarity would be welcome there on how rounding is done daily (*)
