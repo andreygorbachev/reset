@@ -53,11 +53,11 @@ using namespace reset;
 
 static auto parse_csv_resets_SOFR() -> resets
 {
-	// from 
+	// from https://www.newyorkfed.org/markets/reference-rates/sofr
 	return parse_csv_resets(
 		"SOFR.csv",
-		1997y / January / 1d,
-		2025y / May / 12d
+		2018y / April / 2d,
+		2026y / April / 9d
 	);
 }
 
