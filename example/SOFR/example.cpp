@@ -73,6 +73,36 @@ static auto parse_csv_resets_SOFR_compounded_index() -> resets
 	);
 }
 
+static auto parse_csv_resets_SOFR_30_day_average() -> resets
+{
+	return parse_csv_resets(
+		"SOFR Compounded Index.csv",
+		12u,
+		2020y / March / 2d,
+		2026y / April / 10d
+	);
+}
+
+static auto parse_csv_resets_SOFR_90_day_average() -> resets
+{
+	return parse_csv_resets(
+		"SOFR Compounded Index.csv",
+		13u,
+		2020y / March / 2d,
+		2026y / April / 10d
+	);
+}
+
+static auto parse_csv_resets_SOFR_180_day_average() -> resets
+{
+	return parse_csv_resets(
+		"SOFR Compounded Index.csv",
+		14u,
+		2020y / March / 2d,
+		2026y / April / 10d
+	);
+}
+
 
 
 int main()
@@ -80,6 +110,10 @@ int main()
 	const auto SOFR = parse_csv_resets_SOFR();
 
 	const auto SOFR_compounded_index = parse_csv_resets_SOFR_compounded_index();
+
+	const auto SOFR_30_day_average = parse_csv_resets_SOFR_30_day_average();
+	const auto SOFR_90_day_average = parse_csv_resets_SOFR_90_day_average();
+	const auto SOFR_180_day_average = parse_csv_resets_SOFR_180_day_average();
 
 	// from https://www.newyorkfed.org/markets/opolicy/operating_policy_200212
 	auto detail = index_detail{};
