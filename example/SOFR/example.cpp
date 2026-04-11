@@ -56,6 +56,7 @@ static auto parse_csv_resets_SOFR() -> resets
 	// from https://www.newyorkfed.org/markets/reference-rates/sofr
 	return parse_csv_resets(
 		"SOFR.csv",
+		1u, // skip the "SOFR," column after the date
 		2018y / April / 2d,
 		2026y / April / 9d
 	);
@@ -63,11 +64,12 @@ static auto parse_csv_resets_SOFR() -> resets
 
 static auto parse_csv_resets_SOFR_compounded_index() -> resets
 {
-	// from 
+	// from https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index
 	return parse_csv_resets(
-		"SOFR Compounded Index.csv",
-		2018y / April / 23d,
-		2025y / May / 13d
+		"SOFR Compounded Index.csv", // also inludes averages, so maybe needs a better name
+		15u,
+		2018y / April / 2d,
+		2026y / April / 10d
 	);
 }
 
@@ -76,11 +78,9 @@ static auto parse_csv_resets_SOFR_compounded_index() -> resets
 int main()
 {
 	const auto SOFR = parse_csv_resets_SOFR();
-/*
-	const auto SOFR_compounded_index = parse_csv_resets_SOFR_compounded_index();
-	// I think BoE website does not fully describe the compounded index
-	// more clarity would be welcome there on how rounding is done daily (*)
 
+	const auto SOFR_compounded_index = parse_csv_resets_SOFR_compounded_index();
+/*
 	auto detail = index_detail{};
 	detail.initial_value = cpp_dec_float_50{ 100 };
 	detail.initial_date = 2018y / April / 23d;

@@ -67,6 +67,7 @@ inline auto _parse_observation(std::istream& fs)
 
 inline auto _parse_csv_resets_storage(
 	std::istream& fs,
+	const unsigned skip, // how many columns to skip after date before observation
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
 ) -> reset::resets::storage
@@ -79,7 +80,8 @@ inline auto _parse_csv_resets_storage(
 
 		auto s = std::string{};
 		std::getline(fs, s, ','); // skip ","
-		std::getline(fs, s, ','); // skip "SOFR,"
+		for (auto i = 0u; i < skip; ++i)
+			std::getline(fs, s, ','); // skip "xyz,"
 
 		const auto observation = _parse_observation(fs);
 
@@ -117,6 +119,7 @@ inline auto _make_calendar(const reset::resets::storage& ts)
 
 inline auto parse_csv_resets(
 	const std::string& fileName,
+	const unsigned skip, // how many columns to skip after date before observation
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
 ) -> reset::resets
@@ -127,7 +130,7 @@ inline auto parse_csv_resets(
 	auto t = std::string{};
 	std::getline(fs, t);
 
-	auto ts = _parse_csv_resets_storage(fs, from, until);
+	auto ts = _parse_csv_resets_storage(fs, skip, from, until);
 
 	auto c = _make_calendar(ts);
 
