@@ -102,13 +102,13 @@ int main()
 		<< index(SOFR, date, detail)
 		<< endl;
 
-	const auto& USA_calendar = locate_calendar("America/USA", date);
+	const auto& SIFMA_calendar = locate_calendar("America/SIFMA", date);
 
 	// check the SOFR dates
 	const auto& SOFR_calendar = SOFR.get_calendar();
-	const auto common_period_1 = SOFR_calendar.get_schedule().get_period() & USA_calendar.get_schedule().get_period();
+	const auto common_period_1 = SOFR_calendar.get_schedule().get_period() & SIFMA_calendar.get_schedule().get_period();
 	if (calendar{ SOFR_calendar.get_weekend(), schedule{ common_period_1, SOFR_calendar.get_schedule().get_dates() } } ==
-		calendar{ USA_calendar.get_weekend(), schedule{ common_period_1, USA_calendar.get_schedule().get_dates() } }
+		calendar{ SIFMA_calendar.get_weekend(), schedule{ common_period_1, SIFMA_calendar.get_schedule().get_dates() } }
 	)
 		cout << "SOFR calendar and USA calendar match" << endl;
 	else
@@ -118,7 +118,7 @@ int main()
 		auto diffs = schedule::dates{};
 		ranges::set_symmetric_difference(
 			SOFR_calendar.make_business_days_schedule(common_period_1).get_dates(),
-			USA_calendar.make_business_days_schedule(common_period_1).get_dates(),
+			SIFMA_calendar.make_business_days_schedule(common_period_1).get_dates(),
 			inserter(diffs, diffs.begin())
 		);
 		cout << "The following dates are in one calendar but not in the other:" << endl;
@@ -128,9 +128,9 @@ int main()
 
 	// check the SOFR Compounded Index dates
 	const auto& SOFR_compounded_index_calendar = SOFR_compounded_index.get_calendar();
-	const auto common_period_2 = SOFR_compounded_index_calendar.get_schedule().get_period() & USA_calendar.get_schedule().get_period();
+	const auto common_period_2 = SOFR_compounded_index_calendar.get_schedule().get_period() & SIFMA_calendar.get_schedule().get_period();
 	if (calendar{ SOFR_compounded_index_calendar.get_weekend(), schedule{ common_period_2, SOFR_compounded_index_calendar.get_schedule().get_dates() } } ==
-		calendar{ USA_calendar.get_weekend(), schedule{ common_period_2, USA_calendar.get_schedule().get_dates() } }
+		calendar{ SIFMA_calendar.get_weekend(), schedule{ common_period_2, SIFMA_calendar.get_schedule().get_dates() } }
 	)
 		cout << "SOFR Compounded Index calendar and USA calendar match" << endl;
 	else
@@ -140,7 +140,7 @@ int main()
 		auto diffs = schedule::dates{};
 		ranges::set_symmetric_difference(
 			SOFR_compounded_index_calendar.make_business_days_schedule(common_period_2).get_dates(),
-			USA_calendar.make_business_days_schedule(common_period_2).get_dates(),
+			SIFMA_calendar.make_business_days_schedule(common_period_2).get_dates(),
 			inserter(diffs, diffs.begin())
 		);
 		cout << "The following dates are in one calendar but not in the other:" << endl;
