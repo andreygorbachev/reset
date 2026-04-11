@@ -66,9 +66,9 @@ static auto parse_csv_resets_SOFR_compounded_index() -> resets
 {
 	// from https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index
 	return parse_csv_resets(
-		"SOFR Compounded Index.csv", // also inludes averages, so maybe needs a better name
+		"SOFR Compounded Index.csv", // also includes averages, so maybe needs a better name
 		15u,
-		2018y / April / 2d,
+		2020y / March / 2d,
 		2026y / April / 10d
 	);
 }
@@ -100,14 +100,14 @@ int main()
 		<< " and the same computed value is "
 		<< index(SOFR, date, detail)
 		<< endl;
-/*
-	const auto& London_calendar = locate_calendar("Europe/London", date);
+
+	const auto& USA_calendar = locate_calendar("America/USA", date);
 
 	// check the SOFR dates
 	const auto& SOFR_calendar = SOFR.get_calendar();
-	const auto common_period_1 = SOFR_calendar.get_schedule().get_period() & London_calendar.get_schedule().get_period();
+	const auto common_period_1 = SOFR_calendar.get_schedule().get_period() & USA_calendar.get_schedule().get_period();
 	if (calendar{ SOFR_calendar.get_weekend(), schedule{ common_period_1, SOFR_calendar.get_schedule().get_dates() } } ==
-		calendar{ London_calendar.get_weekend(), schedule{ common_period_1, London_calendar.get_schedule().get_dates() } }
+		calendar{ USA_calendar.get_weekend(), schedule{ common_period_1, USA_calendar.get_schedule().get_dates() } }
 	)
 		cout << "SOFR calendar and London calendar match" << endl;
 	else
@@ -117,7 +117,7 @@ int main()
 		auto diffs = schedule::dates{};
 		ranges::set_symmetric_difference(
 			SOFR_calendar.make_business_days_schedule(common_period_1).get_dates(),
-			London_calendar.make_business_days_schedule(common_period_1).get_dates(),
+			USA_calendar.make_business_days_schedule(common_period_1).get_dates(),
 			inserter(diffs, diffs.begin())
 		);
 		cout << "The following dates are in one calendar but not in the other:" << endl;
@@ -127,9 +127,9 @@ int main()
 
 	// check the SOFR Compounded Index dates
 	const auto& SOFR_compounded_index_calendar = SOFR_compounded_index.get_calendar();
-	const auto common_period_2 = SOFR_compounded_index_calendar.get_schedule().get_period() & London_calendar.get_schedule().get_period();
+	const auto common_period_2 = SOFR_compounded_index_calendar.get_schedule().get_period() & USA_calendar.get_schedule().get_period();
 	if (calendar{ SOFR_compounded_index_calendar.get_weekend(), schedule{ common_period_2, SOFR_compounded_index_calendar.get_schedule().get_dates() } } ==
-		calendar{ London_calendar.get_weekend(), schedule{ common_period_2, London_calendar.get_schedule().get_dates() } }
+		calendar{ USA_calendar.get_weekend(), schedule{ common_period_2, USA_calendar.get_schedule().get_dates() } }
 	)
 		cout << "SOFR Compounded Index calendar and London calendar match" << endl;
 	else
@@ -139,14 +139,14 @@ int main()
 		auto diffs = schedule::dates{};
 		ranges::set_symmetric_difference(
 			SOFR_compounded_index_calendar.make_business_days_schedule(common_period_2).get_dates(),
-			London_calendar.make_business_days_schedule(common_period_2).get_dates(),
+			USA_calendar.make_business_days_schedule(common_period_2).get_dates(),
 			inserter(diffs, diffs.begin())
 		);
 		cout << "The following dates are in one calendar but not in the other:" << endl;
 		for (const auto& d : diffs)
 			cout << d << endl;
 	}
-
+/*
 	// look for inconsistencies in the data
 	const auto dates = SOFR_compounded_index_calendar.make_business_days_schedule( days_period{ detail.initial_date, date } );
 	for (const auto& d : dates.get_dates())
