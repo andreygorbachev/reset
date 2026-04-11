@@ -41,13 +41,62 @@
 namespace reset
 {
 
+	inline void index_step_( // should it be the same as index_step_ in index.h?
+		boost::multiprecision::cpp_dec_float_50& a, // should it take a return a value? (no in/out parameter)
+		const std::chrono::year_month_day& start,
+		const std::chrono::year_month_day& end,
+		const resets& r
+	)
+	{
+		const auto rate = r[start]; // we need to handle a non business day start here
+
+		const auto& dc = r.get_day_count();
+
+		const auto year_fraction = fin_calendar::fraction(start, end, dc);
+
+		const auto one = boost::multiprecision::cpp_dec_float_50{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
+		a *= boost::multiprecision::cpp_dec_float_50{ one + rate * year_fraction }; // should these have some kind of units?
+	}
+
 	// maybe this needs a better name?
 	inline auto average(
 		const resets& r,
 		const std::chrono::year_month_day& ymd
 	) -> boost::multiprecision::cpp_dec_float_50
 	{
-		return { 0 }; // temp only
+		const auto& c = r.get_calendar();
+		const auto schedule = c.make_business_days_schedule(
+			gregorian::util::days_period{ std::chrono::sys_days{ ymd } - std::chrono::days{ 30 }, ymd} // hard coded for now for 30 days only
+		); // is this a wrong data structure?
+		// assert that it is not empty?
+
+		const auto& dates = schedule.get_dates();
+
+		auto val = boost::multiprecision::cpp_dec_float_50{ 1 };
+
+		// not very elegant to start with
+		auto start = std::chrono::year_month_day{};
+		for (const auto& d : dates)
+		{
+			if (d == *dates.cbegin())
+			{
+				start = d;
+				continue;
+			}
+
+			const auto& end = d;
+
+			index_step_(val, start, end, r);
+
+			start = d;
+		}
+
+		const auto& dc = r.get_day_count();
+
+		const auto year_fraction = fin_calendar::fraction(schedule.get_period(), dc);
+
+		const auto one = boost::multiprecision::cpp_dec_float_50{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
+		return (val - one) / year_fraction;
 	}
 
 }

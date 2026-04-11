@@ -24,6 +24,7 @@
 
 #include <resets.h>
 #include <index.h>
+#include <average.h>
 
 #include <static_data.h>
 #include <calendar.h>
@@ -136,6 +137,17 @@ int main()
 		<< index(SOFR, date, detail)
 		<< endl;
 
+	cout
+		<< fixed
+		<< setprecision(5)
+		<< "For "
+		<< date
+		<< " SOFR 30 Day Average is "
+		<< SOFR_30_day_average[date] * 100 // need a different accessor? (or handle 100 in some other way)
+		<< " and the same computed value is "
+		<< average(SOFR, date) * 100
+		<< endl;
+
 	const auto& SIFMA_calendar = locate_calendar("America/SIFMA", date);
 
 	// check the SOFR dates
@@ -194,6 +206,8 @@ int main()
 
 		if (SOFR_compounded_index[d] * 100 != index(SOFR, d, detail))
 			cout
+				<< fixed
+				<< setprecision(8)
 				<< "For "
 				<< d
 				<< " SOFR Compounded Index is "
