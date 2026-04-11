@@ -140,7 +140,7 @@ namespace reset
 		if (detail.final_trunc)
 			i = trunc_dp(i, *detail.final_trunc);
 
-		if(detail.final_round)
+		if (detail.final_round)
 			i = round_dp(i, *detail.final_round);
 
 		return i;
