@@ -43,6 +43,7 @@ namespace reset
 
 	struct average_detail
 	{
+		std::chrono::days term{}; // for 3o day average, do we want it to be days{ 30 } or days{ -30 }?
 		std::optional<unsigned int> final_round = std::nullopt;
 	};
 
@@ -72,7 +73,7 @@ namespace reset
 	{
 		const auto& c = r.get_calendar();
 		const auto schedule = c.make_business_days_schedule(
-			gregorian::util::days_period{ std::chrono::sys_days{ ymd } - std::chrono::days{ 30 }, ymd} // hard coded for now for 30 days only
+			gregorian::util::days_period{ std::chrono::sys_days{ ymd } - detail.term, ymd}
 		); // is this a wrong data structure?
 		// assert that it is not empty?
 

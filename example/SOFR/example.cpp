@@ -123,6 +123,7 @@ int main()
 	id.final_round = 8u;
 
 	auto _30dd = average_detail{};
+	_30dd.term = days{ 30 };
 	_30dd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
 
 	//	const auto date = 2026y / April / 10d;
