@@ -126,6 +126,10 @@ int main()
 	_30dd.term = days{ 30 };
 	_30dd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
 
+	auto _90dd = average_detail{};
+	_90dd.term = days{ 90 };
+	_90dd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+
 	//	const auto date = 2026y / April / 10d;
 	const auto date = 2026y / April / 9d;
 
@@ -150,6 +154,17 @@ int main()
 		<< SOFR_30_day_average[date] * 100 // need a different accessor? (or handle 100 in some other way)
 		<< " and the same computed value is "
 		<< average(SOFR, date, _30dd) * 100
+		<< endl;
+
+	cout
+		<< fixed
+		<< setprecision(5)
+		<< "For "
+		<< date
+		<< " SOFR 90 Day Average is "
+		<< SOFR_90_day_average[date] * 100 // need a different accessor? (or handle 100 in some other way)
+		<< " and the same computed value is "
+		<< average(SOFR, date, _90dd) * 100
 		<< endl;
 
 	const auto& SIFMA_calendar = locate_calendar("America/SIFMA", date);
