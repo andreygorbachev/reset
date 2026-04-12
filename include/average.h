@@ -41,7 +41,12 @@
 namespace reset
 {
 
-	inline void index_step_( // should it be the same as index_step_ in index.h?
+	struct average_detail
+	{
+		std::optional<unsigned int> final_round = std::nullopt;
+	};
+
+	inline void average_step_( // should it be the same as index_step_ in index.h?
 		boost::multiprecision::cpp_dec_float_50& a, // should it take a return a value? (no in/out parameter)
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
@@ -61,7 +66,8 @@ namespace reset
 	// maybe this needs a better name?
 	inline auto average(
 		const resets& r,
-		const std::chrono::year_month_day& ymd
+		const std::chrono::year_month_day& ymd,
+		const average_detail& detail = average_detail{}
 	) -> boost::multiprecision::cpp_dec_float_50
 	{
 		const auto& c = r.get_calendar();
@@ -86,7 +92,7 @@ namespace reset
 
 			const auto& end = d;
 
-			index_step_(val, start, end, r);
+			average_step_(val, start, end, r);
 
 			start = d;
 		}
@@ -96,7 +102,12 @@ namespace reset
 		const auto year_fraction = fin_calendar::fraction(schedule.get_period(), dc);
 
 		const auto one = boost::multiprecision::cpp_dec_float_50{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
-		return (val - one) / year_fraction;
+		auto a = boost::multiprecision::cpp_dec_float_50{ (val - one) / year_fraction };
+
+		if (detail.final_round)
+			a = round_dp(a, *detail.final_round);
+
+		return a;
 	}
 
 }
