@@ -25,6 +25,7 @@
 #include "resets_math.h"
 
 #include <day_count.h>
+#include <preceding.h>
 
 #include <time_series.h>
 
@@ -32,6 +33,7 @@
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
+#include <chrono>
 #include <cmath>
 #include <memory>
 #include <optional>
@@ -63,7 +65,9 @@ namespace reset
 		auto operator[](const std::chrono::year_month_day& ymd) const -> observation;
 		// this converts from percentages
 		// and throws an exception for missing resets - is it what we want?
-		// what should we do for the resets which meant to be published but are not available (and the prevous business day resets should be used instead)?
+
+		auto current_observation(const std::chrono::year_month_day& ymd) const -> observation;
+		// throws an exception when we are pushed before the start of resets
 
 	public:
 
@@ -103,6 +107,13 @@ namespace reset
 			return from_percent(*o);
 		else
 			throw std::out_of_range{ "Request is not consistent with publication calendar" }; // we should handle days where reset is expected but not supplied (previous one should be returned)
+	}
+
+	inline auto resets::current_observation(const std::chrono::year_month_day& ymd) const -> observation
+	{
+		const auto p = fin_calendar::preceding{};
+		const auto& o = ts_[p.adjust(ymd, c_)];
+		return from_percent(*o);
 	}
 
 

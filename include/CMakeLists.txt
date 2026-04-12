@@ -13,6 +13,7 @@ target_include_directories(${PROJECT_NAME} INTERFACE .)
 target_link_libraries(${PROJECT_NAME} INTERFACE
   calendar
   fin-calendar_day-count
+  fin-calendar_business-day-convention
   Boost::config
   Boost::multiprecision
 )

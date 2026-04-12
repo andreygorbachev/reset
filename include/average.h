@@ -54,7 +54,8 @@ namespace reset
 		const resets& r
 	)
 	{
-		const auto rate = r[start]; // we need to handle a non business day start here
+//		const auto rate = r[start];
+		const auto rate = r.current_observation(start); // or we can create special average_step_ for the first step when average starts on a non business day (and we need to use the previous reset)
 
 		const auto& dc = r.get_day_count();
 

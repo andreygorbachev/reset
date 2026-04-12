@@ -79,6 +79,21 @@ namespace reset
 		EXPECT_THROW(rs[2023y / January / 1d], out_of_range);
 	}
 
+	TEST(resets, current_observation)
+	{
+		auto ts = time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
+		ts[2023y / January / 3d] = cpp_dec_float_50{ "3.4269" };
+
+		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
+
+		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{} };
+
+		EXPECT_EQ(cpp_dec_float_50{ "0.034269" }, rs.current_observation(2023y / January / 3d));
+
+		// test actual move when we ask for a non-business day (do we need to distinguish between non-business day and missing reset?)
+		// test move before the start of resets (is that possible?)
+	}
+
 	TEST(resets, last_reset_year_month_day)
 	{
 		auto ts = time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
