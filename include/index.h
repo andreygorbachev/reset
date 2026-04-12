@@ -126,7 +126,7 @@ namespace reset
 		{
 			if (d == *dates.cbegin())
 			{
-				start = d;
+				start = d; // this probably means that we assume that the index starts on a business day - assert it?
 				continue;
 			}
 

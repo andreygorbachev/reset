@@ -64,13 +64,15 @@ namespace reset
 		a *= boost::multiprecision::cpp_dec_float_50{ one + rate * year_fraction }; // should these have some kind of units?
 	}
 
-	// maybe this needs a better name? (like compounded_average?)
+	// maybe this needs a better name? (like compounded 
 	inline auto average(
 		const resets& r,
 		const std::chrono::year_month_day& ymd,
 		const average_detail& detail = average_detail{}
 	) -> boost::multiprecision::cpp_dec_float_50
 	{
+		// do we handle the case where detail.term is empty?
+
 		const auto& c = r.get_calendar();
 		const auto schedule = c.make_business_days_schedule(
 			gregorian::util::days_period{ std::chrono::sys_days{ ymd } - detail.term, ymd}
@@ -82,20 +84,45 @@ namespace reset
 		auto val = boost::multiprecision::cpp_dec_float_50{ 1 };
 
 		// not very elegant to start with
-		auto start = std::chrono::year_month_day{};
-		for (const auto& d : dates)
+		if (*dates.cbegin() == schedule.get_period().get_from())
 		{
-			if (d == *dates.cbegin())
+			auto start = std::chrono::year_month_day{};
+			for (const auto& d : dates)
 			{
+				if (d == *dates.cbegin())
+				{
+					start = d;
+					continue;
+				}
+
+				const auto& end = d;
+
+				average_step_(val, start, end, r);
+
 				start = d;
-				continue;
 			}
+		}
+		else
+		{
+			// special case where the first period starts on a non business day
 
-			const auto& end = d;
+			average_step_(val, schedule.get_period().get_from(), *dates.cbegin(), r);
 
-			average_step_(val, start, end, r);
+			auto start = std::chrono::year_month_day{};
+			for (const auto& d : dates)
+			{
+				if (d == *dates.cbegin())
+				{
+					start = d;
+					continue;
+				}
 
-			start = d;
+				const auto& end = d;
+
+				average_step_(val, start, end, r);
+
+				start = d;
+			}
 		}
 
 		const auto& dc = r.get_day_count();
