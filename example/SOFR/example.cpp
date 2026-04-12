@@ -233,12 +233,12 @@ int main()
 	}
 
 	// look for inconsistencies in the data
-	const auto dates = SOFR_compounded_index_calendar.make_business_days_schedule(
+	const auto index_dates = SOFR_compounded_index_calendar.make_business_days_schedule(
 		SOFR_compounded_index.get_time_series().get_period()
 	);
-	for (const auto& d : dates.get_dates())
+	for (const auto& d : index_dates.get_dates())
 	{
-		if (d == *dates.get_dates().crbegin())
+		if (d == *index_dates.get_dates().crbegin())
 			break;
 		// temporary only, unit we sort out start/end of RFR/RFR Index
 
@@ -253,6 +253,75 @@ int main()
 				<< " and the same computed value is "
 				<< index(SOFR, d, id)
 				<< endl;
+	}
+
+	const auto& SOFR_30_day_average_calendar = SOFR_30_day_average.get_calendar();
+	const auto _30_day_dates = SOFR_30_day_average_calendar.make_business_days_schedule(
+		SOFR_30_day_average.get_time_series().get_period()
+	);
+	for (const auto& d : _30_day_dates.get_dates())
+	{
+		if (d == *_30_day_dates.get_dates().crbegin())
+			break;
+		// temporary only
+
+		if (SOFR_30_day_average[d] * 100 != average(SOFR, d, _30dd) * 100)
+			cout
+				<< fixed
+				<< setprecision(5)
+				<< "For "
+				<< d
+				<< " SOFR 30 Day Average is "
+				<< SOFR_30_day_average[d] * 100 // need a different accessor? (or handle 100 in some other way)
+				<< " and the same computed value is "
+				<< average(SOFR, d, _30dd) * 100
+				<< endl;
+	}
+
+	const auto& SOFR_90_day_average_calendar = SOFR_90_day_average.get_calendar();
+	const auto _90_day_dates = SOFR_90_day_average_calendar.make_business_days_schedule(
+		SOFR_90_day_average.get_time_series().get_period()
+	);
+	for (const auto& d : _90_day_dates.get_dates())
+	{
+		if (d == *_90_day_dates.get_dates().crbegin())
+			break;
+		// temporary only
+
+		if (SOFR_90_day_average[d] * 100 != average(SOFR, d, _90dd) * 100)
+			cout
+			<< fixed
+			<< setprecision(5)
+			<< "For "
+			<< d
+			<< " SOFR 90 Day Average is "
+			<< SOFR_90_day_average[d] * 100 // need a different accessor? (or handle 100 in some other way)
+			<< " and the same computed value is "
+			<< average(SOFR, d, _90dd) * 100
+			<< endl;
+	}
+
+	const auto& SOFR_180_day_average_calendar = SOFR_180_day_average.get_calendar();
+	const auto _180_day_dates = SOFR_180_day_average_calendar.make_business_days_schedule(
+		SOFR_180_day_average.get_time_series().get_period()
+	);
+	for (const auto& d : _180_day_dates.get_dates())
+	{
+		if (d == *_180_day_dates.get_dates().crbegin())
+			break;
+		// temporary only
+
+		if (SOFR_180_day_average[d] * 100 != average(SOFR, d, _180dd) * 100)
+			cout
+			<< fixed
+			<< setprecision(5)
+			<< "For "
+			<< d
+			<< " SOFR 180 Day Average is "
+			<< SOFR_180_day_average[d] * 100 // need a different accessor? (or handle 100 in some other way)
+			<< " and the same computed value is "
+			<< average(SOFR, d, _180dd) * 100
+			<< endl;
 	}
 
 	return 0;
