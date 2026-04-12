@@ -37,6 +37,7 @@
 #include <ios>
 #include <algorithm>
 #include <iterator>
+#include <cassert>
 
 using namespace std;
 using namespace std::chrono;
@@ -113,8 +114,11 @@ int main()
 	const auto SOFR_compounded_index = parse_csv_resets_SOFR_compounded_index();
 
 	const auto SOFR_30_day_average = parse_csv_resets_SOFR_30_day_average();
+	assert(SOFR_30_day_average.get_calendar() == SOFR_compounded_index.get_calendar());
 	const auto SOFR_90_day_average = parse_csv_resets_SOFR_90_day_average();
+	assert(SOFR_90_day_average.get_calendar() == SOFR_compounded_index.get_calendar());
 	const auto SOFR_180_day_average = parse_csv_resets_SOFR_180_day_average();
+	assert(SOFR_180_day_average.get_calendar() == SOFR_compounded_index.get_calendar());
 
 	// from https://www.newyorkfed.org/markets/opolicy/operating_policy_200212
 	auto id = index_detail{};

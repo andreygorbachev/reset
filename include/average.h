@@ -64,7 +64,7 @@ namespace reset
 		a *= boost::multiprecision::cpp_dec_float_50{ one + rate * year_fraction }; // should these have some kind of units?
 	}
 
-	// maybe this needs a better name?
+	// maybe this needs a better name? (like compounded_average?)
 	inline auto average(
 		const resets& r,
 		const std::chrono::year_month_day& ymd,
