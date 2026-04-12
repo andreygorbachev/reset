@@ -117,12 +117,15 @@ int main()
 	const auto SOFR_180_day_average = parse_csv_resets_SOFR_180_day_average();
 
 	// from https://www.newyorkfed.org/markets/opolicy/operating_policy_200212
-	auto detail = index_detail{};
-	detail.initial_value = cpp_dec_float_50{ 1 };
-	detail.initial_date = 2018y / April / 2d;
-	detail.final_round = 8u;
+	auto id = index_detail{};
+	id.initial_value = cpp_dec_float_50{ 1 };
+	id.initial_date = 2018y / April / 2d;
+	id.final_round = 8u;
 
-//	const auto date = 2026y / April / 10d;
+	auto _30dd = average_detail{};
+	_30dd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+
+	//	const auto date = 2026y / April / 10d;
 	const auto date = 2026y / April / 9d;
 
 	// check the latest data available in this example
@@ -134,7 +137,7 @@ int main()
 		<< " SOFR Compounded Index is "
 		<< SOFR_compounded_index[date] * 100 // need a different accessor? (or handle 100 in some other way)
 		<< " and the same computed value is "
-		<< index(SOFR, date, detail)
+		<< index(SOFR, date, id)
 		<< endl;
 
 	cout
@@ -145,7 +148,7 @@ int main()
 		<< " SOFR 30 Day Average is "
 		<< SOFR_30_day_average[date] * 100 // need a different accessor? (or handle 100 in some other way)
 		<< " and the same computed value is "
-		<< average(SOFR, date) * 100
+		<< average(SOFR, date, _30dd) * 100
 		<< endl;
 
 	const auto& SIFMA_calendar = locate_calendar("America/SIFMA", date);
@@ -204,7 +207,7 @@ int main()
 			break;
 		// temporary only, unit we sort out start/end of RFR/RFR Index
 
-		if (SOFR_compounded_index[d] * 100 != index(SOFR, d, detail))
+		if (SOFR_compounded_index[d] * 100 != index(SOFR, d, id))
 			cout
 				<< fixed
 				<< setprecision(8)
@@ -213,7 +216,7 @@ int main()
 				<< " SOFR Compounded Index is "
 				<< SOFR_compounded_index[d] * 100
 				<< " and the same computed value is "
-				<< index(SOFR, d, detail)
+				<< index(SOFR, d, id)
 				<< endl;
 	}
 
