@@ -327,5 +327,7 @@ int main()
 	return 0;
 }
 
-// what shuld we expect for 03 April 2026? there was no SOFR published on that day, but would compounding be done on that day?
+// what should we expect for 03 April 2026? there was no SOFR published on that day, but would compounding be done on that day?
 // (what is the compounding calendar for the index and averages?)
+
+// do we also need to cosider FedFunds?
