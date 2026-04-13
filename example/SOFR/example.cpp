@@ -41,7 +41,6 @@
 
 using namespace std;
 using namespace std::chrono;
-using namespace std::ranges;
 
 using namespace boost::multiprecision;
 
