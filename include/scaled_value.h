@@ -39,6 +39,9 @@ namespace reset
     };
 
 
+    // literals? print format?
+
+
     template<typename Numeric>
     using Percent = scaled_value<Numeric, std::ratio<1, 100>>;
     

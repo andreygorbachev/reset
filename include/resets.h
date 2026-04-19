@@ -58,7 +58,7 @@ namespace reset
 
 	public:
 
-		explicit resets(storage ts, calendar c, day_count dc);
+		explicit resets(storage ts, calendar c, day_count dc); // should also have number of decimals published
 
 	public:
 
