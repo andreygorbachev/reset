@@ -55,8 +55,7 @@ inline auto _parse_observation1(std::istream& fs)
 {
 	auto o = std::string{};
 	std::getline(fs, o, ','); // can we make _parse_observation1 and _parse_observation2 the same (and parse the comma in the caller)?
-
-	using namespace std::string_literals;
+	// should we check decimal places?
 
 	return reset::resets::observation{ o };
 }
@@ -65,8 +64,7 @@ inline auto _parse_observation2(std::istream& fs)
 {
 	auto o = std::string{};
 	std::getline(fs, o);
-
-	using namespace std::string_literals;
+	// should we check decimal places?
 
 	return reset::resets::observation{ o };
 }
@@ -142,5 +140,5 @@ inline auto parse_csv_resets_x2(
 
 	const auto dc = fin_calendar::actual_360<boost::multiprecision::cpp_dec_float_50>{};
 
-	return { reset::resets{ std::move(ts1), c, dc }, reset::resets{ std::move(ts2), c, dc } };
+	return { reset::resets{ std::move(ts1), c, dc, 6 }, reset::resets{ std::move(ts2), c, dc, 5 } }; // index needs to be checked a bit more
 }

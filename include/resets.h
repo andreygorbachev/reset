@@ -56,9 +56,12 @@ namespace reset
 
 		using day_count = fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50>;
 
+		using decimal_places = int; // static_assert consistency between cpp_dec_float_50 and unsigned?
+		// to be consistent with streams and formal, it is defined as int and not unsigned int
+
 	public:
 
-		explicit resets(storage ts, calendar c, day_count dc); // should also have number of decimals published
+		explicit resets(storage ts, calendar c, day_count dc, decimal_places dp);
 
 	public:
 
@@ -74,6 +77,7 @@ namespace reset
 		auto get_time_series() const noexcept -> const storage&;
 		auto get_calendar() const noexcept -> const calendar&;
 		auto get_day_count() const noexcept -> const day_count&;
+		auto get_decimal_places() const noexcept -> decimal_places;
 
 	public:
 
@@ -87,14 +91,17 @@ namespace reset
 
 		day_count dc_; // is this the right place for this? (does SONIA compounded index has a day count?)
 
+		decimal_places dp_;
+
 	}; // should there be a different class for indices?
 
 
 
-	inline resets::resets(storage ts, calendar c, day_count dc) :
+	inline resets::resets(storage ts, calendar c, day_count dc, decimal_places dp) :
 		ts_{ std::move(ts) },
 		c_{ std::move(c) },
-		dc_{ dc }
+		dc_{ dc },
+		dp_{ dp }
 	{
 	}
 
@@ -130,6 +137,11 @@ namespace reset
 	inline auto resets::get_day_count() const noexcept -> const day_count&
 	{
 		return dc_;
+	}
+
+	inline auto resets::get_decimal_places() const noexcept -> decimal_places
+	{
+		return dp_;
 	}
 
 

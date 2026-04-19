@@ -68,7 +68,7 @@ int main()
 
 	cout
 		<< fixed
-		<< setprecision(6)
+		<< setprecision(detail.final_trunc.value())
 		<< "For "
 		<< date1
 		<< " VNA is "
@@ -84,7 +84,7 @@ int main()
 
 	cout
 		<< fixed
-		<< setprecision(6)
+		<< setprecision(detail.final_trunc.value())
 		<< "For "
 		<< date2
 		<< " VNA is "

@@ -35,6 +35,7 @@
 #include <chrono>
 #include <iostream>
 #include <iomanip>
+#include <ios>
 
 using namespace std;
 using namespace std::chrono;
@@ -67,7 +68,7 @@ auto make_resets()
 		if (cal.is_business_day(d))
 			ts[d] = daily_rate;
 
-	return resets{ move(ts), move(cal), actual_365_fixed<cpp_dec_float_50>{} };
+	return resets{ move(ts), move(cal), actual_365_fixed<cpp_dec_float_50>{}, 8 };
 }
 
 
@@ -88,7 +89,7 @@ int main()
 
 	cout
 		<< fixed
-		<< setprecision(8);
+		<< setprecision(r.get_decimal_places());
 		
 	for (
 		auto d = f;

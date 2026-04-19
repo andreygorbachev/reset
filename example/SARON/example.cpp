@@ -66,7 +66,7 @@ int main()
 
 	cout
 		<< fixed
-		<< setprecision(4)
+		<< setprecision(SARON_compounded_index.get_decimal_places())
 		<< "For "
 		<< date
 		<< " SARON Compounded Index is "

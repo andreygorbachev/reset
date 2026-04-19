@@ -41,10 +41,10 @@
 namespace reset
 {
 
-	struct average_detail
+	struct average_detail // should it be called metadata?
 	{
-		std::chrono::days term{}; // for 3o day average, do we want it to be days{ 30 } or days{ -30 }?
-		std::optional<unsigned int> final_round = std::nullopt;
+		std::chrono::days term{}; // for 30 day average, do we want it to be days{ 30 } or days{ -30 }?
+		std::optional<unsigned int> final_round = std::nullopt; // should rounding and truncations be int?
 	};
 
 	inline void average_step_( // should it be the same as index_step_ in index.h?

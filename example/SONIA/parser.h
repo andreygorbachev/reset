@@ -81,6 +81,7 @@ inline auto _parse_csv_resets_storage(
 
 		auto s = std::string{};
 		std::getline(fs, s, ','); // skip the comma
+		// check decimal places?
 
 		const auto observation = _parse_observation(fs);
 
@@ -117,7 +118,8 @@ inline auto _make_calendar(const reset::resets::storage& ts)
 inline auto parse_csv_resets(
 	const std::string& fileName,
 	const std::chrono::year_month_day& from, // these could also be read from the file
-	const std::chrono::year_month_day& until
+	const std::chrono::year_month_day& until,
+	const reset::resets::decimal_places dp
 ) -> reset::resets
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
@@ -132,5 +134,5 @@ inline auto parse_csv_resets(
 
 	const auto dc = fin_calendar::actual_365_fixed<boost::multiprecision::cpp_dec_float_50>{};
 
-	return reset::resets{ std::move(ts), std::move(c), dc };
+	return reset::resets{ std::move(ts), std::move(c), dc, dp };
 }

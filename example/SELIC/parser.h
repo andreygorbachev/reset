@@ -80,6 +80,7 @@ inline auto _parse_csv_resets_storage(
 
 		auto s = std::string{};
 		std::getline(fs, s, ';'); // skip the delimiter
+		// check decimal places?
 
 		const auto observation = _parse_observation(fs);
 
@@ -131,5 +132,5 @@ inline auto parse_csv_resets(
 
 	const auto dc = fin_calendar::calculation_252<boost::multiprecision::cpp_dec_float_50>{ c }; // think more about copies of calendar
 
-	return reset::resets{ std::move(ts), std::move(c), dc };
+	return reset::resets{ std::move(ts), std::move(c), dc, 2 };
 }

@@ -56,7 +56,8 @@ static auto parse_csv_resets_SONIA() -> resets
 	return parse_csv_resets(
 		"SONIA.csv",
 		1997y / January / 1d,
-		2025y / May / 12d
+		2025y / May / 12d,
+		4
 	);
 }
 
@@ -66,7 +67,8 @@ static auto parse_csv_resets_SONIA_compounded_index() -> resets
 	return parse_csv_resets(
 		"SONIA Compounded Index.csv",
 		2018y / April / 23d,
-		2025y / May / 13d
+		2025y / May / 13d,
+		8
 	);
 }
 
@@ -92,7 +94,7 @@ int main()
 	// check the latest data available in this example
 	cout
 		<< fixed
-		<< setprecision(8)
+		<< setprecision(SONIA_compounded_index.get_decimal_places())
 		<< "For "
 		<< date
 		<< " SONIA Compounded Index is "

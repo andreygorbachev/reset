@@ -41,7 +41,7 @@
 namespace reset
 {
 
-	struct index_detail
+	struct index_detail // should it be called metadata?
 	{
 		boost::multiprecision::cpp_dec_float_50 initial_value{ 1 };
 		std::chrono::year_month_day initial_date{};
@@ -51,7 +51,7 @@ namespace reset
 		std::optional<unsigned int> step_trunc = std::nullopt;
 		std::optional<unsigned int> step_round = std::nullopt;
 		std::optional<unsigned int> final_trunc = std::nullopt;
-		std::optional<unsigned int> final_round = std::nullopt;
+		std::optional<unsigned int> final_round = std::nullopt; // should rounding and truncations be int?
 	};
 
 	inline auto index_factor_(

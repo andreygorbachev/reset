@@ -52,7 +52,7 @@ namespace reset
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		return resets{ std::move(ts), std::move(c), actual_360<resets::observation>{} };
+		return resets{ std::move(ts), std::move(c), actual_360<resets::observation>{}, 2 };
 	}
 
 }

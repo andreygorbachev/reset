@@ -59,7 +59,8 @@ static auto parse_csv_resets_SOFR() -> resets
 		"SOFR.csv",
 		1u, // skip the "SOFR," column after the date
 		2018y / April / 2d,
-		2026y / April / 9d
+		2026y / April / 9d,
+		2
 	);
 }
 
@@ -70,7 +71,8 @@ static auto parse_csv_resets_SOFR_compounded_index() -> resets
 		"SOFR Compounded Index.csv", // also includes averages, so maybe needs a better name
 		15u,
 		2020y / March / 2d,
-		2026y / April / 10d
+		2026y / April / 10d,
+		8
 	);
 }
 
@@ -80,7 +82,8 @@ static auto parse_csv_resets_SOFR_30_day_average() -> resets
 		"SOFR Compounded Index.csv",
 		12u,
 		2020y / March / 2d,
-		2026y / April / 10d
+		2026y / April / 10d,
+		5
 	);
 }
 
@@ -90,7 +93,8 @@ static auto parse_csv_resets_SOFR_90_day_average() -> resets
 		"SOFR Compounded Index.csv",
 		13u,
 		2020y / March / 2d,
-		2026y / April / 10d
+		2026y / April / 10d,
+		5
 	);
 }
 
@@ -100,7 +104,8 @@ static auto parse_csv_resets_SOFR_180_day_average() -> resets
 		"SOFR Compounded Index.csv",
 		14u,
 		2020y / March / 2d,
-		2026y / April / 10d
+		2026y / April / 10d,
+		5
 	);
 }
 

@@ -55,7 +55,7 @@ namespace reset
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{} };
+		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{}, 4 };
 
 		const auto expected1 = time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 		const auto expected2 = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
@@ -72,7 +72,7 @@ namespace reset
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{} };
+		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{}, 4 };
 
 		EXPECT_EQ(cpp_dec_float_50{ "0.034269" }, rs[2023y / January / 3d]);
 
@@ -86,7 +86,7 @@ namespace reset
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{} };
+		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{}, 4 };
 
 		EXPECT_EQ(cpp_dec_float_50{ "0.034269" }, rs.current_observation(2023y / January / 3d));
 
@@ -101,7 +101,7 @@ namespace reset
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{} };
+		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{}, 4 };
 
 		EXPECT_EQ(2023y / January / 3d, rs.last_reset_year_month_day());
 	}

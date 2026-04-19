@@ -58,8 +58,7 @@ inline auto _parse_observation(std::istream& fs)
 {
 	auto o = std::string{};
 	std::getline(fs, o, ',');
-
-	using namespace std::string_literals;
+	// check decimal places?
 
 	return reset::resets::observation{ o };
 }
@@ -121,7 +120,8 @@ inline auto parse_csv_resets(
 	const std::string& fileName,
 	const unsigned skip, // how many columns to skip after date before observation
 	const std::chrono::year_month_day& from, // these could also be read from the file
-	const std::chrono::year_month_day& until
+	const std::chrono::year_month_day& until,
+	const reset::resets::decimal_places dp
 ) -> reset::resets
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
@@ -136,5 +136,5 @@ inline auto parse_csv_resets(
 
 	const auto dc = fin_calendar::actual_360<boost::multiprecision::cpp_dec_float_50>{};
 
-	return reset::resets{ std::move(ts), std::move(c), dc };
+	return reset::resets{ std::move(ts), std::move(c), dc, dp };
 }
