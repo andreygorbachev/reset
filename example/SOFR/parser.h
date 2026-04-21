@@ -133,6 +133,12 @@ inline auto parse_csv_resets(
 	auto ts = _parse_csv_resets_storage(fs, skip, from, until);
 
 	auto c = _make_calendar(ts);
+	// please note that this is an important calendar and is different from "America/SIFMA"
+	// as sometimes NY Fed decides not to publish SOFR even when SIFMA says the market should be open
+	// (happened several times on Good Friday)
+	// then SOFR Index does not use Good Friday for compounding,
+	// but ISDA does use Good Friday for compounding (via a fallback mechanism)
+	// (to me this is not 100% clear from the SOFR Index description)
 
 	const auto dc = fin_calendar::actual_360<boost::multiprecision::cpp_dec_float_50>{};
 
