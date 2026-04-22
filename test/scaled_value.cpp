@@ -20,59 +20,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#pragma once
+#include <cmath>
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
-#include <ratio>
+#include <scaled_value.h>
+
+#include <gtest/gtest.h>
+
+using namespace boost::multiprecision;
+
+using namespace std;
 
 
 namespace reset
 {
 
-    template <typename Ratio>
-    class scaled_value // should it be in util?
-    {
+	TEST(scaled_value, constructor)
+	{
+		const auto sv = Percent{ cpp_dec_float_50{ "1.011111" } };
+		EXPECT_EQ(cpp_dec_float_50{ "1.011111" }, static_cast<cpp_dec_float_50>(sv));
+	}
 
-    public:
-
-        // note that we do this implicitly
-        scaled_value(boost::multiprecision::cpp_dec_float_50 value); // noexcept?
-
-    public:
-
-        // note that we do this implicitly
-        operator boost::multiprecision::cpp_dec_float_50() const; // noexcept?
-
-    private:
-
-        boost::multiprecision::cpp_dec_float_50 value_;
-
-    };
-
-
-    template<typename Ratio>
-    scaled_value<Ratio>::scaled_value(boost::multiprecision::cpp_dec_float_50 v) :
-        value_{ v * Ratio::den / Ratio::num }
-    {
-    }
-
-
-    template<typename Ratio>
-    scaled_value<Ratio>::operator boost::multiprecision::cpp_dec_float_50() const
-    {
-        return value_ * Ratio::num / Ratio::den;
-    }
-
-
-
-    // literals? print format?
-
-
-    using Percent = scaled_value<std::ratio<1, 100>>;
-    
-    using BasisPoints = scaled_value<std::ratio<1, 10'000>>;
-
-    using Value = scaled_value<std::ratio<1, 1>>;
+	TEST(scaled_value, operator_cpp_dec_float_50)
+	{
+		const auto sv = Percent{ cpp_dec_float_50{ "1.011111" } };
+		EXPECT_EQ(cpp_dec_float_50{ "1.011111" }, static_cast<cpp_dec_float_50>(sv));
+	}
 
 }
