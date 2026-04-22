@@ -61,4 +61,22 @@ namespace reset
 		EXPECT_EQ(cpp_dec_float_50{ "3" }, sv.get_value());
 	}
 
+	TEST(scaled_value, Percent)
+	{
+		const auto sv = Percent{ "3" };
+		EXPECT_EQ(cpp_dec_float_50{ "0.03" }, static_cast<cpp_dec_float_50>(sv));
+	}
+
+	TEST(scaled_value, BasisPoints)
+	{
+		const auto sv = BasisPoints{ "3" };
+		EXPECT_EQ(cpp_dec_float_50{ "0.0003" }, static_cast<cpp_dec_float_50>(sv));
+	}
+
+	TEST(scaled_value, Value)
+	{
+		const auto sv = Value{ "3" };
+		EXPECT_EQ(cpp_dec_float_50{ "3" }, static_cast<cpp_dec_float_50>(sv));
+	}
+
 }
