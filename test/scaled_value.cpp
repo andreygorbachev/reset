@@ -38,14 +38,20 @@ namespace reset
 
 	TEST(scaled_value, constructor)
 	{
-		const auto sv = Percent{ cpp_dec_float_50{ "1.011111" } };
-		EXPECT_EQ(cpp_dec_float_50{ "1.011111" }, static_cast<cpp_dec_float_50>(sv));
+		const auto sv = Percent{ cpp_dec_float_50{ "0.03" } }; // 3%
+		EXPECT_EQ(cpp_dec_float_50{ "0.03" }, static_cast<cpp_dec_float_50>(sv));
 	}
 
 	TEST(scaled_value, operator_cpp_dec_float_50)
 	{
-		const auto sv = Percent{ cpp_dec_float_50{ "1.011111" } };
-		EXPECT_EQ(cpp_dec_float_50{ "1.011111" }, static_cast<cpp_dec_float_50>(sv));
+		const auto sv = Percent{ cpp_dec_float_50{ "0.03" } }; // 3%
+		EXPECT_EQ(cpp_dec_float_50{ "0.03" }, static_cast<cpp_dec_float_50>(sv));
+	}
+
+	TEST(scaled_value, get_value)
+	{
+		const auto sv = Percent{ cpp_dec_float_50{ "0.03" } }; // 3%
+		EXPECT_EQ(cpp_dec_float_50{ "3" }, sv.get_value());
 	}
 
 }

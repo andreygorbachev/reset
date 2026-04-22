@@ -44,6 +44,10 @@ namespace reset
         // note that we do this implicitly
         operator boost::multiprecision::cpp_dec_float_50() const; // noexcept?
 
+    public:
+
+        auto get_value() const noexcept -> const boost::multiprecision::cpp_dec_float_50&;
+
     private:
 
         boost::multiprecision::cpp_dec_float_50 value_;
@@ -62,6 +66,13 @@ namespace reset
     scaled_value<Ratio>::operator boost::multiprecision::cpp_dec_float_50() const
     {
         return value_ * Ratio::num / Ratio::den;
+    }
+
+
+    template<typename Ratio>
+    auto scaled_value<Ratio>::get_value() const noexcept -> const boost::multiprecision::cpp_dec_float_50&
+    {
+        return value_;
     }
 
 
