@@ -36,7 +36,8 @@ namespace reset
 
 	struct rate
 	{
-		Percent rate;
+
+		Percent percent;
 
 		std::chrono::year_month_day start; // usually included
 		std::chrono::year_month_day end; // usually excluded

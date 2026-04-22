@@ -33,6 +33,7 @@
 
 #include <day_count.h>
 
+#include "rate.h"
 #include "resets.h"
 #include "resets_math.h"
 // do we need more includes for clarity?
@@ -70,7 +71,7 @@ namespace reset
 		const resets& r,
 		const std::chrono::year_month_day& ymd,
 		const average_detail& detail = average_detail{}
-	) -> boost::multiprecision::cpp_dec_float_50
+	) -> rate
 	{
 		// do we handle the case where detail.term is empty?
 
@@ -136,7 +137,12 @@ namespace reset
 		if (detail.final_round)
 			a = round_dp(a, *detail.final_round);
 
-		return a;
+		return {
+			a,
+			*dates.cbegin(),
+			*dates.crbegin(),
+			r.get_day_count()
+		};
 	}
 
 }

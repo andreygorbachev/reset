@@ -165,7 +165,7 @@ int main()
 		<< " SOFR 30 Day Average is "
 		<< SOFR_30_day_average[date] * 100 // need a different accessor? (or handle 100 in some other way)
 		<< " and the same computed value is "
-		<< average(SOFR, date, _30dd) * 100
+		<< average(SOFR, date, _30dd).percent.get_value()
 		<< endl;
 
 	cout
@@ -176,7 +176,7 @@ int main()
 		<< " SOFR 90 Day Average is "
 		<< SOFR_90_day_average[date] * 100 // need a different accessor? (or handle 100 in some other way)
 		<< " and the same computed value is "
-		<< average(SOFR, date, _90dd) * 100
+		<< average(SOFR, date, _90dd).percent.get_value()
 		<< endl;
 
 	cout
@@ -187,7 +187,7 @@ int main()
 		<< " SOFR 180 Day Average is "
 		<< SOFR_180_day_average[date] * 100 // need a different accessor? (or handle 100 in some other way)
 		<< " and the same computed value is "
-		<< average(SOFR, date, _180dd) * 100
+		<< average(SOFR, date, _180dd).percent.get_value()
 		<< endl;
 
 	const auto& SIFMA_calendar = locate_calendar("America/SIFMA", date);
@@ -269,7 +269,7 @@ int main()
 			break;
 		// temporary only
 
-		if (SOFR_30_day_average[d] * 100 != average(SOFR, d, _30dd) * 100)
+		if (SOFR_30_day_average[d] != average(SOFR, d, _30dd).percent)
 			cout
 				<< fixed
 				<< setprecision(5)
@@ -278,7 +278,7 @@ int main()
 				<< " SOFR 30 Day Average is "
 				<< SOFR_30_day_average[d] * 100 // need a different accessor? (or handle 100 in some other way)
 				<< " and the same computed value is "
-				<< average(SOFR, d, _30dd) * 100
+				<< average(SOFR, d, _30dd).percent.get_value()
 				<< endl;
 	}
 
@@ -292,7 +292,7 @@ int main()
 			break;
 		// temporary only
 
-		if (SOFR_90_day_average[d] * 100 != average(SOFR, d, _90dd) * 100)
+		if (SOFR_90_day_average[d] != average(SOFR, d, _90dd).percent)
 			cout
 			<< fixed
 			<< setprecision(5)
@@ -301,7 +301,7 @@ int main()
 			<< " SOFR 90 Day Average is "
 			<< SOFR_90_day_average[d] * 100 // need a different accessor? (or handle 100 in some other way)
 			<< " and the same computed value is "
-			<< average(SOFR, d, _90dd) * 100
+			<< average(SOFR, d, _90dd).percent.get_value()
 			<< endl;
 	}
 
@@ -315,7 +315,7 @@ int main()
 			break;
 		// temporary only
 
-		if (SOFR_180_day_average[d] * 100 != average(SOFR, d, _180dd) * 100)
+		if (SOFR_180_day_average[d] != average(SOFR, d, _180dd).percent)
 			cout
 			<< fixed
 			<< setprecision(5)
@@ -324,7 +324,7 @@ int main()
 			<< " SOFR 180 Day Average is "
 			<< SOFR_180_day_average[d] * 100 // need a different accessor? (or handle 100 in some other way)
 			<< " and the same computed value is "
-			<< average(SOFR, d, _180dd) * 100
+			<< average(SOFR, d, _180dd).percent.get_value()
 			<< endl;
 	}
 
