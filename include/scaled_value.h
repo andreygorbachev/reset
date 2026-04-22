@@ -48,6 +48,7 @@ namespace reset
     template<typename Numeric>
     using BasisPoints = scaled_value<Numeric, std::ratio<1, 10'000>>;
 
-    // dollar value?
+    template<typename Numeric>
+    using Value = scaled_value<Numeric, std::ratio<1, 1>>;
 
 }
