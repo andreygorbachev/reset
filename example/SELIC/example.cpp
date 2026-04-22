@@ -22,7 +22,7 @@
 
 #include "parser.h"
 
-#include <resets.h>
+#include <fixings.h>
 #include <index.h>
 
 #include <calculation_252.h>
@@ -43,10 +43,10 @@ using namespace reset;
 
 
 
-static auto parse_csv_resets_SELIC() -> resets
+static auto parse_csv_fixings_SELIC() -> fixings
 {
 	// from https://api.bcb.gov.br/dados/serie/bcdata.sgs.1178/dados?formato=csv&dataInicial=01/07/2000&dataFinal=dd/mm/yyyy
-	return parse_csv_resets(
+	return parse_csv_fixings(
 		"SELIC Effective.csv",
 		2000y / July / 1d,
 		2014y / July / 1d
@@ -57,7 +57,7 @@ static auto parse_csv_resets_SELIC() -> resets
 
 int main()
 {
-	const auto SELIC = parse_csv_resets_SELIC();
+	const auto SELIC = parse_csv_fixings_SELIC();
 
 	auto rfd = rate_fixing_detail{};
 	rfd.day_count = calculation_252<boost::multiprecision::cpp_dec_float_50>{ SELIC.get_calendar() }; // think more about copies of calendar

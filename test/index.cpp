@@ -27,7 +27,7 @@
 #include <actual_360.h>
 
 #include <index.h>
-#include <resets.h>
+#include <fixings.h>
 
 #include <gtest/gtest.h>
 
@@ -46,7 +46,7 @@ namespace reset
 	{
 		// from "Statement Regarding Publication of SOFR Averages and a SOFR Index"
 
-		const auto resets = make_SOFR_resets();
+		const auto fix = make_SOFR_fixings();
 
 		auto rfd = rate_fixing_detail{};
 		rfd.day_count = actual_360<cpp_dec_float_50>{};
@@ -56,12 +56,12 @@ namespace reset
 		id.initial_date = 2018y / April / 2d;
 		id.final_round = 8u;
 
-//		EXPECT_EQ(resets::observation{ "1.00000000" }, index(resets, rfd, 2018y / April / 2d, id));
-		EXPECT_EQ(resets::observation{ "1.00005000" }, index(resets, rfd, 2018y / April / 3d, id));
-		EXPECT_EQ(resets::observation{ "1.00010084" }, index(resets, rfd, 2018y / April / 4d, id));
-		EXPECT_EQ(resets::observation{ "1.00014917" }, index(resets, rfd, 2018y / April / 5d, id));
-		EXPECT_EQ(resets::observation{ "1.00019779" }, index(resets, rfd, 2018y / April / 6d, id));
-//		EXPECT_EQ(resets::observation{ "1.00034365" }, index(resets, rfd, 2018y / April / 9d, id));
+//		EXPECT_EQ(fixings::observation{ "1.00000000" }, index(fix, rfd, 2018y / April / 2d, id));
+		EXPECT_EQ(fixings::observation{ "1.00005000" }, index(fix, rfd, 2018y / April / 3d, id));
+		EXPECT_EQ(fixings::observation{ "1.00010084" }, index(fix, rfd, 2018y / April / 4d, id));
+		EXPECT_EQ(fixings::observation{ "1.00014917" }, index(fix, rfd, 2018y / April / 5d, id));
+		EXPECT_EQ(fixings::observation{ "1.00019779" }, index(fix, rfd, 2018y / April / 6d, id));
+//		EXPECT_EQ(fixings::observation{ "1.00034365" }, index(fix, rfd, 2018y / April / 9d, id));
 	}
 
 	TEST(index, index2)
@@ -78,13 +78,13 @@ namespace reset
 
 	TEST(index, index4)
 	{
-		const auto resets = make_SOFR_resets();
+		const auto fix = make_SOFR_fixings();
 
 		// don't allow for an index to be generated before it actually exists
-//		EXPECT_THROW(index(resets, 2018y / March / 29d), out_of_range); // the last business day before the SOFR started
+//		EXPECT_THROW(index(fix, 2018y / March / 29d), out_of_range); // the last business day before the SOFR started
 
 		// don't allow for an index to be generated on a non-business day
-//		EXPECT_THROW(index(resets, 2018y / April / 7d), out_of_range);
+//		EXPECT_THROW(index(fix, 2018y / April / 7d), out_of_range);
 	}
 
 }

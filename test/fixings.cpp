@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <resets.h>
+#include <fixings.h>
 
 #include <time_series.h>
 
@@ -47,7 +47,7 @@ using namespace std::chrono;
 namespace reset
 {
 
-	TEST(resets, constructor)
+	TEST(fixings, constructor)
 	{
 		auto ts = time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 
@@ -56,50 +56,50 @@ namespace reset
 		const auto expected1 = time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 		const auto expected2 = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto rs = resets{ move(ts), move(c), 4 };
-		EXPECT_EQ(expected1, rs.get_time_series());
-//		EXPECT_EQ(expected2, rs.get_publication_calendar());
+		const auto fix = fixings{ move(ts), move(c), 4 };
+		EXPECT_EQ(expected1, fix.get_time_series());
+//		EXPECT_EQ(expected2, fix.get_publication_calendar());
 	}
 
-	TEST(resets, operator_square_brackets)
+	TEST(fixings, operator_square_brackets)
 	{
 		auto ts = time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 		ts[2023y / January / 3d] = cpp_dec_float_50{ "3.4269" };
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto rs = resets{ move(ts), move(c), 4 };
+		const auto fix = fixings{ move(ts), move(c), 4 };
 
-		EXPECT_EQ(cpp_dec_float_50{ "0.034269" }, rs[2023y / January / 3d]);
+		EXPECT_EQ(cpp_dec_float_50{ "0.034269" }, fix[2023y / January / 3d]);
 
-		EXPECT_THROW(rs[2023y / January / 1d], out_of_range);
+		EXPECT_THROW(fix[2023y / January / 1d], out_of_range);
 	}
 
-	TEST(resets, current_observation)
+	TEST(fixings, current_observation)
 	{
 		auto ts = time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 		ts[2023y / January / 3d] = cpp_dec_float_50{ "3.4269" };
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto rs = resets{ move(ts), move(c), 4 };
+		const auto fix = fixings{ move(ts), move(c), 4 };
 
-		EXPECT_EQ(cpp_dec_float_50{ "0.034269" }, rs.current_observation(2023y / January / 3d));
+		EXPECT_EQ(cpp_dec_float_50{ "0.034269" }, fix.current_observation(2023y / January / 3d));
 
 		// test actual move when we ask for a non-business day (do we need to distinguish between non-business day and missing reset?)
-		// test move before the start of resets (is that possible?)
+		// test move before the start of fixings (is that possible?)
 	}
 
-	TEST(resets, last_reset_year_month_day)
+	TEST(fixings, last_reset_year_month_day)
 	{
 		auto ts = time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 		ts[2023y / January / 3d] = cpp_dec_float_50{ "3.4269" };
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto rs = resets{ move(ts), move(c), 4 };
+		const auto fix = fixings{ move(ts), move(c), 4 };
 
-		EXPECT_EQ(2023y / January / 3d, rs.last_reset_year_month_day());
+		EXPECT_EQ(2023y / January / 3d, fix.last_reset_year_month_day());
 	}
 
 }

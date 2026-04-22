@@ -33,7 +33,7 @@
 
 #include <day_count.h>
 
-#include "resets.h"
+#include "fixings.h"
 #include "resets_math.h"
 // do we need more includes for clarity?
 
@@ -60,12 +60,12 @@ namespace reset
 		boost::multiprecision::cpp_dec_float_50 i,
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
-		const resets& r,
+		const fixings& fix,
 		const rate_fixing_detail& rfd,
 		const index_detail& detail
 	) -> boost::multiprecision::cpp_dec_float_50
 	{
-		const auto rate = r[start];
+		const auto rate = fix[start];
 
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
@@ -87,12 +87,12 @@ namespace reset
 		boost::multiprecision::cpp_dec_float_50& i,
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
-		const resets& r,
+		const fixings& fix,
 		const rate_fixing_detail& rfd,
 		const index_detail& id
 	)
 	{
-		i *= index_factor_(i, start, end, r, rfd, id);
+		i *= index_factor_(i, start, end, fix, rfd, id);
 
 		if (id.step_trunc)
 			i = trunc_dp(i, *id.step_trunc);
@@ -102,9 +102,9 @@ namespace reset
 	}
 
 
-	// maybe this needs a better name? - compute a compounded RFR index from the underlying resets
+	// maybe this needs a better name? - compute a compounded RFR index from the underlying fixings
 	inline auto index(
-		const resets& r,
+		const fixings& fix,
 		const rate_fixing_detail& rfd,
 		const std::chrono::year_month_day& ymd,
 		const index_detail& id = index_detail{} // does it need a default?
@@ -113,7 +113,7 @@ namespace reset
 		// should throw an exception if we requested an index before a business day before the first reset
 		// but we do not have information about relevant calendar at the moment
 
-		const auto& c = r.get_calendar();
+		const auto& c = fix.get_calendar();
 		const auto schedule = c.make_business_days_schedule(
 			gregorian::util::days_period{ id.initial_date, ymd }
 		); // is this a wrong data structure?
@@ -135,7 +135,7 @@ namespace reset
 
 			const auto& end = d;
 
-			index_step_(i, start, end, r, rfd, id);
+			index_step_(i, start, end, fix, rfd, id);
 
 			start = d;
 		}

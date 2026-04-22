@@ -22,7 +22,7 @@
 
 #include "parser.h"
 
-#include <resets.h>
+#include <fixings.h>
 #include <index.h>
 #include <average.h>
 
@@ -56,10 +56,10 @@ using namespace reset;
 
 
 
-static auto parse_csv_resets_SOFR() -> resets
+static auto parse_csv_fixings_SOFR() -> fixings
 {
 	// from https://www.newyorkfed.org/markets/reference-rates/sofr
-	return parse_csv_resets(
+	return parse_csv_fixings(
 		"SOFR.csv",
 		1u, // skip the "SOFR," column after the date
 		2018y / April / 2d,
@@ -68,10 +68,10 @@ static auto parse_csv_resets_SOFR() -> resets
 	);
 }
 
-static auto parse_csv_resets_SOFR_compounded_index() -> resets
+static auto parse_csv_fixings_SOFR_compounded_index() -> fixings
 {
 	// from https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index
-	return parse_csv_resets(
+	return parse_csv_fixings(
 		"SOFR Compounded Index.csv", // also includes averages, so maybe needs a better name
 		15u,
 		2020y / March / 2d,
@@ -80,9 +80,9 @@ static auto parse_csv_resets_SOFR_compounded_index() -> resets
 	);
 }
 
-static auto parse_csv_resets_SOFR_30_day_average() -> resets
+static auto parse_csv_fixings_SOFR_30_day_average() -> fixings
 {
-	return parse_csv_resets(
+	return parse_csv_fixings(
 		"SOFR Compounded Index.csv",
 		12u,
 		2020y / March / 2d,
@@ -91,9 +91,9 @@ static auto parse_csv_resets_SOFR_30_day_average() -> resets
 	);
 }
 
-static auto parse_csv_resets_SOFR_90_day_average() -> resets
+static auto parse_csv_fixings_SOFR_90_day_average() -> fixings
 {
-	return parse_csv_resets(
+	return parse_csv_fixings(
 		"SOFR Compounded Index.csv",
 		13u,
 		2020y / March / 2d,
@@ -102,9 +102,9 @@ static auto parse_csv_resets_SOFR_90_day_average() -> resets
 	);
 }
 
-static auto parse_csv_resets_SOFR_180_day_average() -> resets
+static auto parse_csv_fixings_SOFR_180_day_average() -> fixings
 {
-	return parse_csv_resets(
+	return parse_csv_fixings(
 		"SOFR Compounded Index.csv",
 		14u,
 		2020y / March / 2d,
@@ -117,18 +117,18 @@ static auto parse_csv_resets_SOFR_180_day_average() -> resets
 
 int main()
 {
-	const auto SOFR = parse_csv_resets_SOFR();
+	const auto SOFR = parse_csv_fixings_SOFR();
 
 	auto rfd = rate_fixing_detail{};
 	rfd.day_count = actual_360<cpp_dec_float_50>{};
 
-	const auto SOFR_compounded_index = parse_csv_resets_SOFR_compounded_index();
+	const auto SOFR_compounded_index = parse_csv_fixings_SOFR_compounded_index();
 
-	const auto SOFR_30_day_average = parse_csv_resets_SOFR_30_day_average();
+	const auto SOFR_30_day_average = parse_csv_fixings_SOFR_30_day_average();
 	assert(SOFR_30_day_average.get_calendar() == SOFR_compounded_index.get_calendar());
-	const auto SOFR_90_day_average = parse_csv_resets_SOFR_90_day_average();
+	const auto SOFR_90_day_average = parse_csv_fixings_SOFR_90_day_average();
 	assert(SOFR_90_day_average.get_calendar() == SOFR_compounded_index.get_calendar());
-	const auto SOFR_180_day_average = parse_csv_resets_SOFR_180_day_average();
+	const auto SOFR_180_day_average = parse_csv_fixings_SOFR_180_day_average();
 	assert(SOFR_180_day_average.get_calendar() == SOFR_compounded_index.get_calendar());
 
 	// from https://www.newyorkfed.org/markets/opolicy/operating_policy_200212

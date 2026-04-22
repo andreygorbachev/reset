@@ -17,7 +17,7 @@ add_executable(${PROJECT_NAME}
   resets_math.cpp
   scaled_value.cpp
   rate.cpp
-  resets.cpp
+  fixings.cpp
   index.cpp
   average.cpp
   accrued.cpp

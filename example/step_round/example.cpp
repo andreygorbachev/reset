@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <resets.h>
+#include <fixings.h>
 #include <index.h>
 
 #include <actual_365_fixed.h>
@@ -51,7 +51,7 @@ using namespace gregorian::util;
 
 
 
-auto make_resets()
+static auto make_fixings()
 {
 	const/*expr*/ auto daily_rate = cpp_dec_float_50{ "3.17" }; // we assume that all rates are always the same
 
@@ -68,14 +68,14 @@ auto make_resets()
 		if (cal.is_business_day(d))
 			ts[d] = daily_rate;
 
-	return resets{ move(ts), move(cal), 8 };
+	return fixings{ move(ts), move(cal), 8 };
 }
 
 
 int main()
 {
-	const auto r = make_resets();
-	const auto& cal = r.get_calendar();
+	const auto fix = make_fixings();
+	const auto& cal = fix.get_calendar();
 	const auto [f, u] = cal.get_schedule().get_period().from_until();
 
 	auto rfd = rate_fixing_detail{};
@@ -92,7 +92,7 @@ int main()
 
 	cout
 		<< fixed
-		<< setprecision(r.get_decimal_places());
+		<< setprecision(fix.get_decimal_places());
 		
 	for (
 		auto d = f;
@@ -100,8 +100,8 @@ int main()
 		d = sys_days{ d } + days{ 365 }
 	) // as we do not cache the previous step, we can spread the below over multiple threads
 	{
-		const auto i1 = index(r, rfd, d, id1);
-		const auto i2 = index(r, rfd, d, id2);
+		const auto i1 = index(fix, rfd, d, id1);
+		const auto i2 = index(fix, rfd, d, id2);
 
 		if (i1 != i2)
 			cout

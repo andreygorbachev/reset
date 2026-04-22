@@ -22,7 +22,7 @@
 
 #include "parser.h"
 
-#include <resets.h>
+#include <fixings.h>
 #include <index.h>
 
 #include <actual_360.h>
@@ -43,9 +43,9 @@ using namespace reset;
 
 
 
-static auto parse_csv_resets_SARON_and_SARON_compounded_index() -> pair<resets, resets>
+static auto parse_csv_fixings_SARON_and_SARON_compounded_index() -> pair<fixings, fixings>
 {
-	return parse_csv_resets_x2(
+	return parse_csv_fixings_x2(
 		"saron_compound_calculator.csv",
 		1999y / June / 30d,
 		2020y / February / 17d
@@ -58,7 +58,7 @@ int main()
 {
 	// from saron_compound_calculator.xls from SIX
 
-	const auto [SARON, SARON_compounded_index] = parse_csv_resets_SARON_and_SARON_compounded_index();
+	const auto [SARON, SARON_compounded_index] = parse_csv_fixings_SARON_and_SARON_compounded_index();
 
 	auto rfd = rate_fixing_detail{};
 	rfd.day_count = actual_360<cpp_dec_float_50>{};

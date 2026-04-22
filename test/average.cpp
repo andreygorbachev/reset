@@ -25,7 +25,7 @@
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
 #include <average.h>
-#include <resets.h>
+#include <fixings.h>
 
 #include <gtest/gtest.h>
 

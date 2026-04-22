@@ -22,7 +22,7 @@
 
 #include "parser.h"
 
-#include <resets.h>
+#include <fixings.h>
 #include <index.h>
 
 #include <actual_365_fixed.h>
@@ -54,10 +54,10 @@ using namespace reset;
 
 
 
-static auto parse_csv_resets_SONIA() -> resets
+static auto parse_csv_fixings_SONIA() -> fixings
 {
 	// from https://www.bankofengland.co.uk/markets/sonia-benchmark
-	return parse_csv_resets(
+	return parse_csv_fixings(
 		"SONIA.csv",
 		1997y / January / 1d,
 		2025y / May / 12d,
@@ -65,10 +65,10 @@ static auto parse_csv_resets_SONIA() -> resets
 	);
 }
 
-static auto parse_csv_resets_SONIA_compounded_index() -> resets
+static auto parse_csv_fixings_SONIA_compounded_index() -> fixings
 {
 	// from https://www.bankofengland.co.uk/markets/sonia-benchmark
-	return parse_csv_resets(
+	return parse_csv_fixings(
 		"SONIA Compounded Index.csv",
 		2018y / April / 23d,
 		2025y / May / 13d,
@@ -80,12 +80,12 @@ static auto parse_csv_resets_SONIA_compounded_index() -> resets
 
 int main()
 {
-	const auto SONIA = parse_csv_resets_SONIA();
+	const auto SONIA = parse_csv_fixings_SONIA();
 
 	auto rfd = rate_fixing_detail{};
 	rfd.day_count = actual_360<cpp_dec_float_50>{};
 
-	const auto SONIA_compounded_index = parse_csv_resets_SONIA_compounded_index();
+	const auto SONIA_compounded_index = parse_csv_fixings_SONIA_compounded_index();
 	// I think BoE website does not fully describe the compounded index
 	// more clarity would be welcome there on how rounding is done daily (*)
 

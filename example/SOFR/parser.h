@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <resets.h>
+#include <fixings.h>
 
 #include <calendar.h>
 #include <schedule.h>
@@ -57,18 +57,18 @@ inline auto _parse_observation(std::istream& fs)
 	std::getline(fs, o, ',');
 	// check decimal places?
 
-	return reset::resets::observation{ o };
+	return reset::fixings::observation{ o };
 }
 
 
-inline auto _parse_csv_resets_storage(
+inline auto _parse_csv_fixings_storage(
 	std::istream& fs,
 	const unsigned skip, // how many columns to skip after date before observation
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
-) -> reset::resets::storage
+) -> reset::fixings::storage
 {
-	auto result = reset::resets::storage{ gregorian::util::days_period{ from, until } };
+	auto result = reset::fixings::storage{ gregorian::util::days_period{ from, until } };
 
 	for (;;)
 	{
@@ -93,7 +93,7 @@ inline auto _parse_csv_resets_storage(
 }
 
 
-inline auto _make_calendar(const reset::resets::storage& ts)
+inline auto _make_calendar(const reset::fixings::storage& ts)
 {
 	const auto& fu = ts.get_period();
 
@@ -113,13 +113,13 @@ inline auto _make_calendar(const reset::resets::storage& ts)
 }
 
 
-inline auto parse_csv_resets(
+inline auto parse_csv_fixings(
 	const std::string& fileName,
 	const unsigned skip, // how many columns to skip after date before observation
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until,
-	const reset::resets::decimal_places dp
-) -> reset::resets
+	const reset::fixings::decimal_places dp
+) -> reset::fixings
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
 
@@ -127,7 +127,7 @@ inline auto parse_csv_resets(
 	auto t = std::string{};
 	std::getline(fs, t);
 
-	auto ts = _parse_csv_resets_storage(fs, skip, from, until);
+	auto ts = _parse_csv_fixings_storage(fs, skip, from, until);
 
 	auto c = _make_calendar(ts);
 	// please note that this is an important calendar and is different from "America/SIFMA"
@@ -137,5 +137,5 @@ inline auto parse_csv_resets(
 	// but ISDA does use Good Friday for compounding (via a fallback mechanism)
 	// (to me this is not 100% clear from the SOFR Index description)
 
-	return reset::resets{ std::move(ts), std::move(c), dp };
+	return reset::fixings{ std::move(ts), std::move(c), dp };
 }

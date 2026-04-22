@@ -26,13 +26,13 @@
 
 #include <period.h>
 
-#include <resets.h>
+#include <fixings.h>
 
 
 namespace reset
 {
 
-	inline auto make_SOFR_resets() -> resets
+	inline auto make_SOFR_fixings() -> fixings
 	{
 		// from "Statement Regarding Publication of SOFR Averages and a SOFR Index"
 
@@ -40,16 +40,16 @@ namespace reset
 		using namespace gregorian;
 		using namespace gregorian::util;
 
-		auto ts = resets::storage{ days_period{2018y / April / 2d, 2018y / April / 6d} }; // should we write code to use initialiser for _time_series?
-		ts[2018y / April / 2d] = resets::observation{ "1.80" };
-		ts[2018y / April / 3d] = resets::observation{ "1.83" };
-		ts[2018y / April / 4d] = resets::observation{ "1.74" };
-		ts[2018y / April / 5d] = resets::observation{ "1.75" };
-		ts[2018y / April / 6d] = resets::observation{ "1.75" };
+		auto ts = fixings::storage{ days_period{2018y / April / 2d, 2018y / April / 6d} }; // should we write code to use initialiser for _time_series?
+		ts[2018y / April / 2d] = fixings::observation{ "1.80" };
+		ts[2018y / April / 3d] = fixings::observation{ "1.83" };
+		ts[2018y / April / 4d] = fixings::observation{ "1.74" };
+		ts[2018y / April / 5d] = fixings::observation{ "1.75" };
+		ts[2018y / April / 6d] = fixings::observation{ "1.75" };
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		return resets{ std::move(ts), std::move(c), 2 };
+		return fixings{ std::move(ts), std::move(c), 2 };
 	}
 
 }

@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <resets.h>
+#include <fixings.h>
 
 #include <period.h>
 
@@ -57,19 +57,19 @@ inline auto _parse_observation(std::istream& fs)
 
 	std::replace(o.begin(), o.end(), ',', '.'); // instead of looking into locales
 
-	return reset::resets::observation{
+	return reset::fixings::observation{
 		o.substr(1uz, o.length() - 2uz)
 	}; // we ignore the first and last characters (quotes)
 }
 
 
-inline auto _parse_csv_resets_storage(
+inline auto _parse_csv_fixings_storage(
 	std::istream& fs,
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
-) -> reset::resets::storage
+) -> reset::fixings::storage
 {
-	auto result = reset::resets::storage{ gregorian::util::days_period{ from, until } };
+	auto result = reset::fixings::storage{ gregorian::util::days_period{ from, until } };
 
 	for (;;)
 	{
@@ -91,7 +91,7 @@ inline auto _parse_csv_resets_storage(
 }
 
 
-inline auto _make_calendar(const reset::resets::storage& ts)
+inline auto _make_calendar(const reset::fixings::storage& ts)
 {
 	const auto& fu = ts.get_period();
 
@@ -111,11 +111,11 @@ inline auto _make_calendar(const reset::resets::storage& ts)
 }
 
 
-inline auto parse_csv_resets(
+inline auto parse_csv_fixings(
 	const std::string& fileName,
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
-) -> reset::resets
+) -> reset::fixings
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
 
@@ -123,9 +123,9 @@ inline auto parse_csv_resets(
 	auto t = std::string{};
 	std::getline(fs, t);
 
-	auto ts = _parse_csv_resets_storage(fs, from, until);
+	auto ts = _parse_csv_fixings_storage(fs, from, until);
 
 	auto c = _make_calendar(ts);
 
-	return reset::resets{ std::move(ts), std::move(c), 2 };
+	return reset::fixings{ std::move(ts), std::move(c), 2 };
 }

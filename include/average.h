@@ -34,7 +34,7 @@
 #include <day_count.h>
 
 #include "rate.h"
-#include "resets.h"
+#include "fixings.h"
 #include "resets_math.h"
 // do we need more includes for clarity?
 
@@ -54,12 +54,12 @@ namespace reset
 		boost::multiprecision::cpp_dec_float_50& a, // should it take a return a value? (no in/out parameter)
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
-		const resets& r,
+		const fixings& fix,
 		const rate_fixing_detail& rfd
 	)
 	{
-//		const auto rate = r[start];
-		const auto rate = r.current_observation(start); // or we can create special average_step_ for the first step when average starts on a non business day (and we need to use the previous reset)
+//		const auto rate = fix[start];
+		const auto rate = fix.current_observation(start); // or we can create special average_step_ for the first step when average starts on a non business day (and we need to use the previous reset)
 
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
@@ -69,7 +69,7 @@ namespace reset
 
 	// maybe this needs a better name? (like compounded 
 	inline auto average(
-		const resets& r,
+		const fixings& fix,
 		const rate_fixing_detail& rfd,
 		const std::chrono::year_month_day& ymd,
 		const average_detail& detail = average_detail{} // does it need a default?
@@ -77,7 +77,7 @@ namespace reset
 	{
 		// do we handle the case where detail.term is empty?
 
-		const auto& c = r.get_calendar();
+		const auto& c = fix.get_calendar();
 		const auto schedule = c.make_business_days_schedule(
 			gregorian::util::days_period{ std::chrono::sys_days{ ymd } - detail.term, ymd}
 		); // is this a wrong data structure?
@@ -101,7 +101,7 @@ namespace reset
 
 				const auto& end = d;
 
-				average_step_(val, start, end, r, rfd);
+				average_step_(val, start, end, fix, rfd);
 
 				start = d;
 			}
@@ -110,7 +110,7 @@ namespace reset
 		{
 			// special case where the first period starts on a non business day
 
-			average_step_(val, schedule.get_period().get_from(), *dates.cbegin(), r, rfd);
+			average_step_(val, schedule.get_period().get_from(), *dates.cbegin(), fix, rfd);
 
 			auto start = std::chrono::year_month_day{};
 			for (const auto& d : dates)
@@ -123,7 +123,7 @@ namespace reset
 
 				const auto& end = d;
 
-				average_step_(val, start, end, r, rfd);
+				average_step_(val, start, end, fix, rfd);
 
 				start = d;
 			}
