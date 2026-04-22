@@ -57,7 +57,7 @@ namespace reset
 		using day_count = fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50>;
 
 		using decimal_places = int; // static_assert consistency between cpp_dec_float_50 and unsigned?
-		// to be consistent with streams and formal, it is defined as int and not unsigned int
+		// to be consistent with streams and format, it is defined as int and not unsigned int
 
 	public:
 
