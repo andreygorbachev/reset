@@ -19,7 +19,7 @@ add_executable(${PROJECT_NAME}
   resets.cpp
   index.cpp
   average.cpp
-  rate.cpp
+  accrued.cpp
   setup.h
 )
 

@@ -29,7 +29,7 @@
 
 #include <day_count.h>
 
-#include <rate.h>
+#include <accrued.h>
 
 #include <gtest/gtest.h>
 
@@ -74,26 +74,26 @@ namespace reset
 		EXPECT_EQ(expected, i);
 	}
 
-	TEST(rate, rate)
+	TEST(accrued, accrued)
 	{
 		const auto& c = locate_calendar("America/ANBIMA"s, 2023y / January / 1d);
 
-		const auto r1 = rate<cpp_dec_float_50>{ simple_annualized<cpp_dec_float_50>{ 5 } };
+		const auto a1 = accrued<cpp_dec_float_50>{ simple_annualized<cpp_dec_float_50>{ 5 } };
 		const auto dc1 = actual_365_fixed<cpp_dec_float_50>{};
 		const auto i1 = interest(
 			year_month_day{ 2023y / January / 1d },
 			year_month_day{ 2023y / January / 2d },
 			day_count<cpp_dec_float_50>{ dc1 },
-			r1
+			a1
 		);
 
-		const auto r2 = rate<cpp_dec_float_50>{ compound_annualized<cpp_dec_float_50>{ 5 } };
+		const auto a2 = accrued<cpp_dec_float_50>{ compound_annualized<cpp_dec_float_50>{ 5 } };
 		const auto dc2 = calculation_252<cpp_dec_float_50>{ c };
 		const auto i2 = interest(
 			year_month_day{ 2023y / January / 1d },
 			year_month_day{ 2023y / January / 2d },
 			day_count<cpp_dec_float_50>{ dc2 },
-			r2
+			a2
 		);
 	}
 

@@ -6,7 +6,7 @@ add_library(${PROJECT_NAME} INTERFACE
   resets.h
   index.h
   average.h
-  rate.h
+  accrued.h
 )
 
 target_include_directories(${PROJECT_NAME} INTERFACE .)

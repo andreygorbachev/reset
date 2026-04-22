@@ -86,8 +86,9 @@ namespace reset
 	};
 
 
+	// not 100% sure it should be in reset
 	template<typename T = double>
-	using rate = std::variant<
+	using accrued = std::variant<
 		simple_annualized<T>,
 		compound_annualized<T>
 	>; // per unit of currency
@@ -98,12 +99,12 @@ namespace reset
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const fin_calendar::day_count<T>& dc,
-		const rate<T>& r
+		const accrued<T>& a
 	) -> T
 	{
 		const auto i = std::visit(
 			[&](const auto& r) { return r.interest(start, end, dc); },
-			r
+			a
 		);
 
 		return i;
