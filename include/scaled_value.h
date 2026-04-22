@@ -22,18 +22,20 @@
 
 #pragma once
 
+#include <boost/multiprecision/cpp_dec_float.hpp>
+
 #include <ratio>
 
 
 namespace reset
 {
 
-    template <typename Numeric, typename Ratio>
+    template <typename Ratio>
     struct scaled_value // should it be in util?
     {
-        Numeric value;
+        boost::multiprecision::cpp_dec_float_50 value;
 
-        Numeric to_numeric() const {
+        boost::multiprecision::cpp_dec_float_50 to_numeric() const {
             return value * Ratio::num / Ratio::den;
         }
     };
@@ -42,13 +44,10 @@ namespace reset
     // literals? print format?
 
 
-    template<typename Numeric>
-    using Percent = scaled_value<Numeric, std::ratio<1, 100>>;
+    using Percent = scaled_value<std::ratio<1, 100>>;
     
-    template<typename Numeric>
-    using BasisPoints = scaled_value<Numeric, std::ratio<1, 10'000>>;
+    using BasisPoints = scaled_value<std::ratio<1, 10'000>>;
 
-    template<typename Numeric>
-    using Value = scaled_value<Numeric, std::ratio<1, 1>>;
+    using Value = scaled_value<std::ratio<1, 1>>;
 
 }
