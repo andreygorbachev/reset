@@ -25,6 +25,8 @@
 #include <resets.h>
 #include <index.h>
 
+#include <calculation_252.h>
+
 #include <chrono>
 #include <iostream>
 #include <iomanip>
@@ -34,6 +36,8 @@ using namespace std;
 using namespace std::chrono;
 
 using namespace boost::multiprecision;
+
+using namespace fin_calendar;
 
 using namespace reset;
 
@@ -55,12 +59,15 @@ int main()
 {
 	const auto SELIC = parse_csv_resets_SELIC();
 
-	auto detail = index_detail{};
-	detail.initial_value = cpp_dec_float_50{ 1000 };
-	detail.initial_date = 2000y / July / 1d;
-	detail.brazil = true;
-	detail.factor_round = 8u;
-	detail.final_trunc = 6u;
+	auto rfd = rate_fixing_detail{};
+	rfd.day_count = calculation_252<boost::multiprecision::cpp_dec_float_50>{ SELIC.get_calendar() }; // think more about copies of calendar
+
+	auto id = index_detail{};
+	id.initial_value = cpp_dec_float_50{ 1000 };
+	id.initial_date = 2000y / July / 1d;
+	id.brazil = true;
+	id.factor_round = 8u;
+	id.final_trunc = 6u;
 
 	// from https://wilsonfreitas.github.io/posts/pricing-brazilian-government-bonds-lft.html
 
@@ -68,13 +75,13 @@ int main()
 
 	cout
 		<< fixed
-		<< setprecision(detail.final_trunc.value())
+		<< setprecision(id.final_trunc.value())
 		<< "For "
 		<< date1
 		<< " VNA is "
 		<< cpp_dec_float_50{ "6023.149269" }
 		<< " and the same computed value is "
-		<< index(SELIC, date1, detail)
+		<< index(SELIC, rfd, date1, id)
 		<< endl;
 
 	// from "Metodologia de Cálculo dos Títulos Públicos Federais Ofertados nos Leilões Primários"
@@ -84,13 +91,13 @@ int main()
 
 	cout
 		<< fixed
-		<< setprecision(detail.final_trunc.value())
+		<< setprecision(id.final_trunc.value())
 		<< "For "
 		<< date2
 		<< " VNA is "
 		<< cpp_dec_float_50{ "3449.694215" } // for some reason the English version of the same document has different values
 		<< " and the same computed value is "
-		<< index(SELIC, date2, detail)
+		<< index(SELIC, rfd, date2, id)
 		<< endl;
 
 	return 0;

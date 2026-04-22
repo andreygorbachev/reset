@@ -25,6 +25,8 @@
 #include <resets.h>
 #include <index.h>
 
+#include <actual_360.h>
+
 #include <chrono>
 #include <iostream>
 #include <iomanip>
@@ -34,6 +36,8 @@ using namespace std;
 using namespace std::chrono;
 
 using namespace boost::multiprecision;
+
+using namespace fin_calendar;
 
 using namespace reset;
 
@@ -56,10 +60,13 @@ int main()
 
 	const auto [SARON, SARON_compounded_index] = parse_csv_resets_SARON_and_SARON_compounded_index();
 
-	auto detail = index_detail{};
-	detail.initial_value = cpp_dec_float_50{ 10'000 };
-	detail.initial_date = 1999y / June / 30d;
-	detail.final_round = 4u;
+	auto rfd = rate_fixing_detail{};
+	rfd.day_count = actual_360<cpp_dec_float_50>{};
+
+	auto id = index_detail{};
+	id.initial_value = cpp_dec_float_50{ 10'000 };
+	id.initial_date = 1999y / June / 30d;
+	id.final_round = 4u;
 
 //	const auto date = 2020y / February / 17d;
 	const auto date = 2020y / January / 24d; // then things don't work
@@ -72,7 +79,7 @@ int main()
 		<< " SARON Compounded Index is "
 		<< SARON_compounded_index[date] * 100 // need a different accessor? (or handle 100 in some other way)
 		<< " and the same computed value is "
-		<< index(SARON, date, detail);
+		<< index(SARON, rfd, date, id);
 
 	return 0;
 }

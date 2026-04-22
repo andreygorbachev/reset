@@ -54,19 +54,20 @@ namespace reset
 		std::optional<unsigned int> final_round = std::nullopt; // should rounding and truncations be int?
 	};
 
+
+
 	inline auto index_factor_(
 		boost::multiprecision::cpp_dec_float_50 i,
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const resets& r,
+		const rate_fixing_detail& rfd,
 		const index_detail& detail
 	) -> boost::multiprecision::cpp_dec_float_50
 	{
 		const auto rate = r[start];
 
-		const auto& dc = r.get_day_count();
-
-		const auto year_fraction = fin_calendar::fraction(start, end, dc);
+		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
 		const auto one = boost::multiprecision::cpp_dec_float_50{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
 		auto factor = detail.brazil ?
@@ -87,24 +88,26 @@ namespace reset
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const resets& r,
-		const index_detail& detail
+		const rate_fixing_detail& rfd,
+		const index_detail& id
 	)
 	{
-		i *= index_factor_(i, start, end, r, detail);
+		i *= index_factor_(i, start, end, r, rfd, id);
 
-		if (detail.step_trunc)
-			i = trunc_dp(i, *detail.step_trunc);
+		if (id.step_trunc)
+			i = trunc_dp(i, *id.step_trunc);
 
-		if (detail.step_round)
-			i = round_dp(i, *detail.step_round);
+		if (id.step_round)
+			i = round_dp(i, *id.step_round);
 	}
 
 
 	// maybe this needs a better name? - compute a compounded RFR index from the underlying resets
 	inline auto index(
 		const resets& r,
+		const rate_fixing_detail& rfd,
 		const std::chrono::year_month_day& ymd,
-		const index_detail& detail = index_detail{}
+		const index_detail& id = index_detail{} // does it need a default?
 	) -> boost::multiprecision::cpp_dec_float_50
 	{
 		// should throw an exception if we requested an index before a business day before the first reset
@@ -112,13 +115,13 @@ namespace reset
 
 		const auto& c = r.get_calendar();
 		const auto schedule = c.make_business_days_schedule(
-			gregorian::util::days_period{ detail.initial_date, ymd }
+			gregorian::util::days_period{ id.initial_date, ymd }
 		); // is this a wrong data structure?
 		// assert that it is not empty?
 
 		const auto& dates = schedule.get_dates();
 
-		auto i = detail.initial_value;
+		auto i = id.initial_value;
 
 		// not very elegant to start with
 		auto start = std::chrono::year_month_day{};
@@ -132,16 +135,16 @@ namespace reset
 
 			const auto& end = d;
 
-			index_step_(i, start, end, r, detail);
+			index_step_(i, start, end, r, rfd, id);
 
 			start = d;
 		}
 
-		if (detail.final_trunc)
-			i = trunc_dp(i, *detail.final_trunc);
+		if (id.final_trunc)
+			i = trunc_dp(i, *id.final_trunc);
 
-		if (detail.final_round)
-			i = round_dp(i, *detail.final_round);
+		if (id.final_round)
+			i = round_dp(i, *id.final_round);
 
 		return i;
 	}

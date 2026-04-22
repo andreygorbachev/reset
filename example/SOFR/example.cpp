@@ -26,6 +26,8 @@
 #include <index.h>
 #include <average.h>
 
+#include <actual_360.h>
+
 #include <static_data.h>
 #include <calendar.h>
 #include <schedule.h>
@@ -47,6 +49,8 @@ using namespace boost::multiprecision;
 using namespace gregorian;
 using namespace gregorian::util;
 using namespace gregorian::static_data;
+
+using namespace fin_calendar;
 
 using namespace reset;
 
@@ -115,6 +119,9 @@ int main()
 {
 	const auto SOFR = parse_csv_resets_SOFR();
 
+	auto rfd = rate_fixing_detail{};
+	rfd.day_count = actual_360<cpp_dec_float_50>{};
+
 	const auto SOFR_compounded_index = parse_csv_resets_SOFR_compounded_index();
 
 	const auto SOFR_30_day_average = parse_csv_resets_SOFR_30_day_average();
@@ -154,7 +161,7 @@ int main()
 		<< " SOFR Compounded Index is "
 		<< SOFR_compounded_index[date] * 100 // need a different accessor? (or handle 100 in some other way)
 		<< " and the same computed value is "
-		<< index(SOFR, date, id)
+		<< index(SOFR, rfd, date, id)
 		<< endl;
 
 	cout
@@ -165,7 +172,7 @@ int main()
 		<< " SOFR 30 Day Average is "
 		<< SOFR_30_day_average[date] * 100 // need a different accessor? (or handle 100 in some other way)
 		<< " and the same computed value is "
-		<< average(SOFR, date, _30dd).percent.get_value()
+		<< average(SOFR, rfd, date, _30dd).percent.get_value()
 		<< endl;
 
 	cout
@@ -176,7 +183,7 @@ int main()
 		<< " SOFR 90 Day Average is "
 		<< SOFR_90_day_average[date] * 100 // need a different accessor? (or handle 100 in some other way)
 		<< " and the same computed value is "
-		<< average(SOFR, date, _90dd).percent.get_value()
+		<< average(SOFR, rfd, date, _90dd).percent.get_value()
 		<< endl;
 
 	cout
@@ -187,7 +194,7 @@ int main()
 		<< " SOFR 180 Day Average is "
 		<< SOFR_180_day_average[date] * 100 // need a different accessor? (or handle 100 in some other way)
 		<< " and the same computed value is "
-		<< average(SOFR, date, _180dd).percent.get_value()
+		<< average(SOFR, rfd, date, _180dd).percent.get_value()
 		<< endl;
 
 	const auto& SIFMA_calendar = locate_calendar("America/SIFMA", date);
@@ -246,7 +253,7 @@ int main()
 			break;
 		// temporary only, unit we sort out start/end of RFR/RFR Index
 
-		if (SOFR_compounded_index[d] * 100 != index(SOFR, d, id))
+		if (SOFR_compounded_index[d] * 100 != index(SOFR, rfd, d, id))
 			cout
 				<< fixed
 				<< setprecision(8)
@@ -255,7 +262,7 @@ int main()
 				<< " SOFR Compounded Index is "
 				<< SOFR_compounded_index[d] * 100
 				<< " and the same computed value is "
-				<< index(SOFR, d, id)
+				<< index(SOFR, rfd, d, id)
 				<< endl;
 	}
 
@@ -269,7 +276,7 @@ int main()
 			break;
 		// temporary only
 
-		if (SOFR_30_day_average[d] != average(SOFR, d, _30dd).percent)
+		if (SOFR_30_day_average[d] != average(SOFR, rfd, d, _30dd).percent)
 			cout
 				<< fixed
 				<< setprecision(5)
@@ -278,7 +285,7 @@ int main()
 				<< " SOFR 30 Day Average is "
 				<< SOFR_30_day_average[d] * 100 // need a different accessor? (or handle 100 in some other way)
 				<< " and the same computed value is "
-				<< average(SOFR, d, _30dd).percent.get_value()
+				<< average(SOFR, rfd, d, _30dd).percent.get_value()
 				<< endl;
 	}
 
@@ -292,7 +299,7 @@ int main()
 			break;
 		// temporary only
 
-		if (SOFR_90_day_average[d] != average(SOFR, d, _90dd).percent)
+		if (SOFR_90_day_average[d] != average(SOFR, rfd, d, _90dd).percent)
 			cout
 			<< fixed
 			<< setprecision(5)
@@ -301,7 +308,7 @@ int main()
 			<< " SOFR 90 Day Average is "
 			<< SOFR_90_day_average[d] * 100 // need a different accessor? (or handle 100 in some other way)
 			<< " and the same computed value is "
-			<< average(SOFR, d, _90dd).percent.get_value()
+			<< average(SOFR, rfd, d, _90dd).percent.get_value()
 			<< endl;
 	}
 
@@ -315,7 +322,7 @@ int main()
 			break;
 		// temporary only
 
-		if (SOFR_180_day_average[d] != average(SOFR, d, _180dd).percent)
+		if (SOFR_180_day_average[d] != average(SOFR, rfd, d, _180dd).percent)
 			cout
 			<< fixed
 			<< setprecision(5)
@@ -324,7 +331,7 @@ int main()
 			<< " SOFR 180 Day Average is "
 			<< SOFR_180_day_average[d] * 100 // need a different accessor? (or handle 100 in some other way)
 			<< " and the same computed value is "
-			<< average(SOFR, d, _180dd).percent.get_value()
+			<< average(SOFR, rfd, d, _180dd).percent.get_value()
 			<< endl;
 	}
 

@@ -29,9 +29,6 @@
 #include <period.h>
 #include <weekend.h>
 
-#include <day_count.h>
-#include <actual_360.h>
-
 #include <string>
 #include <chrono>
 #include <istream>
@@ -140,7 +137,5 @@ inline auto parse_csv_resets(
 	// but ISDA does use Good Friday for compounding (via a fallback mechanism)
 	// (to me this is not 100% clear from the SOFR Index description)
 
-	const auto dc = fin_calendar::actual_360<boost::multiprecision::cpp_dec_float_50>{};
-
-	return reset::resets{ std::move(ts), std::move(c), dc, dp };
+	return reset::resets{ std::move(ts), std::move(c), dp };
 }

@@ -22,8 +22,6 @@
 
 #include <resets.h>
 
-#include <day_count.h>
-
 #include <time_series.h>
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
@@ -55,14 +53,12 @@ namespace reset
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{}, 4 };
-
 		const auto expected1 = time_series<optional<cpp_dec_float_50>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 		const auto expected2 = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
-		const auto expected3 = day_count<cpp_dec_float_50>{ actual_365_fixed<cpp_dec_float_50>{} };
+
+		const auto rs = resets{ move(ts), move(c), 4 };
 		EXPECT_EQ(expected1, rs.get_time_series());
 //		EXPECT_EQ(expected2, rs.get_publication_calendar());
-//		EXPECT_EQ(expected3, rs.get_day_count());
 	}
 
 	TEST(resets, operator_square_brackets)
@@ -72,7 +68,7 @@ namespace reset
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{}, 4 };
+		const auto rs = resets{ move(ts), move(c), 4 };
 
 		EXPECT_EQ(cpp_dec_float_50{ "0.034269" }, rs[2023y / January / 3d]);
 
@@ -86,7 +82,7 @@ namespace reset
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{}, 4 };
+		const auto rs = resets{ move(ts), move(c), 4 };
 
 		EXPECT_EQ(cpp_dec_float_50{ "0.034269" }, rs.current_observation(2023y / January / 3d));
 
@@ -101,7 +97,7 @@ namespace reset
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto rs = resets{ move(ts), move(c), actual_365_fixed<cpp_dec_float_50>{}, 4 };
+		const auto rs = resets{ move(ts), move(c), 4 };
 
 		EXPECT_EQ(2023y / January / 3d, rs.last_reset_year_month_day());
 	}

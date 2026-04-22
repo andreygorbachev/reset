@@ -48,19 +48,20 @@ namespace reset
 		std::optional<unsigned int> final_round = std::nullopt; // should rounding and truncations be int?
 	};
 
+
+
 	inline void average_step_( // should it be the same as index_step_ in index.h?
 		boost::multiprecision::cpp_dec_float_50& a, // should it take a return a value? (no in/out parameter)
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
-		const resets& r
+		const resets& r,
+		const rate_fixing_detail& rfd
 	)
 	{
 //		const auto rate = r[start];
 		const auto rate = r.current_observation(start); // or we can create special average_step_ for the first step when average starts on a non business day (and we need to use the previous reset)
 
-		const auto& dc = r.get_day_count();
-
-		const auto year_fraction = fin_calendar::fraction(start, end, dc);
+		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
 		const auto one = boost::multiprecision::cpp_dec_float_50{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
 		a *= boost::multiprecision::cpp_dec_float_50{ one + rate * year_fraction }; // should these have some kind of units?
@@ -69,8 +70,9 @@ namespace reset
 	// maybe this needs a better name? (like compounded 
 	inline auto average(
 		const resets& r,
+		const rate_fixing_detail& rfd,
 		const std::chrono::year_month_day& ymd,
-		const average_detail& detail = average_detail{}
+		const average_detail& detail = average_detail{} // does it need a default?
 	) -> rate
 	{
 		// do we handle the case where detail.term is empty?
@@ -99,7 +101,7 @@ namespace reset
 
 				const auto& end = d;
 
-				average_step_(val, start, end, r);
+				average_step_(val, start, end, r, rfd);
 
 				start = d;
 			}
@@ -108,7 +110,7 @@ namespace reset
 		{
 			// special case where the first period starts on a non business day
 
-			average_step_(val, schedule.get_period().get_from(), *dates.cbegin(), r);
+			average_step_(val, schedule.get_period().get_from(), *dates.cbegin(), r, rfd);
 
 			auto start = std::chrono::year_month_day{};
 			for (const auto& d : dates)
@@ -121,15 +123,13 @@ namespace reset
 
 				const auto& end = d;
 
-				average_step_(val, start, end, r);
+				average_step_(val, start, end, r, rfd);
 
 				start = d;
 			}
 		}
 
-		const auto& dc = r.get_day_count();
-
-		const auto year_fraction = fin_calendar::fraction(schedule.get_period(), dc);
+		const auto year_fraction = fin_calendar::fraction(schedule.get_period(), rfd.day_count);
 
 		const auto one = boost::multiprecision::cpp_dec_float_50{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
 		auto a = boost::multiprecision::cpp_dec_float_50{ (val - one) / year_fraction };
@@ -141,7 +141,7 @@ namespace reset
 			a,
 			*dates.cbegin(),
 			*dates.crbegin(),
-			r.get_day_count()
+			rfd.day_count // or should the average has its own day count? (is there a way to default it to underlying daily rate day count?)
 		};
 	}
 

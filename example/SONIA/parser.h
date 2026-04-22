@@ -29,9 +29,6 @@
 #include <period.h>
 #include <weekend.h>
 
-#include <day_count.h>
-#include <actual_365_fixed.h>
-
 #include <string>
 #include <chrono>
 #include <istream>
@@ -132,7 +129,5 @@ inline auto parse_csv_resets(
 
 	auto c = _make_calendar(ts);
 
-	const auto dc = fin_calendar::actual_365_fixed<boost::multiprecision::cpp_dec_float_50>{};
-
-	return reset::resets{ std::move(ts), std::move(c), dc, dp };
+	return reset::resets{ std::move(ts), std::move(c), dp };
 }

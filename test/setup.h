@@ -26,8 +26,6 @@
 
 #include <period.h>
 
-#include <actual_360.h>
-
 #include <resets.h>
 
 
@@ -41,7 +39,6 @@ namespace reset
 		using namespace std::chrono;
 		using namespace gregorian;
 		using namespace gregorian::util;
-		using namespace fin_calendar;
 
 		auto ts = resets::storage{ days_period{2018y / April / 2d, 2018y / April / 6d} }; // should we write code to use initialiser for _time_series?
 		ts[2018y / April / 2d] = resets::observation{ "1.80" };
@@ -52,7 +49,7 @@ namespace reset
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		return resets{ std::move(ts), std::move(c), actual_360<resets::observation>{}, 2 };
+		return resets{ std::move(ts), std::move(c), 2 };
 	}
 
 }

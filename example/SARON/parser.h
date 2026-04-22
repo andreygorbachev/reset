@@ -26,9 +26,6 @@
 
 #include <period.h>
 
-#include <day_count.h>
-#include <actual_360.h>
-
 #include <string>
 #include <chrono>
 #include <istream>
@@ -138,7 +135,5 @@ inline auto parse_csv_resets_x2(
 
 	auto c = _make_calendar(ts1);
 
-	const auto dc = fin_calendar::actual_360<boost::multiprecision::cpp_dec_float_50>{};
-
-	return { reset::resets{ std::move(ts1), c, dc, 6 }, reset::resets{ std::move(ts2), c, dc, 5 } }; // index needs to be checked a bit more
+	return { reset::resets{ std::move(ts1), c, 6 }, reset::resets{ std::move(ts2), c, 5 } }; // index needs to be checked a bit more
 }

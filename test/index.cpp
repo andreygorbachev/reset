@@ -24,6 +24,8 @@
 
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
+#include <actual_360.h>
+
 #include <index.h>
 #include <resets.h>
 
@@ -34,6 +36,7 @@
 using namespace std;
 using namespace std::chrono;
 using namespace boost::multiprecision;
+using namespace fin_calendar;
 
 
 namespace reset
@@ -45,17 +48,20 @@ namespace reset
 
 		const auto resets = make_SOFR_resets();
 
-		auto detail = index_detail{};
-		detail.initial_value = cpp_dec_float_50{ 1 };
-		detail.initial_date = 2018y / April / 2d;
-		detail.final_round = 8u;
+		auto rfd = rate_fixing_detail{};
+		rfd.day_count = actual_360<cpp_dec_float_50>{};
 
-//		EXPECT_EQ(resets::observation{ "1.00000000" }, index(resets, 2018y / April / 2d, detail));
-		EXPECT_EQ(resets::observation{ "1.00005000" }, index(resets, 2018y / April / 3d, detail));
-		EXPECT_EQ(resets::observation{ "1.00010084" }, index(resets, 2018y / April / 4d, detail));
-		EXPECT_EQ(resets::observation{ "1.00014917" }, index(resets, 2018y / April / 5d, detail));
-		EXPECT_EQ(resets::observation{ "1.00019779" }, index(resets, 2018y / April / 6d, detail));
-//		EXPECT_EQ(resets::observation{ "1.00034365" }, index(resets, 2018y / April / 9d, detail));
+		auto id = index_detail{};
+		id.initial_value = cpp_dec_float_50{ 1 };
+		id.initial_date = 2018y / April / 2d;
+		id.final_round = 8u;
+
+//		EXPECT_EQ(resets::observation{ "1.00000000" }, index(resets, rfd, 2018y / April / 2d, id));
+		EXPECT_EQ(resets::observation{ "1.00005000" }, index(resets, rfd, 2018y / April / 3d, id));
+		EXPECT_EQ(resets::observation{ "1.00010084" }, index(resets, rfd, 2018y / April / 4d, id));
+		EXPECT_EQ(resets::observation{ "1.00014917" }, index(resets, rfd, 2018y / April / 5d, id));
+		EXPECT_EQ(resets::observation{ "1.00019779" }, index(resets, rfd, 2018y / April / 6d, id));
+//		EXPECT_EQ(resets::observation{ "1.00034365" }, index(resets, rfd, 2018y / April / 9d, id));
 	}
 
 	TEST(index, index2)

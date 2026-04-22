@@ -25,6 +25,8 @@
 #include <resets.h>
 #include <index.h>
 
+#include <actual_365_fixed.h>
+
 #include <static_data.h>
 #include <calendar.h>
 #include <schedule.h>
@@ -45,6 +47,8 @@ using namespace boost::multiprecision;
 using namespace gregorian;
 using namespace gregorian::util;
 using namespace gregorian::static_data;
+
+using namespace fin_calendar;
 
 using namespace reset;
 
@@ -78,15 +82,18 @@ int main()
 {
 	const auto SONIA = parse_csv_resets_SONIA();
 
+	auto rfd = rate_fixing_detail{};
+	rfd.day_count = actual_360<cpp_dec_float_50>{};
+
 	const auto SONIA_compounded_index = parse_csv_resets_SONIA_compounded_index();
 	// I think BoE website does not fully describe the compounded index
 	// more clarity would be welcome there on how rounding is done daily (*)
 
-	auto detail = index_detail{};
-	detail.initial_value = cpp_dec_float_50{ 100 };
-	detail.initial_date = 2018y / April / 23d;
-	detail.step_round = 18u;
-	detail.final_round = 8u;
+	auto id = index_detail{};
+	id.initial_value = cpp_dec_float_50{ 100 };
+	id.initial_date = 2018y / April / 23d;
+	id.step_round = 18u;
+	id.final_round = 8u;
 
 //	const auto date = 2025y / May / 13d;
 	const auto date = 2025y / May / 12d;
@@ -100,7 +107,7 @@ int main()
 		<< " SONIA Compounded Index is "
 		<< SONIA_compounded_index[date] * 100 // need a different accessor? (or handle 100 in some other way)
 		<< " and the same computed value is "
-		<< index(SONIA, date, detail)
+		<< index(SONIA, rfd, date, id)
 		<< endl;
 
 	const auto& London_calendar = locate_calendar("Europe/London", date);
@@ -159,14 +166,14 @@ int main()
 			break;
 		// temporary only, until we sort out start/end of RFR/RFR Index
 
-		if (SONIA_compounded_index[d] * 100 != index(SONIA, d, detail))
+		if (SONIA_compounded_index[d] * 100 != index(SONIA, rfd, d, id))
 			cout
 				<< "For "
 				<< d
 				<< " SONIA Compounded Index is "
 				<< SONIA_compounded_index[d] * 100
 				<< " and the same computed value is "
-				<< index(SONIA, d, detail)
+				<< index(SONIA, rfd, d, id)
 				<< endl;
 	}
 

@@ -23,7 +23,7 @@
 #include <resets.h>
 #include <index.h>
 
-#include <day_count.h>
+#include <actual_365_fixed.h>
 
 #include <calendar.h>
 #include <period.h>
@@ -68,7 +68,7 @@ auto make_resets()
 		if (cal.is_business_day(d))
 			ts[d] = daily_rate;
 
-	return resets{ move(ts), move(cal), actual_365_fixed<cpp_dec_float_50>{}, 8 };
+	return resets{ move(ts), move(cal), 8 };
 }
 
 
@@ -78,14 +78,17 @@ int main()
 	const auto& cal = r.get_calendar();
 	const auto [f, u] = cal.get_schedule().get_period().from_until();
 
-	auto detail1 = index_detail{};
-	detail1.initial_value = cpp_dec_float_50{ 100 };
-	detail1.initial_date = f;
-	detail1.step_round = 18u; // we compare the index with daily rounding
-	detail1.final_round = 8u;
+	auto rfd = rate_fixing_detail{};
+	rfd.day_count = actual_365_fixed<cpp_dec_float_50>{};
 
-	auto detail2 = detail1;
-	detail2.step_round = nullopt; // with the index without daily rounding
+	auto id1 = index_detail{};
+	id1.initial_value = cpp_dec_float_50{ 100 };
+	id1.initial_date = f;
+	id1.step_round = 18u; // we compare the index with daily rounding
+	id1.final_round = 8u;
+
+	auto id2 = id1;
+	id2.step_round = nullopt; // with the index without daily rounding
 
 	cout
 		<< fixed
@@ -97,8 +100,8 @@ int main()
 		d = sys_days{ d } + days{ 365 }
 	) // as we do not cache the previous step, we can spread the below over multiple threads
 	{
-		const auto i1 = index(r, d, detail1);
-		const auto i2 = index(r, d, detail2);
+		const auto i1 = index(r, rfd, d, id1);
+		const auto i2 = index(r, rfd, d, id2);
 
 		if (i1 != i2)
 			cout
