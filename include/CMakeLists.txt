@@ -3,6 +3,7 @@
 add_library(${PROJECT_NAME} INTERFACE
   resets_math.h
   scaled_value.h
+  rate.h
   resets.h
   index.h
   average.h

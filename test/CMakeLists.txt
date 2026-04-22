@@ -16,6 +16,7 @@ project("${PROJECT_NAME}_test" LANGUAGES CXX)
 add_executable(${PROJECT_NAME}
   resets_math.cpp
   scaled_value.cpp
+  rate.cpp
   resets.cpp
   index.cpp
   average.cpp
