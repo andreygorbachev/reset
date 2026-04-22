@@ -36,7 +36,13 @@ using namespace std;
 namespace reset
 {
 
-	TEST(scaled_value, constructor)
+	TEST(scaled_value, constructor1)
+	{
+		const auto sv = Percent{ "3" }; // 3%
+		EXPECT_EQ(cpp_dec_float_50{ "0.03" }, static_cast<cpp_dec_float_50>(sv));
+	}
+
+	TEST(scaled_value, constructor2)
 	{
 		const auto sv = Percent{ cpp_dec_float_50{ "0.03" } }; // 3%
 		EXPECT_EQ(cpp_dec_float_50{ "0.03" }, static_cast<cpp_dec_float_50>(sv));

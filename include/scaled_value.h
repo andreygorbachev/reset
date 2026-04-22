@@ -25,6 +25,7 @@
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
 #include <ratio>
+#include <string_view>
 
 
 namespace reset
@@ -36,8 +37,10 @@ namespace reset
 
     public:
 
+        explicit scaled_value(std::string_view value); // noexcept?
+
         // note that we do this implicitly
-        scaled_value(boost::multiprecision::cpp_dec_float_50 value); // noexcept?
+        scaled_value(boost::multiprecision::cpp_dec_float_50 v); // noexcept?
 
     public:
 
@@ -53,6 +56,13 @@ namespace reset
         boost::multiprecision::cpp_dec_float_50 value_;
 
     };
+
+
+    template<typename Ratio>
+    scaled_value<Ratio>::scaled_value(std::string_view value) :
+        value_{ value }
+    {
+    }
 
 
     template<typename Ratio>
