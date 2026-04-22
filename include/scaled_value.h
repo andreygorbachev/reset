@@ -32,7 +32,7 @@ namespace reset
 {
 
     template <typename Ratio>
-    class scaled_value // should it be in util?
+    class scaled_value // should it be in util? // constexpr?
     {
 
     public:
@@ -87,7 +87,8 @@ namespace reset
 
 
 
-    // literals? print format?
+    // literals? (not 100% sure what they would apply to as we are dealing with decimals, rather than doubles
+    // print format?
 
 
     using Percent = scaled_value<std::ratio<1, 100>>;
