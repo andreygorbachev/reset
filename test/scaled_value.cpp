@@ -39,7 +39,8 @@ namespace reset
 	TEST(scaled_value, constructor1)
 	{
 		const auto sv = Percent{ "3" };
-		EXPECT_EQ(cpp_dec_float_50{ "0.03" }, static_cast<cpp_dec_float_50>(sv));
+		// also test "wrong" strings I guess (or do we just rely on cpp_dec_float_50 to do so)
+		EXPECT_EQ(cpp_dec_float_50{ "3" }, sv.get_value());
 	}
 
 	TEST(scaled_value, constructor2)

@@ -87,7 +87,7 @@ namespace reset
 
 
 
-    // literals? (not 100% sure what they would apply to as we are dealing with decimals, rather than doubles
+    // literals? (not 100% sure what they would apply to as we are dealing with decimals, rather than doubles)
     // print format?
 
 
