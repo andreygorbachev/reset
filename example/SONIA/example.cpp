@@ -54,10 +54,10 @@ using namespace reset;
 
 
 
-static auto parse_csv_fixings_SONIA() -> fixings
+static auto parse_csv_fixings_SONIA() -> RateFixings
 {
 	// from https://www.bankofengland.co.uk/markets/sonia-benchmark
-	return parse_csv_fixings(
+	return parse_csv_fixings<RateFixings>(
 		"SONIA.csv",
 		1997y / January / 1d,
 		2025y / May / 12d,
@@ -65,10 +65,10 @@ static auto parse_csv_fixings_SONIA() -> fixings
 	);
 }
 
-static auto parse_csv_fixings_SONIA_compounded_index() -> fixings
+static auto parse_csv_fixings_SONIA_compounded_index() -> IndexFixings
 {
 	// from https://www.bankofengland.co.uk/markets/sonia-benchmark
-	return parse_csv_fixings(
+	return parse_csv_fixings<IndexFixings>(
 		"SONIA Compounded Index.csv",
 		2018y / April / 23d,
 		2025y / May / 13d,
@@ -83,7 +83,7 @@ int main()
 	const auto SONIA = parse_csv_fixings_SONIA();
 
 	auto rfd = rate_fixing_detail{};
-	rfd.day_count = actual_360<cpp_dec_float_50>{};
+	rfd.day_count = actual_365_fixed<cpp_dec_float_50>{};
 
 	const auto SONIA_compounded_index = parse_csv_fixings_SONIA_compounded_index();
 	// I think BoE website does not fully describe the compounded index
@@ -105,9 +105,9 @@ int main()
 		<< "For "
 		<< date
 		<< " SONIA Compounded Index is "
-		<< SONIA_compounded_index[date] * 100 // need a different accessor? (or handle 100 in some other way)
+		<< SONIA_compounded_index[date]->get_value()
 		<< " and the same computed value is "
-		<< index(SONIA, rfd, date, id)
+		<< index(SONIA, rfd, date, id).get_value()
 		<< endl;
 
 	const auto& London_calendar = locate_calendar("Europe/London", date);
@@ -166,14 +166,14 @@ int main()
 			break;
 		// temporary only, until we sort out start/end of RFR/RFR Index
 
-		if (SONIA_compounded_index[d] * 100 != index(SONIA, rfd, d, id))
+		if (*SONIA_compounded_index[d] != index(SONIA, rfd, d, id))
 			cout
 				<< "For "
 				<< d
 				<< " SONIA Compounded Index is "
-				<< SONIA_compounded_index[d] * 100
+				<< SONIA_compounded_index[d]->get_value()
 				<< " and the same computed value is "
-				<< index(SONIA, rfd, d, id)
+				<< index(SONIA, rfd, d, id).get_value()
 				<< endl;
 	}
 

@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include "scaled_value.h"
 #include "resets_math.h"
 
 #include <day_count.h>
@@ -50,12 +51,13 @@ namespace reset
 
 
 
+	template<typename Observation>
 	class fixings // at the moment we are not thinking about revisions
 	{
 
 	public:
 
-		using observation = boost::multiprecision::cpp_dec_float_50;
+		using observation = Observation;
 
 		using storage = gregorian::util::time_series<std::optional<observation>>; // this is for value dates not publication dates
 
@@ -70,11 +72,9 @@ namespace reset
 
 	public:
 
-		auto operator[](const std::chrono::year_month_day& ymd) const -> observation;
-		// this converts from percentages
-		// and throws an exception for missing fixings - is it what we want?
+		auto operator[](const std::chrono::year_month_day& ymd) const -> const std::optional<observation>&;
 
-		auto current_observation(const std::chrono::year_month_day& ymd) const -> observation;
+		auto current_observation(const std::chrono::year_month_day& ymd) const -> const observation&;
 		// throws an exception when we are pushed before the start of fixings
 
 	public:
@@ -95,11 +95,16 @@ namespace reset
 
 		decimal_places dp_;
 
-	}; // should there be a different class for indices?
+	};
 
 
 
-	inline fixings::fixings(storage ts, calendar c, decimal_places dp) :
+	using RateFixings = fixings<Percent>;
+	using IndexFixings = fixings<Value>;
+
+
+	template<typename Observation>
+	fixings<Observation>::fixings(storage ts, calendar c, decimal_places dp) :
 		ts_{ std::move(ts) },
 		c_{ std::move(c) },
 		dp_{ dp }
@@ -108,40 +113,45 @@ namespace reset
 
 
 
-	inline auto fixings::operator[](const std::chrono::year_month_day& ymd) const -> observation
+	template<typename Observation>
+	auto fixings<Observation>::operator[](const std::chrono::year_month_day& ymd) const -> const std::optional<observation>&
 	{
-		const auto& o = ts_[ymd];
-		if (o)
-			return from_percent(*o);
-		else
-			throw std::out_of_range{ "Request is not consistent with publication calendar" }; // we should handle days where reset is expected but not supplied (previous one should be returned)
+		return ts_[ymd];
 	}
 
-	inline auto fixings::current_observation(const std::chrono::year_month_day& ymd) const -> observation
+	template<typename Observation>
+	auto fixings<Observation>::current_observation(const std::chrono::year_month_day& ymd) const -> const observation&
 	{
-		const auto p = fin_calendar::preceding{};
+		static const auto p = fin_calendar::preceding{};
 		const auto& o = ts_[p.adjust(ymd, c_)];
-		return from_percent(*o);
+		if (o)
+			return *o;
+		else
+			return current_observation(std::chrono::sys_days{ ymd } - std::chrono::days{ 1 });
 	}
 
 
-	inline auto fixings::get_time_series() const noexcept -> const storage&
+	template<typename Observation>
+	auto fixings<Observation>::get_time_series() const noexcept -> const storage&
 	{
 		return ts_;
 	}
 
-	inline auto fixings::get_calendar() const noexcept -> const calendar&
+	template<typename Observation>
+	auto fixings<Observation>::get_calendar() const noexcept -> const calendar&
 	{
 		return c_;
 	}
 
-	inline auto fixings::get_decimal_places() const noexcept -> decimal_places
+	template<typename Observation>
+	auto fixings<Observation>::get_decimal_places() const noexcept -> decimal_places
 	{
 		return dp_;
 	}
 
 
-	inline auto fixings::last_reset_year_month_day() const noexcept -> std::chrono::year_month_day
+	template<typename Observation>
+	auto fixings<Observation>::last_reset_year_month_day() const noexcept -> std::chrono::year_month_day
 	{
 		auto result = ts_.get_period().get_until();
 		while (!ts_[result])

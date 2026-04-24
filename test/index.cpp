@@ -56,12 +56,12 @@ namespace reset
 		id.initial_date = 2018y / April / 2d;
 		id.final_round = 8u;
 
-//		EXPECT_EQ(fixings::observation{ "1.00000000" }, index(fix, rfd, 2018y / April / 2d, id));
-		EXPECT_EQ(fixings::observation{ "1.00005000" }, index(fix, rfd, 2018y / April / 3d, id));
-		EXPECT_EQ(fixings::observation{ "1.00010084" }, index(fix, rfd, 2018y / April / 4d, id));
-		EXPECT_EQ(fixings::observation{ "1.00014917" }, index(fix, rfd, 2018y / April / 5d, id));
-		EXPECT_EQ(fixings::observation{ "1.00019779" }, index(fix, rfd, 2018y / April / 6d, id));
-//		EXPECT_EQ(fixings::observation{ "1.00034365" }, index(fix, rfd, 2018y / April / 9d, id));
+//		EXPECT_EQ(Value{ "1.00000000" }, index(fix, rfd, 2018y / April / 2d, id));
+		EXPECT_EQ(Value{ "1.00005000" }, index(fix, rfd, 2018y / April / 3d, id));
+		EXPECT_EQ(Value{ "1.00010084" }, index(fix, rfd, 2018y / April / 4d, id));
+		EXPECT_EQ(Value{ "1.00014917" }, index(fix, rfd, 2018y / April / 5d, id));
+		EXPECT_EQ(Value{ "1.00019779" }, index(fix, rfd, 2018y / April / 6d, id));
+//		EXPECT_EQ(Value{ "1.00034365" }, index(fix, rfd, 2018y / April / 9d, id));
 	}
 
 	TEST(index, index2)

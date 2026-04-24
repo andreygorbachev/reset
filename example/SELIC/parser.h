@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include <scaled_value.h>
 #include <fixings.h>
 
 #include <period.h>
@@ -57,7 +58,7 @@ inline auto _parse_observation(std::istream& fs)
 
 	std::replace(o.begin(), o.end(), ',', '.'); // instead of looking into locales
 
-	return reset::fixings::observation{
+	return reset::Percent{
 		o.substr(1uz, o.length() - 2uz)
 	}; // we ignore the first and last characters (quotes)
 }
@@ -67,9 +68,9 @@ inline auto _parse_csv_fixings_storage(
 	std::istream& fs,
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
-) -> reset::fixings::storage
+)
 {
-	auto result = reset::fixings::storage{ gregorian::util::days_period{ from, until } };
+	auto result = reset::RateFixings::storage{ gregorian::util::days_period{ from, until } };
 
 	for (;;)
 	{
@@ -91,7 +92,7 @@ inline auto _parse_csv_fixings_storage(
 }
 
 
-inline auto _make_calendar(const reset::fixings::storage& ts)
+inline auto _make_calendar(const reset::RateFixings::storage& ts)
 {
 	const auto& fu = ts.get_period();
 
@@ -115,7 +116,7 @@ inline auto parse_csv_fixings(
 	const std::string& fileName,
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
-) -> reset::fixings
+) -> reset::RateFixings
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
 

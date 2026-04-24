@@ -51,26 +51,28 @@ inline auto _parse_date(std::istream& fs)
 	return ymd;
 }
 
-inline auto _parse_observation(std::istream& fs)
+template<typename Fixings>
+auto _parse_observation(std::istream& fs)
 {
 	auto o = std::string{};
 	std::getline(fs, o);
 
 	using namespace std::string_literals;
 
-	return reset::fixings::observation{
+	return typename Fixings::observation{
 		o.substr(1uz, o.length() - 2uz)
 	}; // we ignore the first and last characters (quotes)
 }
 
 
-inline auto _parse_csv_fixings_storage(
+template<typename Fixings>
+auto _parse_csv_fixings_storage(
 	std::istream& fs,
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
-) -> reset::fixings::storage
+)
 {
-	auto result = reset::fixings::storage{ gregorian::util::days_period{ from, until } };
+	auto result = typename Fixings::storage{ gregorian::util::days_period{ from, until } };
 
 	for (;;)
 	{
@@ -80,7 +82,7 @@ inline auto _parse_csv_fixings_storage(
 		std::getline(fs, s, ','); // skip the comma
 		// check decimal places?
 
-		const auto observation = _parse_observation(fs);
+		const auto observation = _parse_observation<Fixings>(fs);
 
 		result[ymd] = observation;
 
@@ -92,7 +94,8 @@ inline auto _parse_csv_fixings_storage(
 }
 
 
-inline auto _make_calendar(const reset::fixings::storage& ts)
+template<typename Fixings>
+auto _make_calendar(const typename Fixings::storage& ts)
 {
 	const auto& fu = ts.get_period();
 
@@ -112,12 +115,13 @@ inline auto _make_calendar(const reset::fixings::storage& ts)
 }
 
 
-inline auto parse_csv_fixings(
+template<typename Fixings>
+auto parse_csv_fixings(
 	const std::string& fileName,
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until,
-	const reset::fixings::decimal_places dp
-) -> reset::fixings
+	const int dp
+) -> Fixings
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
 
@@ -125,9 +129,9 @@ inline auto parse_csv_fixings(
 	auto t = std::string{};
 	std::getline(fs, t);
 
-	auto ts = _parse_csv_fixings_storage(fs, from, until);
+	auto ts = _parse_csv_fixings_storage<Fixings>(fs, from, until);
 
-	auto c = _make_calendar(ts);
+	auto c = _make_calendar<Fixings>(ts);
 
-	return reset::fixings{ std::move(ts), std::move(c), dp };
+	return Fixings{ std::move(ts), std::move(c), dp };
 }

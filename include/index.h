@@ -57,15 +57,16 @@ namespace reset
 
 
 	inline auto index_factor_(
-		boost::multiprecision::cpp_dec_float_50 i,
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
-		const fixings& fix,
+		const RateFixings& fix,
 		const rate_fixing_detail& rfd,
 		const index_detail& detail
 	) -> boost::multiprecision::cpp_dec_float_50
 	{
-		const auto rate = fix[start];
+		const auto& fixing = fix[start];
+		assert(fixing);
+		const auto rate = static_cast<boost::multiprecision::cpp_dec_float_50>(*fixing);
 
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
@@ -84,31 +85,31 @@ namespace reset
 	}
 
 	inline void index_step_(
-		boost::multiprecision::cpp_dec_float_50& i,
+		boost::multiprecision::cpp_dec_float_50& indx,
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
-		const fixings& fix,
+		const RateFixings& fix,
 		const rate_fixing_detail& rfd,
 		const index_detail& id
 	)
 	{
-		i *= index_factor_(i, start, end, fix, rfd, id);
+		indx *= index_factor_(start, end, fix, rfd, id);
 
 		if (id.step_trunc)
-			i = trunc_dp(i, *id.step_trunc);
+			indx = trunc_dp(indx, *id.step_trunc);
 
 		if (id.step_round)
-			i = round_dp(i, *id.step_round);
+			indx = round_dp(indx, *id.step_round);
 	}
 
 
 	// maybe this needs a better name? - compute a compounded RFR index from the underlying fixings
 	inline auto index(
-		const fixings& fix,
+		const RateFixings& fix,
 		const rate_fixing_detail& rfd,
 		const std::chrono::year_month_day& ymd,
 		const index_detail& id = index_detail{} // does it need a default?
-	) -> boost::multiprecision::cpp_dec_float_50
+	) -> Value
 	{
 		// should throw an exception if we requested an index before a business day before the first reset
 		// but we do not have information about relevant calendar at the moment
@@ -121,7 +122,7 @@ namespace reset
 
 		const auto& dates = schedule.get_dates();
 
-		auto i = id.initial_value;
+		auto indx = id.initial_value;
 
 		// not very elegant to start with
 		auto start = std::chrono::year_month_day{};
@@ -135,18 +136,18 @@ namespace reset
 
 			const auto& end = d;
 
-			index_step_(i, start, end, fix, rfd, id);
+			index_step_(indx, start, end, fix, rfd, id);
 
 			start = d;
 		}
 
 		if (id.final_trunc)
-			i = trunc_dp(i, *id.final_trunc);
+			indx = trunc_dp(indx, *id.final_trunc);
 
 		if (id.final_round)
-			i = round_dp(i, *id.final_round);
+			indx = round_dp(indx, *id.final_round);
 
-		return i;
+		return indx; // no conversion needed?
 	}
 
 // we can also compute all the index values at the same time for all publication dates up to ymd

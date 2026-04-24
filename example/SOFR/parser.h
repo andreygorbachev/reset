@@ -51,24 +51,26 @@ inline auto _parse_date(std::istream& fs)
 	return ymd;
 }
 
+template<typename Fixings>
 inline auto _parse_observation(std::istream& fs)
 {
 	auto o = std::string{};
 	std::getline(fs, o, ',');
 	// check decimal places?
 
-	return reset::fixings::observation{ o };
+	return typename Fixings::observation{ o };
 }
 
 
-inline auto _parse_csv_fixings_storage(
+template<typename Fixings>
+auto _parse_csv_fixings_storage(
 	std::istream& fs,
 	const unsigned skip, // how many columns to skip after date before observation
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
-) -> reset::fixings::storage
+)
 {
-	auto result = reset::fixings::storage{ gregorian::util::days_period{ from, until } };
+	auto result = typename Fixings::storage{ gregorian::util::days_period{ from, until } };
 
 	for (;;)
 	{
@@ -79,7 +81,7 @@ inline auto _parse_csv_fixings_storage(
 		for (auto i = 0u; i < skip; ++i)
 			std::getline(fs, s, ','); // skip "xyz,"
 
-		const auto observation = _parse_observation(fs);
+		const auto observation = _parse_observation<Fixings>(fs);
 
 		result[ymd] = observation;
 
@@ -93,7 +95,8 @@ inline auto _parse_csv_fixings_storage(
 }
 
 
-inline auto _make_calendar(const reset::fixings::storage& ts)
+template<typename Fixings>
+auto _make_calendar(const typename Fixings::storage& ts)
 {
 	const auto& fu = ts.get_period();
 
@@ -113,23 +116,25 @@ inline auto _make_calendar(const reset::fixings::storage& ts)
 }
 
 
-inline auto parse_csv_fixings(
+template<typename Fixings>
+auto parse_csv_fixings(
 	const std::string& fileName,
 	const unsigned skip, // how many columns to skip after date before observation
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until,
-	const reset::fixings::decimal_places dp
-) -> reset::fixings
+	const int dp
+) -> Fixings
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
+	// check that file was open ok
 
 	// skip the first line (header)
 	auto t = std::string{};
 	std::getline(fs, t);
 
-	auto ts = _parse_csv_fixings_storage(fs, skip, from, until);
+	auto ts = _parse_csv_fixings_storage<Fixings>(fs, skip, from, until);
 
-	auto c = _make_calendar(ts);
+	auto c = _make_calendar<Fixings>(ts);
 	// please note that this is an important calendar and is different from "America/SIFMA"
 	// as sometimes NY Fed decides not to publish SOFR even when SIFMA says the market should be open
 	// (happened several times on Good Friday)
@@ -137,5 +142,5 @@ inline auto parse_csv_fixings(
 	// but ISDA does use Good Friday for compounding (via a fallback mechanism)
 	// (to me this is not 100% clear from the SOFR Index description)
 
-	return reset::fixings{ std::move(ts), std::move(c), dp };
+	return Fixings{ std::move(ts), std::move(c), dp };
 }

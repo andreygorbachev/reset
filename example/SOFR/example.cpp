@@ -56,10 +56,10 @@ using namespace reset;
 
 
 
-static auto parse_csv_fixings_SOFR() -> fixings
+static auto parse_csv_fixings_SOFR() -> RateFixings
 {
 	// from https://www.newyorkfed.org/markets/reference-rates/sofr
-	return parse_csv_fixings(
+	return parse_csv_fixings<RateFixings>(
 		"SOFR.csv",
 		1u, // skip the "SOFR," column after the date
 		2018y / April / 2d,
@@ -68,10 +68,10 @@ static auto parse_csv_fixings_SOFR() -> fixings
 	);
 }
 
-static auto parse_csv_fixings_SOFR_compounded_index() -> fixings
+static auto parse_csv_fixings_SOFR_compounded_index() -> IndexFixings
 {
 	// from https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index
-	return parse_csv_fixings(
+	return parse_csv_fixings<IndexFixings>(
 		"SOFR Compounded Index.csv", // also includes averages, so maybe needs a better name
 		15u,
 		2020y / March / 2d,
@@ -80,9 +80,9 @@ static auto parse_csv_fixings_SOFR_compounded_index() -> fixings
 	);
 }
 
-static auto parse_csv_fixings_SOFR_30_day_average() -> fixings
+static auto parse_csv_fixings_SOFR_30_day_average() -> RateFixings
 {
-	return parse_csv_fixings(
+	return parse_csv_fixings<RateFixings>(
 		"SOFR Compounded Index.csv",
 		12u,
 		2020y / March / 2d,
@@ -91,9 +91,9 @@ static auto parse_csv_fixings_SOFR_30_day_average() -> fixings
 	);
 }
 
-static auto parse_csv_fixings_SOFR_90_day_average() -> fixings
+static auto parse_csv_fixings_SOFR_90_day_average() -> RateFixings
 {
-	return parse_csv_fixings(
+	return parse_csv_fixings<RateFixings>(
 		"SOFR Compounded Index.csv",
 		13u,
 		2020y / March / 2d,
@@ -102,9 +102,9 @@ static auto parse_csv_fixings_SOFR_90_day_average() -> fixings
 	);
 }
 
-static auto parse_csv_fixings_SOFR_180_day_average() -> fixings
+static auto parse_csv_fixings_SOFR_180_day_average() -> RateFixings
 {
-	return parse_csv_fixings(
+	return parse_csv_fixings<RateFixings>(
 		"SOFR Compounded Index.csv",
 		14u,
 		2020y / March / 2d,
@@ -159,9 +159,9 @@ int main()
 		<< "For "
 		<< date
 		<< " SOFR Compounded Index is "
-		<< SOFR_compounded_index[date] * 100 // need a different accessor? (or handle 100 in some other way)
+		<< SOFR_compounded_index[date]->get_value()
 		<< " and the same computed value is "
-		<< index(SOFR, rfd, date, id)
+		<< index(SOFR, rfd, date, id).get_value()
 		<< endl;
 
 	cout
@@ -170,7 +170,7 @@ int main()
 		<< "For "
 		<< date
 		<< " SOFR 30 Day Average is "
-		<< SOFR_30_day_average[date] * 100 // need a different accessor? (or handle 100 in some other way)
+		<< SOFR_30_day_average[date]->get_value()
 		<< " and the same computed value is "
 		<< average(SOFR, rfd, date, _30dd).percent.get_value()
 		<< endl;
@@ -181,7 +181,7 @@ int main()
 		<< "For "
 		<< date
 		<< " SOFR 90 Day Average is "
-		<< SOFR_90_day_average[date] * 100 // need a different accessor? (or handle 100 in some other way)
+		<< SOFR_90_day_average[date]->get_value()
 		<< " and the same computed value is "
 		<< average(SOFR, rfd, date, _90dd).percent.get_value()
 		<< endl;
@@ -192,7 +192,7 @@ int main()
 		<< "For "
 		<< date
 		<< " SOFR 180 Day Average is "
-		<< SOFR_180_day_average[date] * 100 // need a different accessor? (or handle 100 in some other way)
+		<< SOFR_180_day_average[date]->get_value()
 		<< " and the same computed value is "
 		<< average(SOFR, rfd, date, _180dd).percent.get_value()
 		<< endl;
@@ -253,16 +253,16 @@ int main()
 			break;
 		// temporary only, unit we sort out start/end of RFR/RFR Index
 
-		if (SOFR_compounded_index[d] * 100 != index(SOFR, rfd, d, id))
+		if (*SOFR_compounded_index[d] != index(SOFR, rfd, d, id))
 			cout
 				<< fixed
 				<< setprecision(8)
 				<< "For "
 				<< d
 				<< " SOFR Compounded Index is "
-				<< SOFR_compounded_index[d] * 100
+				<< SOFR_compounded_index[d]->get_value()
 				<< " and the same computed value is "
-				<< index(SOFR, rfd, d, id)
+				<< index(SOFR, rfd, d, id).get_value()
 				<< endl;
 	}
 
@@ -276,14 +276,14 @@ int main()
 			break;
 		// temporary only
 
-		if (SOFR_30_day_average[d] != average(SOFR, rfd, d, _30dd).percent)
+		if (*SOFR_30_day_average[d] != average(SOFR, rfd, d, _30dd).percent)
 			cout
 				<< fixed
 				<< setprecision(5)
 				<< "For "
 				<< d
 				<< " SOFR 30 Day Average is "
-				<< SOFR_30_day_average[d] * 100 // need a different accessor? (or handle 100 in some other way)
+				<< SOFR_30_day_average[d]->get_value()
 				<< " and the same computed value is "
 				<< average(SOFR, rfd, d, _30dd).percent.get_value()
 				<< endl;
@@ -299,14 +299,14 @@ int main()
 			break;
 		// temporary only
 
-		if (SOFR_90_day_average[d] != average(SOFR, rfd, d, _90dd).percent)
+		if (*SOFR_90_day_average[d] != average(SOFR, rfd, d, _90dd).percent)
 			cout
 			<< fixed
 			<< setprecision(5)
 			<< "For "
 			<< d
 			<< " SOFR 90 Day Average is "
-			<< SOFR_90_day_average[d] * 100 // need a different accessor? (or handle 100 in some other way)
+			<< SOFR_90_day_average[d]->get_value()
 			<< " and the same computed value is "
 			<< average(SOFR, rfd, d, _90dd).percent.get_value()
 			<< endl;
@@ -322,14 +322,14 @@ int main()
 			break;
 		// temporary only
 
-		if (SOFR_180_day_average[d] != average(SOFR, rfd, d, _180dd).percent)
+		if (*SOFR_180_day_average[d] != average(SOFR, rfd, d, _180dd).percent)
 			cout
 			<< fixed
 			<< setprecision(5)
 			<< "For "
 			<< d
 			<< " SOFR 180 Day Average is "
-			<< SOFR_180_day_average[d] * 100 // need a different accessor? (or handle 100 in some other way)
+			<< SOFR_180_day_average[d]->get_value()
 			<< " and the same computed value is "
 			<< average(SOFR, rfd, d, _180dd).percent.get_value()
 			<< endl;

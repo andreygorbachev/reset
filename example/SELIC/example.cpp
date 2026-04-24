@@ -43,7 +43,7 @@ using namespace reset;
 
 
 
-static auto parse_csv_fixings_SELIC() -> fixings
+static auto parse_csv_fixings_SELIC() -> RateFixings
 {
 	// from https://api.bcb.gov.br/dados/serie/bcdata.sgs.1178/dados?formato=csv&dataInicial=01/07/2000&dataFinal=dd/mm/yyyy
 	return parse_csv_fixings(
@@ -60,7 +60,7 @@ int main()
 	const auto SELIC = parse_csv_fixings_SELIC();
 
 	auto rfd = rate_fixing_detail{};
-	rfd.day_count = calculation_252<boost::multiprecision::cpp_dec_float_50>{ SELIC.get_calendar() }; // think more about copies of calendar
+	rfd.day_count = calculation_252<cpp_dec_float_50>{ SELIC.get_calendar() }; // think more about copies of calendar
 
 	auto id = index_detail{};
 	id.initial_value = cpp_dec_float_50{ 1000 };
@@ -81,7 +81,7 @@ int main()
 		<< " VNA is "
 		<< cpp_dec_float_50{ "6023.149269" }
 		<< " and the same computed value is "
-		<< index(SELIC, rfd, date1, id)
+		<< index(SELIC, rfd, date1, id).get_value()
 		<< endl;
 
 	// from "Metodologia de Cálculo dos Títulos Públicos Federais Ofertados nos Leilões Primários"
@@ -97,7 +97,7 @@ int main()
 		<< " VNA is "
 		<< cpp_dec_float_50{ "3449.694215" } // for some reason the English version of the same document has different values
 		<< " and the same computed value is "
-		<< index(SELIC, rfd, date2, id)
+		<< index(SELIC, rfd, date2, id).get_value()
 		<< endl;
 
 	return 0;

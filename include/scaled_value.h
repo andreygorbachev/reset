@@ -44,6 +44,9 @@ namespace reset
 
     public:
 
+        friend bool operator==(const scaled_value& x, const scaled_value& y) = default;
+        friend bool operator<=>(const scaled_value& x, const scaled_value& y) = default;
+
         // note that we do this implicitly
         operator boost::multiprecision::cpp_dec_float_50() const; // noexcept?
 

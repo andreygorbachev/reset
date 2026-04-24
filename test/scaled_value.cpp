@@ -40,13 +40,13 @@ namespace reset
 	{
 		const auto sv = Percent{ "3" };
 		// also test "wrong" strings I guess (or do we just rely on cpp_dec_float_50 to do so)
-		EXPECT_EQ(cpp_dec_float_50{ "3" }, sv.get_value());
+		EXPECT_EQ(Percent{ "3" }, sv.get_value());
 	}
 
 	TEST(scaled_value, constructor2)
 	{
 		const auto sv = Percent{ cpp_dec_float_50{ "0.03" } }; // 3%
-		EXPECT_EQ(cpp_dec_float_50{ "0.03" }, static_cast<cpp_dec_float_50>(sv));
+		EXPECT_EQ(Percent{ "3" }, sv.get_value());
 	}
 
 	TEST(scaled_value, operator_cpp_dec_float_50)
@@ -78,5 +78,7 @@ namespace reset
 		const auto sv = Value{ "3" };
 		EXPECT_EQ(cpp_dec_float_50{ "3" }, static_cast<cpp_dec_float_50>(sv));
 	}
+
+	// do we need to test default functions?
 
 }

@@ -53,9 +53,9 @@ using namespace gregorian::util;
 
 static auto make_fixings()
 {
-	const/*expr*/ auto daily_rate = cpp_dec_float_50{ "3.17" }; // we assume that all rates are always the same
+	const/*expr*/ auto daily_rate = Percent{ "3.17" }; // we assume that all rates are always the same
 
-	auto ts = time_series<optional<cpp_dec_float_50>>{ days_period{ 2025y / FirstDayOfJanuary, 2525y / LastDayOfDecember } };
+	auto ts = time_series<optional<Percent>>{ days_period{ 2025y / FirstDayOfJanuary, 2525y / LastDayOfDecember } };
 
 	auto cal = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } }; // we ignore bank holidays
 
@@ -108,9 +108,9 @@ int main()
 				<< "For "
 				<< d
 				<< " Index with step_round is "
-				<< i1
+				<< i1.get_value()
 				<< " and Index without step_round is "
-				<< i2
+				<< i2.get_value()
 				<< endl;
 	}
 

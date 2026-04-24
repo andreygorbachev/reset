@@ -54,12 +54,12 @@ namespace reset
 		boost::multiprecision::cpp_dec_float_50& a, // should it take a return a value? (no in/out parameter)
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
-		const fixings& fix,
+		const RateFixings& fix,
 		const rate_fixing_detail& rfd
 	)
 	{
-//		const auto rate = fix[start];
-		const auto rate = fix.current_observation(start); // or we can create special average_step_ for the first step when average starts on a non business day (and we need to use the previous reset)
+		const auto& fixing = fix.current_observation(start); // or we can create special average_step_ for the first step when average starts on a non business day (and we need to use the previous reset)
+		const auto rate = static_cast<boost::multiprecision::cpp_dec_float_50>(fixing);
 
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
@@ -69,7 +69,7 @@ namespace reset
 
 	// maybe this needs a better name? (like compounded 
 	inline auto average(
-		const fixings& fix,
+		const RateFixings& fix,
 		const rate_fixing_detail& rfd,
 		const std::chrono::year_month_day& ymd,
 		const average_detail& detail = average_detail{} // does it need a default?

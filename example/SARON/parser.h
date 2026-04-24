@@ -22,6 +22,7 @@
 
 #pragma once
 
+#include <scaled_value.h>
 #include <fixings.h>
 
 #include <period.h>
@@ -54,7 +55,7 @@ inline auto _parse_observation1(std::istream& fs)
 	std::getline(fs, o, ','); // can we make _parse_observation1 and _parse_observation2 the same (and parse the comma in the caller)?
 	// should we check decimal places?
 
-	return reset::fixings::observation{ o };
+	return reset::Percent{ o };
 }
 
 inline auto _parse_observation2(std::istream& fs)
@@ -63,7 +64,7 @@ inline auto _parse_observation2(std::istream& fs)
 	std::getline(fs, o);
 	// should we check decimal places?
 
-	return reset::fixings::observation{ o };
+	return reset::Value{ o };
 }
 
 
@@ -71,10 +72,10 @@ inline auto _parse_csv_fixings_storage_x2(
 	std::istream& fs,
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
-) -> std::tuple<reset::fixings::storage, reset::fixings::storage>
+)
 {
-	auto result1 = reset::fixings::storage{ gregorian::util::days_period{ from, until } };
-	auto result2 = reset::fixings::storage{ gregorian::util::days_period{ from, until } };
+	auto result1 = reset::RateFixings::storage{ gregorian::util::days_period{ from, until } };
+	auto result2 = reset::IndexFixings::storage{ gregorian::util::days_period{ from, until } };
 
 	for (;;)
 	{
@@ -95,11 +96,12 @@ inline auto _parse_csv_fixings_storage_x2(
 			break;
 	}
 
-	return { result1, result2 };
+	return std::tuple{ result1, result2 };
 }
 
 
-inline auto _make_calendar(const reset::fixings::storage& ts)
+template<typename Fixings>
+auto _make_calendar(const typename Fixings::storage& ts)
 {
 	const auto& fu = ts.get_period();
 
@@ -123,7 +125,7 @@ inline auto parse_csv_fixings_x2(
 	const std::string& fileName,
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
-) -> std::tuple<reset::fixings, reset::fixings> // SARON, SARON Compounded Index
+) -> std::tuple<reset::RateFixings, reset::IndexFixings> // SARON, SARON Compounded Index
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
 
@@ -133,7 +135,11 @@ inline auto parse_csv_fixings_x2(
 
 	auto [ts1, ts2] = _parse_csv_fixings_storage_x2(fs, from, until);
 
-	auto c = _make_calendar(ts1);
+	auto c1 = _make_calendar<reset::RateFixings>(ts1);
+	auto c2 = _make_calendar<reset::IndexFixings>(ts2);
 
-	return { reset::fixings{ std::move(ts1), c, 6 }, reset::fixings{ std::move(ts2), c, 5 } }; // index needs to be checked a bit more
+	return {
+		reset::RateFixings{ std::move(ts1), std::move(c1), 6 },
+		reset::IndexFixings{ std::move(ts2), std::move(c2), 5 }
+	}; // index needs to be checked a bit more
 }

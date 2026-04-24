@@ -43,7 +43,7 @@ using namespace reset;
 
 
 
-static auto parse_csv_fixings_SARON_and_SARON_compounded_index() -> pair<fixings, fixings>
+static auto parse_csv_fixings_SARON_and_SARON_compounded_index() -> pair<RateFixings, IndexFixings>
 {
 	return parse_csv_fixings_x2(
 		"saron_compound_calculator.csv",
@@ -77,9 +77,9 @@ int main()
 		<< "For "
 		<< date
 		<< " SARON Compounded Index is "
-		<< SARON_compounded_index[date] * 100 // need a different accessor? (or handle 100 in some other way)
+		<< SARON_compounded_index[date]->get_value()
 		<< " and the same computed value is "
-		<< index(SARON, rfd, date, id);
+		<< index(SARON, rfd, date, id).get_value();
 
 	return 0;
 }
