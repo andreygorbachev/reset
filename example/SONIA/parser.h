@@ -132,6 +132,7 @@ auto parse_csv_fixings(
 	std::getline(fs, t);
 
 	auto ts = _parse_csv_fixings_storage<Fixings>(fs, from, until);
+	// we can check the fixings vs decimal places
 
 	auto c = _make_calendar<Fixings>(ts);
 

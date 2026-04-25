@@ -138,6 +138,7 @@ inline auto parse_csv_fixings_x2(
 	std::getline(fs, t);
 
 	auto [ts1, ts2] = _parse_csv_fixings_storage_x2(fs, from, until);
+	// we can check the fixings vs decimal places
 
 	auto c1 = _make_calendar<reset::RateFixings>(ts1);
 	auto c2 = _make_calendar<reset::IndexFixings>(ts2);
