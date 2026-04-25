@@ -157,7 +157,7 @@ int main()
 	// check the latest data available in this example
 	cout
 		<< fixed
-		<< setprecision(8)
+		<< setprecision(SOFR_compounded_index.get_decimal_places())
 		<< "For "
 		<< date
 		<< " SOFR Compounded Index is "
@@ -171,7 +171,7 @@ int main()
 
 	cout
 		<< fixed
-		<< setprecision(5)
+		<< setprecision(SOFR_30_day_average.get_decimal_places())
 		<< "For "
 		<< date
 		<< " SOFR 30 Day Average is "
@@ -185,7 +185,7 @@ int main()
 
 	cout
 		<< fixed
-		<< setprecision(5)
+		<< setprecision(SOFR_90_day_average.get_decimal_places())
 		<< "For "
 		<< date
 		<< " SOFR 90 Day Average is "
@@ -199,7 +199,7 @@ int main()
 
 	cout
 		<< fixed
-		<< setprecision(5)
+		<< setprecision(SOFR_180_day_average.get_decimal_places())
 		<< "For "
 		<< date
 		<< " SOFR 180 Day Average is "
@@ -270,7 +270,7 @@ int main()
 		if (*indx != index(SOFR, rfd, d, id))
 			cout
 				<< fixed
-				<< setprecision(8)
+				<< setprecision(SOFR_compounded_index.get_decimal_places())
 				<< "For "
 				<< d
 				<< " SOFR Compounded Index is "
@@ -296,7 +296,7 @@ int main()
 		if (*_30d_avg != average(SOFR, rfd, d, _30dd).percent)
 			cout
 				<< fixed
-				<< setprecision(5)
+				<< setprecision(SOFR_30_day_average.get_decimal_places())
 				<< "For "
 				<< d
 				<< " SOFR 30 Day Average is "
@@ -322,7 +322,7 @@ int main()
 		if (*_90d_avg != average(SOFR, rfd, d, _90dd).percent)
 			cout
 			<< fixed
-			<< setprecision(5)
+			<< setprecision(SOFR_90_day_average.get_decimal_places())
 			<< "For "
 			<< d
 			<< " SOFR 90 Day Average is "
@@ -348,7 +348,7 @@ int main()
 		if (*_180d_avg != average(SOFR, rfd, d, _180dd).percent)
 			cout
 			<< fixed
-			<< setprecision(5)
+			<< setprecision(SOFR_180_day_average.get_decimal_places())
 			<< "For "
 			<< d
 			<< " SOFR 180 Day Average is "

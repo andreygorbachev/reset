@@ -74,7 +74,7 @@ int main()
 
 	cout
 		<< fixed
-		<< setprecision(id.final_trunc.value())
+		<< setprecision(SELIC.get_decimal_places())
 		<< "For "
 		<< date1
 		<< " VNA is "
@@ -90,7 +90,7 @@ int main()
 
 	cout
 		<< fixed
-		<< setprecision(id.final_trunc.value())
+		<< setprecision(SELIC.get_decimal_places())
 		<< "For "
 		<< date2
 		<< " VNA is "
