@@ -20,17 +20,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include <scaled_value.h>
 #include <fixings.h>
 
 #include <time_series.h>
+#include <period.h>
+#include <weekend.h>
+#include <schedule.h>
+#include <calendar.h>
 
 #include <gtest/gtest.h>
 
 #include <chrono>
 #include <optional>
+#include <stdexcept>
+#include <utility>
 
-
-using namespace fin_calendar;
 
 using namespace gregorian;
 using namespace gregorian::util;
@@ -65,6 +70,7 @@ namespace reset
 
 		const auto fix = fixings{ move(ts), move(c), 4 };
 
+		EXPECT_TRUE(fix[2023y / January / 3d]);
 		EXPECT_EQ(Percent{ "3.4269" }, *fix[2023y / January / 3d]);
 
 		EXPECT_THROW(fix[2022y / December / 31d], out_of_range);
