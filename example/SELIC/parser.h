@@ -27,6 +27,7 @@
 
 #include <period.h>
 #include <weekend.h>
+#include <schedule.h>
 #include <calendar.h>
 
 #include <string>
@@ -81,7 +82,6 @@ inline auto _parse_csv_fixings_storage(
 
 		auto s = std::string{};
 		std::getline(fs, s, ';'); // skip the delimiter
-		// check decimal places?
 
 		const auto observation = _parse_observation(fs);
 

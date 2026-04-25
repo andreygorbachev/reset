@@ -22,12 +22,13 @@
 
 #pragma once
 
+#include <scaled_value.h>
 #include <fixings.h>
 
-#include <calendar.h>
-#include <schedule.h>
 #include <period.h>
 #include <weekend.h>
+#include <schedule.h>
+#include <calendar.h>
 
 #include <string>
 #include <chrono>
@@ -35,7 +36,7 @@
 #include <fstream>
 #include <stdexcept>
 #include <utility>
-#include <optional>
+#include <algorithm>
 #include <cassert>
 
 
@@ -52,40 +53,37 @@ inline auto _parse_date(std::istream& fs)
 	return ymd;
 }
 
-template<typename Fixings>
 inline auto _parse_observation(std::istream& fs)
 {
-	auto o = std::string{};
-	std::getline(fs, o, ',');
+	using namespace std::string_literals;
 
-	return typename Fixings::observation{ o };
+	auto o = std::string{};
+	std::getline(fs, o);
+
+	return reset::Percent{ o };
 }
 
 
-template<typename Fixings>
-auto _parse_csv_fixings_storage(
+inline auto _parse_csv_fixings_storage(
 	std::istream& fs,
-	const unsigned skip, // how many columns to skip after date before observation
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
 )
 {
-	auto result = typename Fixings::storage{ gregorian::util::days_period{ from, until } };
+	auto result = reset::RateFixings::storage{ gregorian::util::days_period{ from, until } };
 
 	for (;;)
 	{
 		const auto ymd = _parse_date(fs);
 
 		auto s = std::string{};
-		std::getline(fs, s, ','); // skip ","
-		for (auto i = 0u; i < skip; ++i)
-			std::getline(fs, s, ','); // skip "xyz,"
+		std::getline(fs, s, ','); // skip the delimiter
+		std::getline(fs, s, ','); // skip 25% column
+		std::getline(fs, s, ','); // skip 75% column
 
-		const auto observation = _parse_observation<Fixings>(fs);
+		const auto observation = _parse_observation(fs);
 
 		result[ymd] = observation;
-
-		std::getline(fs, s); // skip the rest
 
 		if (fs.eof())
 			break;
@@ -95,8 +93,7 @@ auto _parse_csv_fixings_storage(
 }
 
 
-template<typename Fixings>
-auto _make_calendar(const typename Fixings::storage& ts)
+inline auto _make_calendar(const reset::RateFixings::storage& ts)
 {
 	const auto& fu = ts.get_period();
 
@@ -116,32 +113,26 @@ auto _make_calendar(const typename Fixings::storage& ts)
 }
 
 
-template<typename Fixings>
-auto parse_csv_fixings(
+inline auto parse_csv_fixings(
 	const std::string& fileName,
-	const unsigned skip, // how many columns to skip after date before observation
 	const std::chrono::year_month_day& from, // these could also be read from the file
-	const std::chrono::year_month_day& until,
-	const unsigned int dp
-) -> Fixings
+	const std::chrono::year_month_day& until
+) -> reset::RateFixings
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
 	assert(fs);
 
-	// skip the first line (header)
-	auto t = std::string{};
-	std::getline(fs, t);
+	// skip the header
+	for (auto i = 0; i < 19; ++i)
+	{
+		auto t = std::string{};
+		std::getline(fs, t);
+	}
 
-	auto ts = _parse_csv_fixings_storage<Fixings>(fs, skip, from, until);
+	auto ts = _parse_csv_fixings_storage(fs, from, until);
 	// we can check the fixings vs decimal places
 
-	auto c = _make_calendar<Fixings>(ts);
-	// please note that this is an important calendar and is different from "America/SIFMA"
-	// as sometimes NY Fed decides not to publish SOFR even when SIFMA says the market should be open
-	// (happened several times on Good Friday)
-	// then SOFR Index does not use Good Friday for compounding,
-	// but ISDA does use Good Friday for compounding (via a fallback mechanism)
-	// (to me this is not 100% clear from the SOFR Index description)
+	auto c = _make_calendar(ts);
 
-	return Fixings{ std::move(ts), std::move(c), dp };
+	return reset::fixings{ std::move(ts), std::move(c), 2u };
 }
