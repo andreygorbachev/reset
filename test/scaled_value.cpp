@@ -20,8 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <cmath>
-
+#include <decimal.h>
 #include <scaled_value.h>
 
 #include <gtest/gtest.h>
@@ -36,13 +35,13 @@ namespace reset
 	{
 		const auto sv = Percent{ "3" };
 		// also test "wrong" strings I guess (or do we just rely on cpp_dec_float_50 to do so)
-		EXPECT_EQ(Percent{ "3" }, sv.get_value());
+		EXPECT_EQ(Percent{ "3" }, sv);
 	}
 
 	TEST(scaled_value, constructor2)
 	{
 		const auto sv = Percent{ Decimal{ "0.03" } }; // 3%
-		EXPECT_EQ(Percent{ "3" }, sv.get_value());
+		EXPECT_EQ(Percent{ "3" }, sv);
 	}
 
 	TEST(scaled_value, operator_Decimal)
