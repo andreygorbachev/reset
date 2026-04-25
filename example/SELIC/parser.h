@@ -132,5 +132,5 @@ inline auto parse_csv_fixings(
 
 	auto c = _make_calendar(ts);
 
-	return reset::fixings{ std::move(ts), std::move(c), 2 };
+	return reset::fixings{ std::move(ts), std::move(c), 2u };
 }

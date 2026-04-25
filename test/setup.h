@@ -54,7 +54,7 @@ namespace reset
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		return fixings{ std::move(ts), std::move(c), 2 };
+		return fixings{ std::move(ts), std::move(c), 2u };
 	}
 
 }

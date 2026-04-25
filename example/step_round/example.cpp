@@ -23,11 +23,13 @@
 #include <decimal.h>
 #include <fixings.h>
 #include <index.h>
+#include <scaled_value.h>
 
 #include <actual_365_fixed.h>
 
 #include <calendar.h>
 #include <period.h>
+#include <weekend.h>
 #include <schedule.h>
 #include <time_series.h>
 
@@ -67,7 +69,7 @@ static auto make_fixings()
 		if (cal.is_business_day(d))
 			ts[d] = daily_rate;
 
-	return fixings{ move(ts), move(cal), 8 };
+	return fixings{ move(ts), move(cal), 8u };
 }
 
 

@@ -123,7 +123,7 @@ auto parse_csv_fixings(
 	const unsigned skip, // how many columns to skip after date before observation
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until,
-	const int dp
+	const unsigned int dp
 ) -> Fixings
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?

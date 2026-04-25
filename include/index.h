@@ -35,6 +35,7 @@
 #include "decimal.h"
 #include "fixings.h"
 #include "reset_math.h"
+#include "scaled_value.h"
 
 
 namespace reset

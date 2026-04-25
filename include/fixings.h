@@ -59,8 +59,7 @@ namespace reset
 
 		using calendar = gregorian::calendar;
 
-		using decimal_places = int; // static_assert consistency between cpp_dec_float_50 and unsigned?
-		// to be consistent with streams and format, it is defined as int and not unsigned int
+		using decimal_places = unsigned int; // static_assert consistency between cpp_dec_float_50 and unsigned int?
 
 	public:
 

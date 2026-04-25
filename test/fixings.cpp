@@ -56,7 +56,7 @@ namespace reset
 		const auto expected1 = time_series<optional<Percent>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
 		const auto expected2 = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto fix = fixings{ move(ts), move(c), 4 };
+		const auto fix = fixings{ move(ts), move(c), 4u };
 //		EXPECT_EQ(expected1, fix.get_time_series());
 //		EXPECT_EQ(expected2, fix.get_publication_calendar());
 	}
@@ -68,7 +68,7 @@ namespace reset
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto fix = fixings{ move(ts), move(c), 4 };
+		const auto fix = fixings{ move(ts), move(c), 4u };
 
 		EXPECT_TRUE(fix[2023y / January / 3d]);
 		EXPECT_EQ(Percent{ "3.4269" }, *fix[2023y / January / 3d]);
@@ -84,7 +84,7 @@ namespace reset
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto fix = fixings{ move(ts), move(c), 4 };
+		const auto fix = fixings{ move(ts), move(c), 4u };
 
 		EXPECT_EQ(Percent{ "3.4269" }, fix.current_observation(2023y / January / 3d));
 
@@ -99,7 +99,7 @@ namespace reset
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
 
-		const auto fix = fixings{ move(ts), move(c), 4 };
+		const auto fix = fixings{ move(ts), move(c), 4u };
 
 		EXPECT_EQ(2023y / January / 3d, fix.last_reset_year_month_day());
 	}

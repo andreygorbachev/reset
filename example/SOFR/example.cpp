@@ -63,7 +63,7 @@ static auto parse_csv_fixings_SOFR() -> RateFixings
 		1u, // skip the "SOFR," column after the date
 		2018y / April / 2d,
 		2026y / April / 9d,
-		2
+		2u
 	);
 }
 
@@ -75,7 +75,7 @@ static auto parse_csv_fixings_SOFR_compounded_index() -> IndexFixings
 		15u,
 		2020y / March / 2d,
 		2026y / April / 10d,
-		8
+		8u
 	);
 }
 
@@ -86,7 +86,7 @@ static auto parse_csv_fixings_SOFR_30_day_average() -> RateFixings
 		12u,
 		2020y / March / 2d,
 		2026y / April / 10d,
-		5
+		5u
 	);
 }
 
@@ -97,7 +97,7 @@ static auto parse_csv_fixings_SOFR_90_day_average() -> RateFixings
 		13u,
 		2020y / March / 2d,
 		2026y / April / 10d,
-		5
+		5u
 	);
 }
 
@@ -108,7 +108,7 @@ static auto parse_csv_fixings_SOFR_180_day_average() -> RateFixings
 		14u,
 		2020y / March / 2d,
 		2026y / April / 10d,
-		5
+		5u
 	);
 }
 

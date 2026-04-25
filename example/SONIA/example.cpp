@@ -61,7 +61,7 @@ static auto parse_csv_fixings_SONIA() -> RateFixings
 		"SONIA.csv",
 		1997y / January / 1d,
 		2025y / May / 12d,
-		4
+		4u
 	);
 }
 
@@ -72,7 +72,7 @@ static auto parse_csv_fixings_SONIA_compounded_index() -> IndexFixings
 		"SONIA Compounded Index.csv",
 		2018y / April / 23d,
 		2025y / May / 13d,
-		8
+		8u
 	);
 }
 

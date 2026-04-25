@@ -143,7 +143,7 @@ inline auto parse_csv_fixings_x2(
 	auto c2 = _make_calendar<reset::IndexFixings>(ts2);
 
 	return {
-		reset::RateFixings{ std::move(ts1), std::move(c1), 6 },
-		reset::IndexFixings{ std::move(ts2), std::move(c2), 5 }
+		reset::RateFixings{ std::move(ts1), std::move(c1), 6u },
+		reset::IndexFixings{ std::move(ts2), std::move(c2), 5u }
 	}; // index needs to be checked a bit more
 }
