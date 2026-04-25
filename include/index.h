@@ -24,6 +24,7 @@
 
 #include <chrono>
 #include <optional>
+#include <cassert>
 
 #include <period.h>
 
@@ -33,8 +34,7 @@
 
 #include "decimal.h"
 #include "fixings.h"
-#include "resets_math.h"
-// do we need more includes for clarity?
+#include "reset_math.h"
 
 
 namespace reset

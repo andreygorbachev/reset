@@ -14,7 +14,7 @@ project("${PROJECT_NAME}_test" LANGUAGES CXX)
 #configure_file(data/SONIA_compounded_index.csv SONIA_compounded_index.csv COPYONLY)
 
 add_executable(${PROJECT_NAME}
-  resets_math.cpp
+  reset_math.cpp
   scaled_value.cpp
   rate.cpp
   fixings.cpp

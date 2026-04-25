@@ -34,8 +34,7 @@
 #include "decimal.h"
 #include "rate.h"
 #include "fixings.h"
-#include "resets_math.h"
-// do we need more includes for clarity?
+#include "reset_math.h"
 
 
 namespace reset

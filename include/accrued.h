@@ -28,7 +28,7 @@
 
 #include <day_count.h>
 
-#include "resets_math.h"
+#include "reset_math.h"
 
 
 namespace reset

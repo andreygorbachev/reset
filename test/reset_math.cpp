@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 #include <decimal.h>
-#include <resets_math.h>
+#include <reset_math.h>
 
 #include <gtest/gtest.h>
 
