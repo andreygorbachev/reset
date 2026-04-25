@@ -39,20 +39,36 @@ using namespace reset;
 static auto parse_csv_fixings_EuroSTR() -> RateFixings
 {
 	// from https://www.ecb.europa.eu/stats/financial_markets_and_interest_rates/euro_short-term_rate/html/index.en.html
-	return parse_csv_fixings(
+	return parse_csv_fixings<RateFixings>(
 		"Euro short-term rate.csv",
+		1u,
 		2019y / October / 1d,
-		2026y / April / 23d
+		2026y / April / 23d,
+		3u
 	);
 }
 
 static auto parse_csv_fixings_PreEuroSTR() -> RateFixings
 {
 	// from https://www.ecb.europa.eu/stats/financial_markets_and_interest_rates/euro_short-term_rate/html/index.en.html
-	return parse_csv_fixings(
+	return parse_csv_fixings<RateFixings>(
 		"Pre-Euro short-term rate.csv",
+		1u,
 		2017y / March / 15d,
-		2019y / September / 30d
+		2019y / September / 30d,
+		3u
+	);
+}
+
+static auto parse_csv_fixings_IndexEuroSTR() -> IndexFixings
+{
+	// from https://www.ecb.europa.eu/stats/financial_markets_and_interest_rates/euro_short-term_rate/html/index.en.html
+	return parse_csv_fixings<IndexFixings>(
+		"Compounded euro-short term rates and index.csv",
+		1u,
+		2019y / October / 1d,
+		2026y / April / 24d,
+		8u
 	);
 }
 
@@ -64,6 +80,8 @@ int main()
 	const auto PreEuroSTR = parse_csv_fixings_PreEuroSTR();
 
 	// how can we "add" these 2 together?
+
+	const auto IndexEuroSTR = parse_csv_fixings_IndexEuroSTR();
 
 	return 0;
 }
