@@ -46,14 +46,24 @@ static auto parse_csv_fixings_EuroSTR() -> RateFixings
 	);
 }
 
-
-// we ignore Pre-EuroSTR for now
+static auto parse_csv_fixings_PreEuroSTR() -> RateFixings
+{
+	// from https://www.ecb.europa.eu/stats/financial_markets_and_interest_rates/euro_short-term_rate/html/index.en.html
+	return parse_csv_fixings(
+		"Pre-Euro short-term rate.csv",
+		2017y / March / 15d,
+		2019y / September / 30d
+	);
+}
 
 
 
 int main()
 {
-	const auto FTIIE = parse_csv_fixings_EuroSTR();
+	const auto EuroSTR = parse_csv_fixings_EuroSTR();
+	const auto PreEuroSTR = parse_csv_fixings_PreEuroSTR();
+
+	// how can we "add" these 2 together?
 
 	return 0;
 }
