@@ -124,7 +124,7 @@ namespace reset
 		const fin_calendar::day_count<T>& dc
 	) const -> T
 	{
-		return from_percent(rate_) * fin_calendar::fraction(start, end, dc);
+		return rate_ / T{ 100 } * fin_calendar::fraction(start, end, dc); // do we need scaled_value here?
 	}
 
 
@@ -142,7 +142,7 @@ namespace reset
 	) const -> T
 	{
 		const/*expr*/ auto unit_notional = T{ 1 };
-		return pow(unit_notional + from_percent(rate_), fin_calendar::fraction(start, end, dc)) - unit_notional;
+		return pow(unit_notional + rate_ / T{ 100 }, fin_calendar::fraction(start, end, dc)) - unit_notional; // do we need scaled_value here?
 		// or should we calculate a deposit value? (so the unit notional is included in the result)
 	}
 

@@ -40,17 +40,4 @@ namespace reset
 		return trunc(x * p) / p;
 	}
 
-
-	template<typename T>
-	constexpr auto from_percent(const T val) -> T
-	{
-		return val / T{ 100 };
-	}
-
-	template<typename T>
-	constexpr auto to_percent(const T val) -> T
-	{
-		return val * T{ 100 };
-	}
-
 }
