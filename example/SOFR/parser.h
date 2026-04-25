@@ -36,6 +36,7 @@
 #include <stdexcept>
 #include <utility>
 #include <optional>
+#include <cassert>
 
 
 inline auto _parse_date(std::istream& fs)
@@ -126,7 +127,7 @@ auto parse_csv_fixings(
 ) -> Fixings
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
-	// check that file was open ok
+	assert(fs);
 
 	// skip the first line (header)
 	auto t = std::string{};

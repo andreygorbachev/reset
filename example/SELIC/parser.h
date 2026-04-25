@@ -26,6 +26,8 @@
 #include <fixings.h>
 
 #include <period.h>
+#include <weekend.h>
+#include <calendar.h>
 
 #include <string>
 #include <chrono>
@@ -34,6 +36,7 @@
 #include <stdexcept>
 #include <utility>
 #include <algorithm>
+#include <cassert>
 
 
 inline auto _parse_date(std::istream& fs)
@@ -119,6 +122,7 @@ inline auto parse_csv_fixings(
 ) -> reset::RateFixings
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
+	assert(fs);
 
 	// skip the first line (header)
 	auto t = std::string{};
