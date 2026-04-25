@@ -22,11 +22,10 @@
 
 #pragma once
 
+#include "decimal.h"
 #include "scaled_value.h"
 
 #include <day_count.h>
-
-#include <boost/multiprecision/cpp_dec_float.hpp>
 
 #include <chrono>
 
@@ -42,7 +41,7 @@ namespace reset
 		std::chrono::year_month_day start; // usually included
 		std::chrono::year_month_day end; // usually excluded
 
-		fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50> day_count;
+		fin_calendar::day_count<Decimal> day_count;
 
 	};
 

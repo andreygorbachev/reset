@@ -20,20 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <stdexcept>
-
-#include <boost/multiprecision/cpp_dec_float.hpp>
-
 #include <average.h>
-#include <fixings.h>
 
 #include <gtest/gtest.h>
 
-#include "setup.h"
-
 using namespace std;
-using namespace std::chrono;
-using namespace boost::multiprecision;
 
 
 namespace reset

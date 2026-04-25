@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <boost/multiprecision/cpp_dec_float.hpp>
+#include "decimal.h"
 
 #include <ratio>
 #include <string_view>
@@ -40,7 +40,7 @@ namespace reset
         explicit scaled_value(std::string_view value); // noexcept?
 
         // note that we do this implicitly
-        scaled_value(boost::multiprecision::cpp_dec_float_50 v); // noexcept?
+        scaled_value(const Decimal& v); // noexcept?
 
     public:
 
@@ -48,15 +48,15 @@ namespace reset
         friend bool operator<=>(const scaled_value& x, const scaled_value& y) = default;
 
         // note that we do this implicitly
-        operator boost::multiprecision::cpp_dec_float_50() const; // noexcept?
+        operator Decimal() const; // noexcept?
 
     public:
 
-        auto get_value() const noexcept -> const boost::multiprecision::cpp_dec_float_50&;
+        auto get_value() const noexcept -> const Decimal&;
 
     private:
 
-        boost::multiprecision::cpp_dec_float_50 value_;
+        Decimal value_;
 
     };
 
@@ -69,21 +69,21 @@ namespace reset
 
 
     template<typename Ratio>
-    scaled_value<Ratio>::scaled_value(boost::multiprecision::cpp_dec_float_50 v) :
+    scaled_value<Ratio>::scaled_value(const Decimal& v) :
         value_{ v * Ratio::den / Ratio::num }
     {
     }
 
 
     template<typename Ratio>
-    scaled_value<Ratio>::operator boost::multiprecision::cpp_dec_float_50() const
+    scaled_value<Ratio>::operator Decimal() const
     {
         return value_ * Ratio::num / Ratio::den;
     }
 
 
     template<typename Ratio>
-    auto scaled_value<Ratio>::get_value() const noexcept -> const boost::multiprecision::cpp_dec_float_50&
+    auto scaled_value<Ratio>::get_value() const noexcept -> const Decimal&
     {
         return value_;
     }

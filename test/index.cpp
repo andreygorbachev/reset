@@ -20,12 +20,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <stdexcept>
-
-#include <boost/multiprecision/cpp_dec_float.hpp>
+#include <chrono>
 
 #include <actual_360.h>
 
+#include <decimal.h>
 #include <index.h>
 #include <fixings.h>
 
@@ -35,7 +34,6 @@
 
 using namespace std;
 using namespace std::chrono;
-using namespace boost::multiprecision;
 using namespace fin_calendar;
 
 
@@ -49,10 +47,10 @@ namespace reset
 		const auto fix = make_SOFR_fixings();
 
 		auto rfd = rate_fixing_detail{};
-		rfd.day_count = actual_360<cpp_dec_float_50>{};
+		rfd.day_count = actual_360<Decimal>{};
 
 		auto id = index_detail{};
-		id.initial_value = cpp_dec_float_50{ 1 };
+		id.initial_value = Decimal{ 1 };
 		id.initial_date = 2018y / April / 2d;
 		id.final_round = 8u;
 

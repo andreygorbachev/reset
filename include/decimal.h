@@ -20,58 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <cmath>
+#pragma once
 
-#include <decimal.h>
-#include <resets_math.h>
-
-#include <gtest/gtest.h>
-
-using namespace std;
+#include <boost/multiprecision/cpp_dec_float.hpp>
 
 
 namespace reset
 {
 
-	TEST(resets_math, round_dp1)
-	{
-		EXPECT_EQ(1.01, round_dp(1.011111, 2u));
-	}
-
-	TEST(resets_math, round_dp2)
-	{
-		EXPECT_EQ(Decimal{ "1.01" }, round_dp(Decimal{ "1.011111" }, 2u));
-	}
-
-	TEST(resets_math, trunc_dp1)
-	{
-		EXPECT_EQ(1.01, trunc_dp(1.011111, 2u));
-	}
-
-	TEST(resets_math, trunc_dp2)
-	{
-		EXPECT_EQ(Decimal{ "1.01" }, trunc_dp(Decimal{ "1.011111" }, 2u));
-	}
-
-
-	TEST(resets_math, from_percent1)
-	{
-		EXPECT_EQ(0.01, from_percent(1.0));
-	}
-
-	TEST(resets_math, from_percent2)
-	{
-		EXPECT_EQ(Decimal{ "0.01" }, from_percent(Decimal{ "1.0" }));
-	}
-
-	TEST(resets_math, to_percent1)
-	{
-		EXPECT_EQ(1.0, to_percent(0.01));
-	}
-
-	TEST(resets_math, to_percent2)
-	{
-		EXPECT_EQ(Decimal{ "1.0" }, to_percent(Decimal{ "0.01" }));
-	}
+	using Decimal = boost::multiprecision::cpp_dec_float_50;
 
 }

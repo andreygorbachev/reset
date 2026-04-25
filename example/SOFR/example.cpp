@@ -22,6 +22,7 @@
 
 #include "parser.h"
 
+#include <decimal.h>
 #include <fixings.h>
 #include <index.h>
 #include <average.h>
@@ -43,8 +44,6 @@
 
 using namespace std;
 using namespace std::chrono;
-
-using namespace boost::multiprecision;
 
 using namespace gregorian;
 using namespace gregorian::util;
@@ -120,7 +119,7 @@ int main()
 	const auto SOFR = parse_csv_fixings_SOFR();
 
 	auto rfd = rate_fixing_detail{};
-	rfd.day_count = actual_360<cpp_dec_float_50>{};
+	rfd.day_count = actual_360<Decimal>{};
 
 	const auto SOFR_compounded_index = parse_csv_fixings_SOFR_compounded_index();
 
@@ -133,7 +132,7 @@ int main()
 
 	// from https://www.newyorkfed.org/markets/opolicy/operating_policy_200212
 	auto id = index_detail{};
-	id.initial_value = cpp_dec_float_50{ 1 };
+	id.initial_value = Decimal{ 1 };
 	id.initial_date = 2018y / April / 2d;
 	id.final_round = 8u;
 

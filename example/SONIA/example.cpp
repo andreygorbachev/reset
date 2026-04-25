@@ -22,6 +22,7 @@
 
 #include "parser.h"
 
+#include <decimal.h>
 #include <fixings.h>
 #include <index.h>
 
@@ -41,8 +42,6 @@
 
 using namespace std;
 using namespace std::chrono;
-
-using namespace boost::multiprecision;
 
 using namespace gregorian;
 using namespace gregorian::util;
@@ -83,14 +82,14 @@ int main()
 	const auto SONIA = parse_csv_fixings_SONIA();
 
 	auto rfd = rate_fixing_detail{};
-	rfd.day_count = actual_365_fixed<cpp_dec_float_50>{};
+	rfd.day_count = actual_365_fixed<Decimal>{};
 
 	const auto SONIA_compounded_index = parse_csv_fixings_SONIA_compounded_index();
 	// I think BoE website does not fully describe the compounded index
 	// more clarity would be welcome there on how rounding is done daily (*)
 
 	auto id = index_detail{};
-	id.initial_value = cpp_dec_float_50{ 100 };
+	id.initial_value = Decimal{ 100 };
 	id.initial_date = 2018y / April / 23d;
 	id.step_round = 18u;
 	id.final_round = 8u;

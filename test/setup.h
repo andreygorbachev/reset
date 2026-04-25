@@ -23,9 +23,14 @@
 #pragma once
 
 #include <utility>
+#include <chrono>
 
 #include <period.h>
+#include <weekend.h>
+#include <schedule.h>
+#include <calendar.h>
 
+#include <scaled_value.h>
 #include <fixings.h>
 
 

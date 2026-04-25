@@ -22,8 +22,8 @@
 
 #pragma once
 
+#include "decimal.h"
 #include "scaled_value.h"
-#include "resets_math.h"
 
 #include <day_count.h>
 #include <preceding.h>
@@ -32,13 +32,9 @@
 
 #include <calendar.h>
 
-#include <boost/multiprecision/cpp_dec_float.hpp>
-
+#include <utility>
 #include <chrono>
-#include <cmath>
-#include <memory>
 #include <optional>
-#include <stdexcept>
 
 
 namespace reset
@@ -46,7 +42,7 @@ namespace reset
 
 	struct rate_fixing_detail // should it be called metadata?
 	{
-		fin_calendar::day_count<boost::multiprecision::cpp_dec_float_50> day_count;
+		fin_calendar::day_count<Decimal> day_count;
 	};
 
 

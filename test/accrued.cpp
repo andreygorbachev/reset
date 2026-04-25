@@ -20,8 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <boost/multiprecision/cpp_dec_float.hpp>
-
 #include <chrono>
 #include <cmath>
 
@@ -29,13 +27,13 @@
 
 #include <day_count.h>
 
+#include <decimal.h>
 #include <accrued.h>
 
 #include <gtest/gtest.h>
 
 using namespace std;
 using namespace std::chrono;
-using namespace boost::multiprecision;
 using namespace fin_calendar;
 using namespace gregorian;
 using namespace gregorian::static_data;
@@ -78,21 +76,21 @@ namespace reset
 	{
 		const auto& c = locate_calendar("America/ANBIMA"s, 2023y / January / 1d);
 
-		const auto a1 = accrued<cpp_dec_float_50>{ simple_annualized<cpp_dec_float_50>{ 5 } };
-		const auto dc1 = actual_365_fixed<cpp_dec_float_50>{};
+		const auto a1 = accrued<Decimal>{ simple_annualized<Decimal>{ 5 } };
+		const auto dc1 = actual_365_fixed<Decimal>{};
 		const auto i1 = interest(
 			year_month_day{ 2023y / January / 1d },
 			year_month_day{ 2023y / January / 2d },
-			day_count<cpp_dec_float_50>{ dc1 },
+			day_count<Decimal>{ dc1 },
 			a1
 		);
 
-		const auto a2 = accrued<cpp_dec_float_50>{ compound_annualized<cpp_dec_float_50>{ 5 } };
-		const auto dc2 = calculation_252<cpp_dec_float_50>{ c };
+		const auto a2 = accrued<Decimal>{ compound_annualized<Decimal>{ 5 } };
+		const auto dc2 = calculation_252<Decimal>{ c };
 		const auto i2 = interest(
 			year_month_day{ 2023y / January / 1d },
 			year_month_day{ 2023y / January / 2d },
-			day_count<cpp_dec_float_50>{ dc2 },
+			day_count<Decimal>{ dc2 },
 			a2
 		);
 	}

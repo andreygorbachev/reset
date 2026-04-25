@@ -20,6 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include <decimal.h>
 #include <fixings.h>
 #include <index.h>
 
@@ -39,8 +40,6 @@
 
 using namespace std;
 using namespace std::chrono;
-
-using namespace boost::multiprecision;
 
 using namespace reset;
 
@@ -79,10 +78,10 @@ int main()
 	const auto [f, u] = cal.get_schedule().get_period().from_until();
 
 	auto rfd = rate_fixing_detail{};
-	rfd.day_count = actual_365_fixed<cpp_dec_float_50>{};
+	rfd.day_count = actual_365_fixed<Decimal>{};
 
 	auto id1 = index_detail{};
-	id1.initial_value = cpp_dec_float_50{ 100 };
+	id1.initial_value = Decimal{ 100 };
 	id1.initial_date = f;
 	id1.step_round = 18u; // we compare the index with daily rounding
 	id1.final_round = 8u;

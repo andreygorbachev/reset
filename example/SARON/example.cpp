@@ -22,6 +22,7 @@
 
 #include "parser.h"
 
+#include <decimal.h>
 #include <fixings.h>
 #include <index.h>
 
@@ -34,8 +35,6 @@
 
 using namespace std;
 using namespace std::chrono;
-
-using namespace boost::multiprecision;
 
 using namespace fin_calendar;
 
@@ -61,10 +60,10 @@ int main()
 	const auto [SARON, SARON_compounded_index] = parse_csv_fixings_SARON_and_SARON_compounded_index();
 
 	auto rfd = rate_fixing_detail{};
-	rfd.day_count = actual_360<cpp_dec_float_50>{};
+	rfd.day_count = actual_360<Decimal>{};
 
 	auto id = index_detail{};
-	id.initial_value = cpp_dec_float_50{ 10'000 };
+	id.initial_value = Decimal{ 10'000 };
 	id.initial_date = 1999y / June / 30d;
 	id.final_round = 4u;
 

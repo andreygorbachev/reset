@@ -24,12 +24,9 @@
 
 #include <time_series.h>
 
-#include <boost/multiprecision/cpp_dec_float.hpp>
-
 #include <gtest/gtest.h>
 
 #include <chrono>
-#include <memory>
 #include <optional>
 
 
@@ -37,8 +34,6 @@ using namespace fin_calendar;
 
 using namespace gregorian;
 using namespace gregorian::util;
-
-using namespace boost::multiprecision;
 
 using namespace std;
 using namespace std::chrono;

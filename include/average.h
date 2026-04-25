@@ -25,14 +25,13 @@
 #include <chrono>
 #include <optional>
 
-#include <boost/multiprecision/cpp_dec_float.hpp>
-
 #include <period.h>
 
 #include <calendar.h>
 
 #include <day_count.h>
 
+#include "decimal.h"
 #include "rate.h"
 #include "fixings.h"
 #include "resets_math.h"
@@ -51,7 +50,7 @@ namespace reset
 
 
 	inline void average_step_( // should it be the same as index_step_ in index.h?
-		boost::multiprecision::cpp_dec_float_50& a, // should it take a return a value? (no in/out parameter)
+		Decimal& a, // should it take a return a value? (no in/out parameter)
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,
@@ -59,12 +58,12 @@ namespace reset
 	)
 	{
 		const auto& fixing = fix.current_observation(start); // or we can create special average_step_ for the first step when average starts on a non business day (and we need to use the previous reset)
-		const auto rate = static_cast<boost::multiprecision::cpp_dec_float_50>(fixing);
+		const auto rate = static_cast<Decimal>(fixing);
 
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
-		const auto one = boost::multiprecision::cpp_dec_float_50{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
-		a *= boost::multiprecision::cpp_dec_float_50{ one + rate * year_fraction }; // should these have some kind of units?
+		const auto one = Decimal{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
+		a *= Decimal{ one + rate * year_fraction }; // should these have some kind of units?
 	}
 
 	// maybe this needs a better name? (like compounded 
@@ -85,7 +84,7 @@ namespace reset
 
 		const auto& dates = schedule.get_dates();
 
-		auto val = boost::multiprecision::cpp_dec_float_50{ 1 };
+		auto val = Decimal{ 1 };
 
 		// not very elegant to start with
 		if (*dates.cbegin() == schedule.get_period().get_from())
@@ -131,8 +130,8 @@ namespace reset
 
 		const auto year_fraction = fin_calendar::fraction(schedule.get_period(), rfd.day_count);
 
-		const auto one = boost::multiprecision::cpp_dec_float_50{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
-		auto a = boost::multiprecision::cpp_dec_float_50{ (val - one) / year_fraction };
+		const auto one = Decimal{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
+		auto a = Decimal{ (val - one) / year_fraction };
 
 		if (detail.final_round)
 			a = round_dp(a, *detail.final_round);

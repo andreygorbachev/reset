@@ -22,13 +22,9 @@
 
 #include <cmath>
 
-#include <boost/multiprecision/cpp_dec_float.hpp>
-
 #include <scaled_value.h>
 
 #include <gtest/gtest.h>
-
-using namespace boost::multiprecision;
 
 using namespace std;
 
@@ -45,38 +41,38 @@ namespace reset
 
 	TEST(scaled_value, constructor2)
 	{
-		const auto sv = Percent{ cpp_dec_float_50{ "0.03" } }; // 3%
+		const auto sv = Percent{ Decimal{ "0.03" } }; // 3%
 		EXPECT_EQ(Percent{ "3" }, sv.get_value());
 	}
 
-	TEST(scaled_value, operator_cpp_dec_float_50)
+	TEST(scaled_value, operator_Decimal)
 	{
 		const auto sv = Percent{ "3" };
-		EXPECT_EQ(cpp_dec_float_50{ "0.03" }, static_cast<cpp_dec_float_50>(sv));
+		EXPECT_EQ(Decimal{ "0.03" }, static_cast<Decimal>(sv));
 	}
 
 	TEST(scaled_value, get_value)
 	{
 		const auto sv = Percent{ "3" };
-		EXPECT_EQ(cpp_dec_float_50{ "3" }, sv.get_value());
+		EXPECT_EQ(Decimal{ "3" }, sv.get_value());
 	}
 
 	TEST(scaled_value, Percent)
 	{
 		const auto sv = Percent{ "3" };
-		EXPECT_EQ(cpp_dec_float_50{ "0.03" }, static_cast<cpp_dec_float_50>(sv));
+		EXPECT_EQ(Decimal{ "0.03" }, static_cast<Decimal>(sv));
 	}
 
 	TEST(scaled_value, BasisPoints)
 	{
 		const auto sv = BasisPoints{ "3" };
-		EXPECT_EQ(cpp_dec_float_50{ "0.0003" }, static_cast<cpp_dec_float_50>(sv));
+		EXPECT_EQ(Decimal{ "0.0003" }, static_cast<Decimal>(sv));
 	}
 
 	TEST(scaled_value, Value)
 	{
 		const auto sv = Value{ "3" };
-		EXPECT_EQ(cpp_dec_float_50{ "3" }, static_cast<cpp_dec_float_50>(sv));
+		EXPECT_EQ(Decimal{ "3" }, static_cast<Decimal>(sv));
 	}
 
 	// do we need to test default functions?

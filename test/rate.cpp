@@ -20,19 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <boost/multiprecision/cpp_dec_float.hpp>
-
 #include <chrono>
 
 #include <day_count.h>
 
+#include <decimal.h>
 #include <rate.h>
 
 #include <gtest/gtest.h>
 
 using namespace std;
 using namespace std::chrono;
-using namespace boost::multiprecision;
 using namespace fin_calendar;
 
 
@@ -45,7 +43,7 @@ namespace reset
 			Percent{ "6.0" },
 			2025y / January / 1d,
 			2025y / January / 31d,
-			actual_365_fixed<cpp_dec_float_50>{}
+			actual_365_fixed<Decimal>{}
 		};
 
 //		EXPECT_EQ(expected, i);

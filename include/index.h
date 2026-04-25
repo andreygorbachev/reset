@@ -25,14 +25,13 @@
 #include <chrono>
 #include <optional>
 
-#include <boost/multiprecision/cpp_dec_float.hpp>
-
 #include <period.h>
 
 #include <calendar.h>
 
 #include <day_count.h>
 
+#include "decimal.h"
 #include "fixings.h"
 #include "resets_math.h"
 // do we need more includes for clarity?
@@ -43,7 +42,7 @@ namespace reset
 
 	struct index_detail // should it be called metadata?
 	{
-		boost::multiprecision::cpp_dec_float_50 initial_value{ 1 };
+		Decimal initial_value{ 1 };
 		std::chrono::year_month_day initial_date{};
 		bool brazil = false; // this needs to be better - maybe "calendar"/"business" compounding enum?
 		std::optional<unsigned int> factor_trunc = std::nullopt;
@@ -62,18 +61,18 @@ namespace reset
 		const RateFixings& fix,
 		const rate_fixing_detail& rfd,
 		const index_detail& detail
-	) -> boost::multiprecision::cpp_dec_float_50
+	) -> Decimal
 	{
 		const auto& fixing = fix[start];
 		assert(fixing);
-		const auto rate = static_cast<boost::multiprecision::cpp_dec_float_50>(*fixing);
+		const auto rate = static_cast<Decimal>(*fixing);
 
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
-		const auto one = boost::multiprecision::cpp_dec_float_50{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
+		const auto one = Decimal{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
 		auto factor = detail.brazil ?
-			boost::multiprecision::cpp_dec_float_50{ pow(one + rate, year_fraction) } : // we are also missing rounding for Brazil year_fraction at the moment
-			boost::multiprecision::cpp_dec_float_50{ one + rate * year_fraction }; // should these have some kind of units?
+			Decimal{ pow(one + rate, year_fraction) } : // we are also missing rounding for Brazil year_fraction at the moment
+			Decimal{ one + rate * year_fraction }; // should these have some kind of units?
 
 		if (detail.factor_trunc)
 			factor = trunc_dp(factor, *detail.factor_trunc);
@@ -85,7 +84,7 @@ namespace reset
 	}
 
 	inline void index_step_(
-		boost::multiprecision::cpp_dec_float_50& indx,
+		Decimal& indx,
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,

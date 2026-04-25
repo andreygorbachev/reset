@@ -22,6 +22,7 @@
 
 #include "parser.h"
 
+#include <decimal.h>
 #include <fixings.h>
 #include <index.h>
 
@@ -34,8 +35,6 @@
 
 using namespace std;
 using namespace std::chrono;
-
-using namespace boost::multiprecision;
 
 using namespace fin_calendar;
 
@@ -60,10 +59,10 @@ int main()
 	const auto SELIC = parse_csv_fixings_SELIC();
 
 	auto rfd = rate_fixing_detail{};
-	rfd.day_count = calculation_252<cpp_dec_float_50>{ SELIC.get_calendar() }; // think more about copies of calendar
+	rfd.day_count = calculation_252<Decimal>{ SELIC.get_calendar() }; // think more about copies of calendar
 
 	auto id = index_detail{};
-	id.initial_value = cpp_dec_float_50{ 1000 };
+	id.initial_value = Decimal{ 1000 };
 	id.initial_date = 2000y / July / 1d;
 	id.brazil = true;
 	id.factor_round = 8u;
@@ -79,7 +78,7 @@ int main()
 		<< "For "
 		<< date1
 		<< " VNA is "
-		<< cpp_dec_float_50{ "6023.149269" }
+		<< Decimal{ "6023.149269" }
 		<< " and the same computed value is "
 		<< index(SELIC, rfd, date1, id).get_value()
 		<< endl;
@@ -95,7 +94,7 @@ int main()
 		<< "For "
 		<< date2
 		<< " VNA is "
-		<< cpp_dec_float_50{ "3449.694215" } // for some reason the English version of the same document has different values
+		<< Decimal{ "3449.694215" } // for some reason the English version of the same document has different values
 		<< " and the same computed value is "
 		<< index(SELIC, rfd, date2, id).get_value()
 		<< endl;
