@@ -151,6 +151,9 @@ int main()
 	//	const auto date = 2026y / April / 10d;
 	const auto date = 2026y / April / 9d;
 
+	const auto& indx = SOFR_compounded_index[date];
+	assert(indx);
+
 	// check the latest data available in this example
 	cout
 		<< fixed
@@ -158,10 +161,13 @@ int main()
 		<< "For "
 		<< date
 		<< " SOFR Compounded Index is "
-		<< SOFR_compounded_index[date]->get_value()
+		<< indx->get_value()
 		<< " and the same computed value is "
 		<< index(SOFR, rfd, date, id).get_value()
 		<< endl;
+
+	const auto& _30d_avg = SOFR_30_day_average[date];
+	assert(_30d_avg);
 
 	cout
 		<< fixed
@@ -169,10 +175,13 @@ int main()
 		<< "For "
 		<< date
 		<< " SOFR 30 Day Average is "
-		<< SOFR_30_day_average[date]->get_value()
+		<< _30d_avg->get_value()
 		<< " and the same computed value is "
 		<< average(SOFR, rfd, date, _30dd).percent.get_value()
 		<< endl;
+
+	const auto& _90d_avg = SOFR_90_day_average[date];
+	assert(_90d_avg);
 
 	cout
 		<< fixed
@@ -180,10 +189,13 @@ int main()
 		<< "For "
 		<< date
 		<< " SOFR 90 Day Average is "
-		<< SOFR_90_day_average[date]->get_value()
+		<< _90d_avg->get_value()
 		<< " and the same computed value is "
 		<< average(SOFR, rfd, date, _90dd).percent.get_value()
 		<< endl;
+
+	const auto& _180d_avg = SOFR_180_day_average[date];
+	assert(_180d_avg);
 
 	cout
 		<< fixed
@@ -191,7 +203,7 @@ int main()
 		<< "For "
 		<< date
 		<< " SOFR 180 Day Average is "
-		<< SOFR_180_day_average[date]->get_value()
+		<< _180d_avg->get_value()
 		<< " and the same computed value is "
 		<< average(SOFR, rfd, date, _180dd).percent.get_value()
 		<< endl;
@@ -252,14 +264,17 @@ int main()
 			break;
 		// temporary only, unit we sort out start/end of RFR/RFR Index
 
-		if (*SOFR_compounded_index[d] != index(SOFR, rfd, d, id))
+		const auto& indx = SOFR_compounded_index[d];
+		assert(indx);
+
+		if (*indx != index(SOFR, rfd, d, id))
 			cout
 				<< fixed
 				<< setprecision(8)
 				<< "For "
 				<< d
 				<< " SOFR Compounded Index is "
-				<< SOFR_compounded_index[d]->get_value()
+				<< indx->get_value()
 				<< " and the same computed value is "
 				<< index(SOFR, rfd, d, id).get_value()
 				<< endl;
@@ -275,7 +290,10 @@ int main()
 			break;
 		// temporary only
 
-		if (*SOFR_30_day_average[d] != average(SOFR, rfd, d, _30dd).percent)
+		const auto& _30d_avg = SOFR_30_day_average[d];
+		assert(_30d_avg);
+
+		if (*_30d_avg != average(SOFR, rfd, d, _30dd).percent)
 			cout
 				<< fixed
 				<< setprecision(5)
@@ -298,7 +316,10 @@ int main()
 			break;
 		// temporary only
 
-		if (*SOFR_90_day_average[d] != average(SOFR, rfd, d, _90dd).percent)
+		const auto& _90d_avg = SOFR_90_day_average[d];
+		assert(_90d_avg);
+
+		if (*_90d_avg != average(SOFR, rfd, d, _90dd).percent)
 			cout
 			<< fixed
 			<< setprecision(5)
@@ -321,7 +342,10 @@ int main()
 			break;
 		// temporary only
 
-		if (*SOFR_180_day_average[d] != average(SOFR, rfd, d, _180dd).percent)
+		const auto& _180d_avg = SOFR_180_day_average[d];
+		assert(_180d_avg);
+
+		if (*_180d_avg != average(SOFR, rfd, d, _180dd).percent)
 			cout
 			<< fixed
 			<< setprecision(5)

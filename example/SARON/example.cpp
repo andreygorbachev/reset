@@ -32,6 +32,7 @@
 #include <iostream>
 #include <iomanip>
 #include <ios>
+#include <cassert>
 
 using namespace std;
 using namespace std::chrono;
@@ -70,13 +71,16 @@ int main()
 //	const auto date = 2020y / February / 17d;
 	const auto date = 2020y / January / 24d; // then things don't work
 
+	const auto& indx = SARON_compounded_index[date];
+	assert(indx);
+
 	cout
 		<< fixed
 		<< setprecision(SARON_compounded_index.get_decimal_places())
 		<< "For "
 		<< date
 		<< " SARON Compounded Index is "
-		<< SARON_compounded_index[date]->get_value()
+		<< indx->get_value()
 		<< " and the same computed value is "
 		<< index(SARON, rfd, date, id).get_value();
 

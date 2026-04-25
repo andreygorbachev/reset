@@ -39,6 +39,7 @@
 #include <ios>
 #include <algorithm>
 #include <iterator>
+#include <cassert>
 
 using namespace std;
 using namespace std::chrono;
@@ -97,6 +98,9 @@ int main()
 //	const auto date = 2025y / May / 13d;
 	const auto date = 2025y / May / 12d;
 
+	const auto& indx = SONIA_compounded_index[date];
+	assert(indx);
+
 	// check the latest data available in this example
 	cout
 		<< fixed
@@ -104,7 +108,7 @@ int main()
 		<< "For "
 		<< date
 		<< " SONIA Compounded Index is "
-		<< SONIA_compounded_index[date]->get_value()
+		<< indx->get_value()
 		<< " and the same computed value is "
 		<< index(SONIA, rfd, date, id).get_value()
 		<< endl;
@@ -165,12 +169,15 @@ int main()
 			break;
 		// temporary only, until we sort out start/end of RFR/RFR Index
 
-		if (*SONIA_compounded_index[d] != index(SONIA, rfd, d, id))
+		const auto& indx = SONIA_compounded_index[d];
+		assert(indx);
+
+		if (*indx != index(SONIA, rfd, d, id))
 			cout
 				<< "For "
 				<< d
 				<< " SONIA Compounded Index is "
-				<< SONIA_compounded_index[d]->get_value()
+				<< indx->get_value()
 				<< " and the same computed value is "
 				<< index(SONIA, rfd, d, id).get_value()
 				<< endl;
