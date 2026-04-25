@@ -24,8 +24,15 @@
 
 #include <decimal.h>
 #include <fixings.h>
+#include <index.h>
+
+#include <actual_360.h>
 
 #include <chrono>
+#include <iostream>
+#include <iomanip>
+#include <ios>
+#include <cassert>
 
 using namespace std;
 using namespace std::chrono;
@@ -60,7 +67,7 @@ static auto parse_csv_fixings_PreEuroSTR() -> RateFixings
 	);
 }
 
-static auto parse_csv_fixings_IndexEuroSTR() -> IndexFixings
+static auto parse_csv_fixings_EuroSTR_compounded_index() -> IndexFixings
 {
 	// from https://www.ecb.europa.eu/stats/financial_markets_and_interest_rates/euro_short-term_rate/html/index.en.html
 	return parse_csv_fixings<IndexFixings>(
@@ -81,7 +88,63 @@ int main()
 
 	// how can we "add" these 2 together?
 
-	const auto IndexEuroSTR = parse_csv_fixings_IndexEuroSTR();
+	auto rfd = rate_fixing_detail{};
+	rfd.day_count = actual_360<Decimal>{};
+
+	const auto EuroSTR_compounded_index = parse_csv_fixings_EuroSTR_compounded_index();
+
+	// from 
+	auto id = index_detail{};
+	id.initial_value = Decimal{ 100 };
+	id.initial_date = 2019y / October / 1d;
+	id.final_round = 8u;
+//	id.step_round = 8u;
+	// not 100% sure that above is correct
+
+//	const auto date = 2026y / April / 24d;
+	const auto date = 2026y / April / 23d;
+
+	const auto& indx = EuroSTR_compounded_index[date];
+	assert(indx);
+
+	cout
+		<< fixed
+		<< setprecision(EuroSTR_compounded_index.get_decimal_places())
+		<< "For "
+		<< date
+		<< " SOFR Compounded Index is "
+		<< indx->get_value()
+		<< " and the same computed value is "
+		<< index(EuroSTR, rfd, date, id).get_value()
+		<< endl;
+
+	const auto& EuroSTR_compounded_index_calendar = EuroSTR_compounded_index.get_calendar();
+
+	// look for inconsistencies in the data
+	const auto index_dates = EuroSTR_compounded_index_calendar.make_business_days_schedule(
+		EuroSTR_compounded_index.get_time_series().get_period()
+	);
+	for (const auto& d : index_dates.get_dates())
+	{
+		if (d == *index_dates.get_dates().crbegin())
+			break;
+		// temporary only, unit we sort out start/end of RFR/RFR Index
+
+		const auto& indx = EuroSTR_compounded_index[d];
+		assert(indx);
+
+		if (*indx != index(EuroSTR, rfd, d, id))
+			cout
+			<< fixed
+			<< setprecision(EuroSTR_compounded_index.get_decimal_places())
+			<< "For "
+			<< d
+			<< " EuroSTR Compounded Index is "
+			<< indx->get_value()
+			<< " and the same computed value is "
+			<< index(EuroSTR, rfd, d, id).get_value()
+			<< endl;
+	}
 
 	return 0;
 }
