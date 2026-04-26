@@ -88,13 +88,9 @@ inline auto _parse_csv_fixings_storage_x2(
 		auto s1 = std::string{};
 		std::getline(fs, s1, ','); // skip the comma
 
-		const auto observation1 = _parse_observation1(fs);
+		result1[ymd] = _parse_observation1(fs);
 
-		result1[ymd] = observation1;
-
-		const auto observation2 = _parse_observation2(fs);
-
-		result2[ymd] = observation2;
+		result2[ymd] = _parse_observation2(fs);
 
 		if (fs.eof())
 			break;

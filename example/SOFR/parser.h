@@ -81,9 +81,7 @@ auto _parse_csv_fixings_storage(
 		for (auto i = 0u; i < skip; ++i)
 			std::getline(fs, s, ','); // skip "xyz,"
 
-		const auto observation = _parse_observation<Fixings>(fs);
-
-		result[ymd] = observation;
+		result[ymd] = _parse_observation<Fixings>(fs);
 
 		std::getline(fs, s); // skip the rest
 

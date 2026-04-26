@@ -54,37 +54,46 @@ inline auto _parse_date(std::istream& fs)
 	return ymd;
 }
 
-inline auto _parse_observation(std::istream& fs)
+template<typename Fixings>
+auto _parse_observation(std::istream& fs)
 {
-	using namespace std::string_literals;
-
 	auto o = std::string{};
 	std::getline(fs, o);
 
-	return reset::Percent{ o };
+	const auto comma_pos = o.find(',');
+	if (comma_pos != std::string::npos)
+		// not the last column
+		return typename Fixings::observation{
+			o.substr(0uz, comma_pos - 1uz)
+		}; // we ignore the first and last characters (quotes)
+	else
+		// the last column
+		return typename Fixings::observation{
+			o
+		}; // we ignore the first and last characters (quotes)
 }
 
 
-inline auto _parse_csv_fixings_storage(
+template<typename Fixings>
+auto _parse_csv_fixings_storage(
 	std::istream& fs,
+	const unsigned skip, // how many columns to skip after date before observation
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
 )
 {
-	auto result = reset::RateFixings::storage{ gregorian::util::days_period{ from, until } };
+	auto result = typename Fixings::storage{ gregorian::util::days_period{ from, until } };
 
 	for (;;)
 	{
 		const auto ymd = _parse_date(fs);
 
 		auto s = std::string{};
-		std::getline(fs, s, ','); // skip the delimiter
-		std::getline(fs, s, ','); // skip 25% column
-		std::getline(fs, s, ','); // skip 75% column
+		std::getline(fs, s, ','); // skip ","
+		for (auto i = 0u; i < skip; ++i)
+			std::getline(fs, s, ','); // skip "xyz,"
 
-		const auto observation = _parse_observation(fs);
-
-		result[ymd] = observation;
+		result[ymd] = _parse_observation<Fixings>(fs);
 
 		if (fs.eof())
 			break;
@@ -94,7 +103,8 @@ inline auto _parse_csv_fixings_storage(
 }
 
 
-inline auto _make_calendar(const reset::RateFixings::storage& ts)
+template<typename Fixings>
+auto _make_calendar(const typename Fixings::storage& ts)
 {
 	const auto& fu = ts.get_period();
 
@@ -114,11 +124,14 @@ inline auto _make_calendar(const reset::RateFixings::storage& ts)
 }
 
 
-inline auto parse_csv_fixings(
+template<typename Fixings>
+auto parse_csv_fixings(
 	const std::string& fileName,
+	const unsigned skip, // how many columns to skip after date before observation
 	const std::chrono::year_month_day& from, // these could also be read from the file
-	const std::chrono::year_month_day& until
-) -> reset::RateFixings
+	const std::chrono::year_month_day& until,
+	const unsigned int dp
+) -> Fixings
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
 	assert(fs);
@@ -130,10 +143,10 @@ inline auto parse_csv_fixings(
 		std::getline(fs, t);
 	}
 
-	auto ts = _parse_csv_fixings_storage(fs, from, until);
+	auto ts = _parse_csv_fixings_storage<Fixings>(fs, skip, from, until);
 	// we can check the fixings vs decimal places
 
-	auto c = _make_calendar(ts);
+	auto c = _make_calendar<Fixings>(ts);
 
-	return reset::fixings{ std::move(ts), std::move(c), 2u };
+	return Fixings{ std::move(ts), std::move(c), dp };
 }

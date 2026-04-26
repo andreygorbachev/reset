@@ -39,10 +39,24 @@ using namespace reset;
 static auto parse_csv_fixings_FTIIE() -> RateFixings
 {
 	// from https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?&sector=18&accion=consultarDirectorioCuadros&locale=en
-	return parse_csv_fixings(
+	return parse_csv_fixings<RateFixings>(
 		"Overnight TIIE Funding Rate.csv",
+		2u,
 		2006y / January / 2d,
-		2026y / April / 24d
+		2026y / April / 24d,
+		2u
+	);
+}
+
+static auto parse_csv_fixings_FTIIE_compounded_index() -> IndexFixings
+{
+	// from https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=18&accion=consultarCuadroAnalitico&idCuadro=CA766&locale=en
+	return parse_csv_fixings<IndexFixings>(
+		"Overnight Funding TIIE indexes and compounded in advance Overnight Funding TIIE.csv",
+		1u,
+		2006y / January / 2d,
+		2026y / April / 27d,
+		4u
 	);
 }
 
@@ -51,6 +65,8 @@ static auto parse_csv_fixings_FTIIE() -> RateFixings
 int main()
 {
 	const auto FTIIE = parse_csv_fixings_FTIIE();
+
+	const auto FTIIE_compounded_index = parse_csv_fixings_FTIIE_compounded_index();
 
 	return 0;
 }

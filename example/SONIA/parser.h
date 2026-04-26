@@ -81,11 +81,8 @@ auto _parse_csv_fixings_storage(
 
 		auto s = std::string{};
 		std::getline(fs, s, ','); // skip the comma
-		// check decimal places?
 
-		const auto observation = _parse_observation<Fixings>(fs);
-
-		result[ymd] = observation;
+		result[ymd] = _parse_observation<Fixings>(fs);
 
 		if (fs.eof())
 			break;
