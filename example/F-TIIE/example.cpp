@@ -81,6 +81,39 @@ static auto parse_csv_fixings_FTIIE_compounded_on_calendar_days_index() -> Index
 }
 
 
+static auto parse_csv_fixings_FTIIE_28_day() -> RateFixings
+{
+	return parse_csv_fixings<RateFixings>(
+		"Overnight Funding TIIE indexes and compounded in advance Overnight Funding TIIE.csv",
+		2u,
+		2006y / January / 31d, // not 100% sure why these started later than the index
+		2026y / April / 27d,
+		4u
+	);
+}
+
+static auto parse_csv_fixings_FTIIE_91_day() -> RateFixings
+{
+	return parse_csv_fixings<RateFixings>(
+		"Overnight Funding TIIE indexes and compounded in advance Overnight Funding TIIE.csv",
+		3u,
+		2006y / January / 31d,
+		2026y / April / 27d,
+		4u
+	);
+}
+
+static auto parse_csv_fixings_FTIIE_182_day() -> RateFixings
+{
+	return parse_csv_fixings<RateFixings>(
+		"Overnight Funding TIIE indexes and compounded in advance Overnight Funding TIIE.csv",
+		4u,
+		2006y / January / 31d,
+		2026y / April / 27d,
+		4u
+	);
+}
+
 
 int main()
 {
@@ -91,6 +124,10 @@ int main()
 
 	const auto FTIIE_compounded_on_business_days_index = parse_csv_fixings_FTIIE_compounded_on_business_days_index();
 	const auto FTIIE_compounded_on_calendar_days_index = parse_csv_fixings_FTIIE_compounded_on_calendar_days_index();
+
+	const auto FTIIE_28_day = parse_csv_fixings_FTIIE_28_day();
+	const auto FTIIE_91_day = parse_csv_fixings_FTIIE_91_day();
+	const auto FTIIE_182_day = parse_csv_fixings_FTIIE_182_day();
 
 	// from
 	// "Determination of the Overnight Funding TIIE Index compounded on business days,
