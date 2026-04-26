@@ -65,6 +65,7 @@ namespace reset
 		a *= Decimal{ one + rate * year_fraction }; // should these have some kind of units?
 	}
 
+
 	// maybe this needs a better name? (like compounded average)
 	inline auto average(
 		const RateFixings& fix,
