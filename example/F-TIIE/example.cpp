@@ -56,12 +56,24 @@ static auto parse_csv_fixings_FTIIE() -> RateFixings
 	);
 }
 
-static auto parse_csv_fixings_FTIIE_compounded_index() -> IndexFixings
+static auto parse_csv_fixings_FTIIE_compounded_on_business_days_index() -> IndexFixings
 {
 	// from https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=18&accion=consultarCuadroAnalitico&idCuadro=CA766&locale=en
 	return parse_csv_fixings<IndexFixings>(
 		"Overnight Funding TIIE indexes and compounded in advance Overnight Funding TIIE.csv",
 		1u,
+		2006y / January / 2d,
+		2026y / April / 27d,
+		4u
+	);
+}
+
+static auto parse_csv_fixings_FTIIE_compounded_on_calendar_days_index() -> IndexFixings
+{
+	// from https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=18&accion=consultarCuadroAnalitico&idCuadro=CA766&locale=en
+	return parse_csv_fixings<IndexFixings>(
+		"Overnight Funding TIIE indexes and compounded in advance Overnight Funding TIIE.csv",
+		0u,
 		2006y / January / 2d,
 		2026y / April / 27d,
 		4u
@@ -77,7 +89,8 @@ int main()
 	auto rfd = rate_fixing_detail{};
 	rfd.day_count = actual_360<Decimal>{};
 
-	const auto FTIIE_compounded_index = parse_csv_fixings_FTIIE_compounded_index();
+	const auto FTIIE_compounded_on_business_days_index = parse_csv_fixings_FTIIE_compounded_on_business_days_index();
+	const auto FTIIE_compounded_on_calendar_days_index = parse_csv_fixings_FTIIE_compounded_on_calendar_days_index();
 
 	// from
 	// "Determination of the Overnight Funding TIIE Index compounded on business days,
@@ -92,16 +105,30 @@ int main()
 //	const auto date = 2026y / April / 27d;
 	const auto date = 2026y / April / 24d;
 
-	const auto& indx = FTIIE_compounded_index[date];
-	assert(indx);
+	const auto& bus_indx = FTIIE_compounded_on_business_days_index[date];
+	assert(bus_indx);
 
 	cout
 		<< fixed
-		<< setprecision(FTIIE_compounded_index.get_decimal_places())
+		<< setprecision(FTIIE_compounded_on_business_days_index.get_decimal_places())
 		<< "For "
 		<< date
 		<< " F-TIIE Compounded Index (business days) is "
-		<< indx->get_value()
+		<< bus_indx->get_value()
+		<< " and the same computed value is "
+		<< index(FTIIE, rfd, date, id).get_value()
+		<< endl;
+
+	const auto& cal_indx = FTIIE_compounded_on_calendar_days_index[date];
+	assert(cal_indx);
+
+	cout
+		<< fixed
+		<< setprecision(FTIIE_compounded_on_calendar_days_index.get_decimal_places())
+		<< "For "
+		<< date
+		<< " F-TIIE Compounded Index (calendar days) is "
+		<< cal_indx->get_value()
 		<< " and the same computed value is "
 		<< index(FTIIE, rfd, date, id).get_value()
 		<< endl;
