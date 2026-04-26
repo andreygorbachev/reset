@@ -83,7 +83,7 @@ int main()
 	rfd.day_count = actual_365_fixed<Decimal>{};
 
 	auto id1 = index_detail{};
-	id1.initial_value = Decimal{ 100 };
+	id1.initial_value = Value{ "100" };
 	id1.initial_date = f;
 	id1.step_round = 18u; // we compare the index with daily rounding
 	id1.final_round = 8u;

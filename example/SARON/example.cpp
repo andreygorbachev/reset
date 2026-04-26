@@ -23,6 +23,7 @@
 #include "parser.h"
 
 #include <decimal.h>
+#include <scaled_value.h>
 #include <fixings.h>
 #include <index.h>
 
@@ -65,7 +66,7 @@ int main()
 	rfd.day_count = actual_360<Decimal>{};
 
 	auto id = index_detail{};
-	id.initial_value = Decimal{ 10'000 };
+	id.initial_value = Value{ "10000" };
 	id.initial_date = 1999y / June / 30d;
 	id.final_round = 4u;
 

@@ -23,6 +23,7 @@
 #include "parser.h"
 
 #include <decimal.h>
+#include <scaled_value.h>
 #include <fixings.h>
 #include <index.h>
 
@@ -90,7 +91,7 @@ int main()
 	// more clarity would be welcome there on how rounding is done daily (*)
 
 	auto id = index_detail{};
-	id.initial_value = Decimal{ 100 };
+	id.initial_value = Value{ "100" };
 	id.initial_date = 2018y / April / 23d;
 	id.step_round = 18u;
 	id.final_round = 8u;

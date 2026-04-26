@@ -43,7 +43,7 @@ namespace reset
 	struct average_detail // should it be called metadata?
 	{
 		std::chrono::days term{}; // for 30 day average, do we want it to be days{ 30 } or days{ -30 }?
-		std::optional<unsigned int> final_round = std::nullopt; // should rounding and truncations be int?
+		std::optional<unsigned int> final_round = std::nullopt; // should rounding and truncation be int?
 	};
 
 

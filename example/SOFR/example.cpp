@@ -23,6 +23,7 @@
 #include "parser.h"
 
 #include <decimal.h>
+#include <scaled_value.h>
 #include <fixings.h>
 #include <index.h>
 #include <average.h>
@@ -132,7 +133,7 @@ int main()
 
 	// from https://www.newyorkfed.org/markets/opolicy/operating_policy_200212
 	auto id = index_detail{};
-	id.initial_value = Decimal{ 1 };
+	id.initial_value = Value{ "1" };
 	id.initial_date = 2018y / April / 2d;
 	id.final_round = 8u;
 

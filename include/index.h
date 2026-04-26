@@ -43,7 +43,7 @@ namespace reset
 
 	struct index_detail // should it be called metadata?
 	{
-		Decimal initial_value{ 1 };
+		Value initial_value{ 1 };
 		std::chrono::year_month_day initial_date{};
 		bool brazil = false; // this needs to be better - maybe "calendar"/"business" compounding enum?
 		std::optional<unsigned int> factor_trunc = std::nullopt;
@@ -51,7 +51,7 @@ namespace reset
 		std::optional<unsigned int> step_trunc = std::nullopt;
 		std::optional<unsigned int> step_round = std::nullopt;
 		std::optional<unsigned int> final_trunc = std::nullopt;
-		std::optional<unsigned int> final_round = std::nullopt; // should rounding and truncations be int?
+		std::optional<unsigned int> final_round = std::nullopt; // should roundings and truncations be int?
 	};
 
 
@@ -111,7 +111,7 @@ namespace reset
 		const index_detail& id = index_detail{} // does it need a default?
 	) -> Value
 	{
-		// should throw an exception if we requested an index before a business day before the first reset
+		// should throw an exception if we requested an index on a business day before the first reset
 		// but we do not have information about relevant calendar at the moment
 
 		const auto& c = fix.get_calendar();
@@ -122,7 +122,7 @@ namespace reset
 
 		const auto& dates = schedule.get_dates();
 
-		auto indx = id.initial_value;
+		auto indx = static_cast<Decimal>(id.initial_value);
 
 		// not very elegant to start with
 		auto start = std::chrono::year_month_day{};
@@ -154,5 +154,4 @@ namespace reset
 // adjusent_difference for year fraction
 // partial_sum for daily compounding
 // transform for final rounding
-
 }

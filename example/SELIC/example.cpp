@@ -23,6 +23,7 @@
 #include "parser.h"
 
 #include <decimal.h>
+#include <scaled_value.h>
 #include <fixings.h>
 #include <index.h>
 
@@ -62,7 +63,7 @@ int main()
 	rfd.day_count = calculation_252<Decimal>{ SELIC.get_calendar() }; // think more about copies of calendar
 
 	auto id = index_detail{};
-	id.initial_value = Decimal{ 1000 };
+	id.initial_value = Value{ "1000" };
 	id.initial_date = 2000y / July / 1d;
 	id.brazil = true;
 	id.factor_round = 8u;

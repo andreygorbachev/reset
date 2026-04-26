@@ -23,6 +23,7 @@
 #include "parser.h"
 
 #include <decimal.h>
+#include <scaled_value.h>
 #include <index.h>
 #include <fixings.h>
 
@@ -83,7 +84,7 @@ int main()
 	// the Overnight Funding TIIE Index compounded on calendar days,
 	// and the Compounded in advance Overnight Funding TIIE."
 	auto id = index_detail{};
-	id.initial_value = Decimal{ 100'000 };
+	id.initial_value = Value{ "100000" };
 	id.initial_date = 2006y / January / 2d;
 	id.step_round = 16u;
 	id.final_round = 4u;

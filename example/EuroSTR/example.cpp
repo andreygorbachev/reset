@@ -23,6 +23,7 @@
 #include "parser.h"
 
 #include <decimal.h>
+#include <scaled_value.h>
 #include <fixings.h>
 #include <index.h>
 
@@ -95,7 +96,7 @@ int main()
 
 	// from ...
 	auto id = index_detail{};
-	id.initial_value = Decimal{ 100 };
+	id.initial_value = Value{ "100" };
 	id.initial_date = 2019y / October / 1d;
 	id.final_round = 8u;
 //	id.step_round = 8u;
