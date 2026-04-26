@@ -103,8 +103,8 @@ namespace reset
 
 		return {
 			a,
-			*dates.cbegin(),
-			*dates.crbegin(),
+			average_start,
+			average_end,
 			rfd.day_count // or should the average has its own day count? (is there a way to default it to underlying daily rate day count?)
 		};
 	}
