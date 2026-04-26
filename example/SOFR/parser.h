@@ -53,7 +53,7 @@ inline auto _parse_date(std::istream& fs)
 }
 
 template<typename Fixings>
-inline auto _parse_observation(std::istream& fs)
+auto _parse_observation(std::istream& fs)
 {
 	auto o = std::string{};
 	std::getline(fs, o, ',');
