@@ -38,6 +38,7 @@
 #include <utility>
 #include <algorithm>
 #include <cassert>
+#include <optional>
 
 
 inline auto _parse_date(std::istream& fs)

@@ -37,6 +37,7 @@
 #include <utility>
 #include <tuple>
 #include <cassert>
+#include <optional>
 
 
 inline auto _parse_date(std::istream& fs)
