@@ -64,7 +64,7 @@ auto _parse_observation(std::istream& fs)
 	if (comma_pos != std::string::npos)
 		// not the last column
 		return typename Fixings::observation{
-			o.substr(0uz, comma_pos - 1uz)
+			o.substr(0uz, comma_pos)
 		}; // we ignore the first and last characters (quotes)
 	else
 		// the last column

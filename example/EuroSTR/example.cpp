@@ -93,7 +93,7 @@ int main()
 
 	const auto EuroSTR_compounded_index = parse_csv_fixings_EuroSTR_compounded_index();
 
-	// from 
+	// from ...
 	auto id = index_detail{};
 	id.initial_value = Decimal{ 100 };
 	id.initial_date = 2019y / October / 1d;

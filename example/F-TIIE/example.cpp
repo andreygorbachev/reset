@@ -23,9 +23,16 @@
 #include "parser.h"
 
 #include <decimal.h>
+#include <index.h>
 #include <fixings.h>
 
+#include <actual_360.h>
+
 #include <chrono>
+#include <iostream>
+#include <iomanip>
+#include <ios>
+#include <cassert>
 
 using namespace std;
 using namespace std::chrono;
@@ -41,7 +48,7 @@ static auto parse_csv_fixings_FTIIE() -> RateFixings
 	// from https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?&sector=18&accion=consultarDirectorioCuadros&locale=en
 	return parse_csv_fixings<RateFixings>(
 		"Overnight TIIE Funding Rate.csv",
-		2u,
+		0u,
 		2006y / January / 2d,
 		2026y / April / 24d,
 		2u
@@ -66,7 +73,37 @@ int main()
 {
 	const auto FTIIE = parse_csv_fixings_FTIIE();
 
+	auto rfd = rate_fixing_detail{};
+	rfd.day_count = actual_360<Decimal>{};
+
 	const auto FTIIE_compounded_index = parse_csv_fixings_FTIIE_compounded_index();
+
+	// from
+	// "Determination of the Overnight Funding TIIE Index compounded on business days,
+	// the Overnight Funding TIIE Index compounded on calendar days,
+	// and the Compounded in advance Overnight Funding TIIE."
+	auto id = index_detail{};
+	id.initial_value = Decimal{ 100'000 };
+	id.initial_date = 2006y / January / 2d;
+	id.step_round = 16u;
+	id.final_round = 4u;
+
+//	const auto date = 2026y / April / 27d;
+	const auto date = 2026y / April / 24d;
+
+	const auto& indx = FTIIE_compounded_index[date];
+	assert(indx);
+
+	cout
+		<< fixed
+		<< setprecision(FTIIE_compounded_index.get_decimal_places())
+		<< "For "
+		<< date
+		<< " F-TIIE Compounded Index (business days) is "
+		<< indx->get_value()
+		<< " and the same computed value is "
+		<< index(FTIIE, rfd, date, id).get_value()
+		<< endl;
 
 	return 0;
 }
