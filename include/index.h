@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include <chrono>
+#include <ranges>
 #include <optional>
 #include <cassert>
 
@@ -124,22 +124,8 @@ namespace reset
 
 		auto indx = static_cast<Decimal>(id.initial_value);
 
-		// not very elegant to start with
-		auto start = std::chrono::year_month_day{};
-		for (const auto& d : dates)
-		{
-			if (d == *dates.cbegin())
-			{
-				start = d; // this probably means that we assume that the index starts on a business day - assert it?
-				continue;
-			}
-
-			const auto& end = d;
-
+		for (const auto& [start, end] : dates | std::views::adjacent<2uz>)
 			index_step_(indx, start, end, fix, rfd, id);
-
-			start = d;
-		}
 
 		if (id.final_trunc)
 			indx = trunc_dp(indx, *id.final_trunc);

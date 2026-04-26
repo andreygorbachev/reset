@@ -65,7 +65,7 @@ namespace reset
 		a *= Decimal{ one + rate * year_fraction }; // should these have some kind of units?
 	}
 
-	// maybe this needs a better name? (like compounded 
+	// maybe this needs a better name? (like compounded average)
 	inline auto average(
 		const RateFixings& fix,
 		const rate_fixing_detail& rfd,
@@ -75,57 +75,23 @@ namespace reset
 	{
 		// do we handle the case where detail.term is empty?
 
+		const auto average_start = std::chrono::sys_days{ ymd } - detail.term;
+		const auto average_end = ymd; // I think we assume that ymd is a good business day - should we check for that?
+
 		const auto& c = fix.get_calendar();
 		const auto schedule = c.make_business_days_schedule(
-			gregorian::util::days_period{ std::chrono::sys_days{ ymd } - detail.term, ymd}
+			gregorian::util::days_period{ average_start, average_end }
 		); // is this a wrong data structure?
 		// assert that it is not empty?
 
-		const auto& dates = schedule.get_dates();
+		auto dates = schedule.get_dates();
+		if (!dates.contains(average_start))
+			dates.insert(average_start);
 
 		auto val = Decimal{ 1 };
 
-		// not very elegant to start with
-		if (*dates.cbegin() == schedule.get_period().get_from())
-		{
-			auto start = std::chrono::year_month_day{};
-			for (const auto& d : dates)
-			{
-				if (d == *dates.cbegin())
-				{
-					start = d;
-					continue;
-				}
-
-				const auto& end = d;
-
-				average_step_(val, start, end, fix, rfd);
-
-				start = d;
-			}
-		}
-		else
-		{
-			// special case where the first period starts on a non business day
-
-			average_step_(val, schedule.get_period().get_from(), *dates.cbegin(), fix, rfd);
-
-			auto start = std::chrono::year_month_day{};
-			for (const auto& d : dates)
-			{
-				if (d == *dates.cbegin())
-				{
-					start = d;
-					continue;
-				}
-
-				const auto& end = d;
-
-				average_step_(val, start, end, fix, rfd);
-
-				start = d;
-			}
-		}
+		for (const auto& [start, end] : dates | std::views::adjacent<2uz>)
+			average_step_(val, start, end, fix, rfd);
 
 		const auto year_fraction = fin_calendar::fraction(schedule.get_period(), rfd.day_count);
 
