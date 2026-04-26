@@ -85,9 +85,9 @@ namespace reset
 		); // is this a wrong data structure?
 		// assert that it is not empty?
 
-		auto dates = schedule.get_dates();
-		if (!dates.contains(average_start))
-			dates.insert(average_start);
+		auto dates = schedule.get_dates(); // we might consider something not making a copy as most use cases would not need to insert
+		if (!dates.contains(average_start)) // or we can just have a look at cbegin(), which is O(1) operation on most platforms, rather than O(log n)
+			dates.insert(average_start); // do it with hint?
 
 		auto val = Decimal{ 1 };
 
