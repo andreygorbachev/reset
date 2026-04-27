@@ -114,74 +114,41 @@ int main()
 		<< index(SONIA, rfd, date, id).get_value()
 		<< endl;
 
+	// see if we need a fallback
 	const auto& London_calendar = locate_calendar("Europe/London", date);
 
-	// check the SONIA dates
-	const auto& SONIA_calendar = SONIA.get_calendar();
-	const auto common_period_1 = SONIA_calendar.get_schedule().get_period() & London_calendar.get_schedule().get_period();
-	if (calendar{ SONIA_calendar.get_weekend(), schedule{ common_period_1, SONIA_calendar.get_schedule().get_dates() } } ==
-		calendar{ London_calendar.get_weekend(), schedule{ common_period_1, London_calendar.get_schedule().get_dates() } }
-	)
-		cout << "SONIA calendar and London calendar match" << endl;
-	else
-	{
-		cout << "SONIA calendar and London calendar do not match" << endl;
-
-		auto diffs = schedule::dates{};
-		ranges::set_symmetric_difference(
-			SONIA_calendar.make_business_days_schedule(common_period_1).get_dates(),
-			London_calendar.make_business_days_schedule(common_period_1).get_dates(),
-			inserter(diffs, diffs.begin())
-		);
-		cout << "The following dates are in one calendar but not in the other:" << endl;
-		for(const auto& d : diffs)
-			cout << d << endl;
-	}
-
-	// check the SONIA Compounded Index dates
-	const auto& SONIA_compounded_index_calendar = SONIA_compounded_index.get_calendar();
-	const auto common_period_2 = SONIA_compounded_index_calendar.get_schedule().get_period() & London_calendar.get_schedule().get_period();
-	if (calendar{ SONIA_compounded_index_calendar.get_weekend(), schedule{ common_period_2, SONIA_compounded_index_calendar.get_schedule().get_dates() } } ==
-		calendar{ London_calendar.get_weekend(), schedule{ common_period_2, London_calendar.get_schedule().get_dates() } }
-	)
-		cout << "SONIA Compounded Index calendar and London calendar match" << endl;
-	else
-	{
-		cout << "SONIA Compounded Index calendar and London calendar do not match" << endl;
-
-		auto diffs = schedule::dates{};
-		ranges::set_symmetric_difference(
-			SONIA_compounded_index_calendar.make_business_days_schedule(common_period_2).get_dates(),
-			London_calendar.make_business_days_schedule(common_period_2).get_dates(),
-			inserter(diffs, diffs.begin())
-		);
-		cout << "The following dates are in one calendar but not in the other:" << endl;
-		for (const auto& d : diffs)
-			cout << d << endl;
-	}
-
-	// look for inconsistencies in the data
-	const auto dates = SONIA_compounded_index_calendar.make_business_days_schedule(
-		SONIA_compounded_index.get_time_series().get_period()
-	);
+	const auto dates =
+//		London_calendar.make_business_days_schedule(SONIA.get_time_series().get_period());
+		London_calendar.make_business_days_schedule(days_period{ 2018y / April / 23d, 2025y / May / 12d });
 	for (const auto& d : dates.get_dates())
-	{
-		if (d == *dates.get_dates().crbegin())
-			break;
-		// temporary only, until we sort out start/end of RFR/RFR Index
-
-		const auto& indx = SONIA_compounded_index[d];
-		assert(indx);
-
-		if (*indx != index(SONIA, rfd, d, id))
+		if (SONIA.fallback(d))
 			cout
+				<< "Fallback was needed on "
+				<< d
+				<< endl;
+
+	// look for inconsistencies in the index data
+	const auto period = SONIA_compounded_index.get_time_series().get_period();
+	for (
+		auto d = period.get_from();
+		d <= period.get_until();
+		d = sys_days{ d } + days{ 1 }
+	)
+	{
+		const auto& fix = SONIA_compounded_index[d];
+		if (fix)
+		{
+			const auto computed_fix = index(SONIA, rfd, d, id);
+			if (*fix != computed_fix)
+				cout
 				<< "For "
 				<< d
 				<< " SONIA Compounded Index is "
-				<< indx->get_value()
+				<< fix->get_value()
 				<< " and the same computed value is "
-				<< index(SONIA, rfd, d, id).get_value()
+				<< computed_fix.get_value()
 				<< endl;
+		}
 	}
 
 	return 0;

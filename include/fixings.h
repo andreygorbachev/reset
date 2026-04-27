@@ -69,7 +69,12 @@ namespace reset
 
 		auto operator[](const std::chrono::year_month_day& ymd) const -> const std::optional<observation>&;
 
-		auto current_observation(const std::chrono::year_month_day& ymd) const -> const observation&;
+		auto fallback(const std::chrono::year_month_day& ymd) const -> bool; // is it a good name?
+		// what should it do if ymd is not a good business day?
+
+		// do we need another function which would check if fixing is not expected, but is provided?
+
+		auto current_observation(const std::chrono::year_month_day& ymd) const -> const observation&; // is it a good name?
 		// throws an exception when we are pushed before the start of fixings
 
 	public:
@@ -86,7 +91,7 @@ namespace reset
 
 		storage ts_;
 
-		calendar c_;
+		calendar c_; // do we want to copy the calendar?
 
 		decimal_places dp_;
 
@@ -112,6 +117,12 @@ namespace reset
 	auto fixings<Observation>::operator[](const std::chrono::year_month_day& ymd) const -> const std::optional<observation>&
 	{
 		return ts_[ymd];
+	}
+
+	template<typename Observation>
+	auto fixings<Observation>::fallback(const std::chrono::year_month_day& ymd) const -> bool
+	{
+		return !(c_.is_business_day(ymd) && ts_[ymd]);
 	}
 
 	template<typename Observation>

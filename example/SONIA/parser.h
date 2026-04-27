@@ -24,10 +24,9 @@
 
 #include <fixings.h>
 
-#include <calendar.h>
-#include <schedule.h>
 #include <period.h>
-#include <weekend.h>
+
+#include <static_data.h>
 
 #include <string>
 #include <chrono>
@@ -35,7 +34,6 @@
 #include <fstream>
 #include <stdexcept>
 #include <utility>
-#include <optional>
 #include <cassert>
 
 
@@ -93,27 +91,6 @@ auto _parse_csv_fixings_storage(
 
 
 template<typename Fixings>
-auto _make_calendar(const typename Fixings::storage& ts)
-{
-	const auto& fu = ts.get_period();
-
-	auto hols = gregorian::schedule::dates{};
-	for (
-		auto d = fu.get_from();
-		d <= fu.get_until();
-		d = std::chrono::sys_days{ d } + std::chrono::days{ 1 }
-	)
-		if (ts[d] == std::nullopt)
-			hols.insert(d);
-
-	return gregorian::calendar{
-		gregorian::NoWeekend,
-		gregorian::schedule{ fu, hols }
-	};
-}
-
-
-template<typename Fixings>
 auto parse_csv_fixings(
 	const std::string& fileName,
 	const std::chrono::year_month_day& from, // these could also be read from the file
@@ -131,7 +108,12 @@ auto parse_csv_fixings(
 	auto ts = _parse_csv_fixings_storage<Fixings>(fs, from, until);
 	// we can check the fixings vs decimal places
 
-	auto c = _make_calendar<Fixings>(ts);
-
-	return Fixings{ std::move(ts), std::move(c), dp };
+	return Fixings{
+		std::move(ts),
+		gregorian::static_data::locate_calendar(
+			"Europe/London",
+			std::chrono::year{ 2025 } / std::chrono::May / std::chrono::day{ 13u }
+		),
+		dp
+	};
 }

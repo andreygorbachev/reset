@@ -77,6 +77,26 @@ namespace reset
 		EXPECT_THROW(fix[2023y / June / 6d], out_of_range);
 	}
 
+	TEST(fixings, fallback)
+	{
+		auto ts = time_series<optional<Percent>>{ days_period{ 2026y / April / 2d, 2026y / April / 5d } };
+		ts[2026y / April / 2d] = Percent{ "3.4" };
+		// fallback on the 3rd of April
+		ts[2026y / April / 4d] = Percent{ "3.4" }; // missplaced fixing on Saturday (should not be there)
+		// no Sunday fixing
+
+		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), { 2026y / April / 3d } } };
+
+		const auto fix = fixings{ move(ts), move(c), 2u };
+
+		EXPECT_FALSE(fix.fallback(2026y / April / 2d)); // fixing is available, so no need for a fallback
+		EXPECT_TRUE(fix.fallback(2026y / April / 3d)); // fixing is not available (but expected), so fallback is needed
+//		EXPECT_FALSE(fix.fallback(2026y / April / 4d)); // fixing is available (but not expected), so no need for a fallback
+//		EXPECT_FALSE(fix.fallback(2026y / April / 5d)); // fixing is not available (but is not expected), so no need for a fallback
+
+		// test outside calendar
+	}
+
 	TEST(fixings, current_observation)
 	{
 		auto ts = time_series<optional<Percent>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
