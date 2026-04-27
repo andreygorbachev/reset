@@ -69,12 +69,10 @@ namespace reset
 
 		auto operator[](const std::chrono::year_month_day& ymd) const -> const std::optional<observation>&;
 
-		auto fallback(const std::chrono::year_month_day& ymd) const -> bool; // is it a good name?
+		auto needs_fallback(const std::chrono::year_month_day& ymd) const -> bool;
 		// what should it do if ymd is not a good business day?
 
-		// do we need another function which would check if fixing is not expected, but is provided?
-
-		auto current_observation(const std::chrono::year_month_day& ymd) const -> const observation&; // is it a good name?
+		auto with_fallback(const std::chrono::year_month_day& ymd) const -> const observation&;
 		// throws an exception when we are pushed before the start of fixings
 
 	public:
@@ -120,20 +118,20 @@ namespace reset
 	}
 
 	template<typename Observation>
-	auto fixings<Observation>::fallback(const std::chrono::year_month_day& ymd) const -> bool
+	auto fixings<Observation>::needs_fallback(const std::chrono::year_month_day& ymd) const -> bool
 	{
 		return !(c_.is_business_day(ymd) && ts_[ymd]);
 	}
 
 	template<typename Observation>
-	auto fixings<Observation>::current_observation(const std::chrono::year_month_day& ymd) const -> const observation&
+	auto fixings<Observation>::with_fallback(const std::chrono::year_month_day& ymd) const -> const observation&
 	{
 		static const auto p = fin_calendar::preceding{};
 		const auto& o = ts_[p.adjust(ymd, c_)];
 		if (o)
 			return *o;
 		else
-			return current_observation(std::chrono::sys_days{ ymd } - std::chrono::days{ 1 });
+			return with_fallback(std::chrono::sys_days{ ymd } - std::chrono::days{ 1 });
 	}
 
 

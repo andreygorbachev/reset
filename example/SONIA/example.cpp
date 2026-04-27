@@ -121,7 +121,7 @@ int main()
 //		London_calendar.make_business_days_schedule(SONIA.get_time_series().get_period());
 		London_calendar.make_business_days_schedule(days_period{ 2018y / April / 23d, date });
 	for (const auto& d : dates.get_dates())
-		if (SONIA.fallback(d))
+		if (SONIA.needs_fallback(d))
 			cout
 				<< "Fallback was needed on "
 				<< d

@@ -109,7 +109,7 @@ namespace reset
 		const rate_fixing_detail& rfd
 	)
 	{
-		const auto& fixing = fix.current_observation(start); // or we can create special average_step_ for the first step when average starts on a non business day (and we need to use the previous reset)
+		const auto& fixing = fix.with_fallback(start); // or we can create special average_step_ for the first step when average starts on a non business day (and we need to use the previous reset)
 		const auto rate = static_cast<Decimal>(fixing);
 
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
