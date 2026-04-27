@@ -133,11 +133,17 @@ int main()
 	// "Determination of the Overnight Funding TIIE Index compounded on business days,
 	// the Overnight Funding TIIE Index compounded on calendar days,
 	// and the Compounded in advance Overnight Funding TIIE."
-	auto id = index_detail{};
-	id.initial_value = Value{ "100000" };
-	id.initial_date = 2006y / January / 2d;
-	id.step_round = 16u;
-	id.final_round = 4u;
+	auto bus_id = index_detail{};
+	bus_id.initial_value = Value{ "100000" };
+	bus_id.initial_date = 2006y / January / 2d;
+	bus_id.step_round = 16u;
+	bus_id.final_round = 4u;
+
+	auto cal_id = index_detail{};
+	cal_id.initial_value = Value{ "100000" };
+	cal_id.initial_date = 2006y / January / 2d;
+	cal_id.step_round = 16u;
+	cal_id.final_round = 4u;
 
 //	const auto date = 2026y / April / 27d;
 	const auto date = 2026y / April / 24d;
@@ -153,7 +159,7 @@ int main()
 		<< " F-TIIE Compounded Index (business days) is "
 		<< bus_indx->get_value()
 		<< " and the same computed value is "
-		<< index(FTIIE, rfd, date, id).get_value()
+		<< index(FTIIE, rfd, date, bus_id).get_value()
 		<< endl;
 
 	const auto& cal_indx = FTIIE_compounded_on_calendar_days_index[date];
@@ -167,7 +173,7 @@ int main()
 		<< " F-TIIE Compounded Index (calendar days) is "
 		<< cal_indx->get_value()
 		<< " and the same computed value is "
-		<< index(FTIIE, rfd, date, id).get_value()
+		<< index(FTIIE, rfd, date, cal_id).get_value()
 		<< endl;
 
 	return 0;
