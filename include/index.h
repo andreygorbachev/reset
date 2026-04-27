@@ -55,35 +55,6 @@ namespace reset
 	};
 
 
-
-	inline auto index_factor_(
-		const std::chrono::year_month_day& start,
-		const std::chrono::year_month_day& end,
-		const RateFixings& fix,
-		const rate_fixing_detail& rfd,
-		const index_detail& detail
-	) -> Decimal
-	{
-		const auto& fixing = fix[start];
-		assert(fixing);
-		const auto rate = static_cast<Decimal>(*fixing);
-
-		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
-
-		const auto one = Decimal{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
-		auto factor = detail.brazil ?
-			Decimal{ pow(one + rate, year_fraction) } : // we are also missing rounding for Brazil year_fraction at the moment
-			Decimal{ one + rate * year_fraction }; // should these have some kind of units?
-
-		if (detail.factor_trunc)
-			factor = trunc_dp(factor, *detail.factor_trunc);
-
-		if (detail.factor_round)
-			factor = round_dp(factor, *detail.factor_round);
-
-		return factor;
-	}
-
 	inline void index_step_(
 		Decimal& indx,
 		const std::chrono::year_month_day& start,
@@ -91,16 +62,7 @@ namespace reset
 		const RateFixings& fix,
 		const rate_fixing_detail& rfd,
 		const index_detail& id
-	)
-	{
-		indx *= index_factor_(start, end, fix, rfd, id);
-
-		if (id.step_trunc)
-			indx = trunc_dp(indx, *id.step_trunc);
-
-		if (id.step_round)
-			indx = round_dp(indx, *id.step_round);
-	}
+	);
 
 
 	// maybe this needs a better name? - compute a compounded RFR index from the underlying fixings
@@ -140,4 +102,52 @@ namespace reset
 // adjusent_difference for year fraction
 // partial_sum for daily compounding
 // transform for final rounding
+
+
+	inline auto index_factor_(
+		const std::chrono::year_month_day& start,
+		const std::chrono::year_month_day& end,
+		const RateFixings& fix,
+		const rate_fixing_detail& rfd,
+		const index_detail& detail
+	)
+	{
+		const auto& fixing = fix[start];
+		assert(fixing);
+		const auto rate = static_cast<Decimal>(*fixing);
+
+		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
+
+		const auto one = Decimal{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
+		auto factor = detail.brazil ?
+			Decimal{ pow(one + rate, year_fraction) } : // we are also missing rounding for Brazil year_fraction at the moment
+			Decimal{ one + rate * year_fraction }; // should these have some kind of units?
+
+		if (detail.factor_trunc)
+			factor = trunc_dp(factor, *detail.factor_trunc);
+
+		if (detail.factor_round)
+			factor = round_dp(factor, *detail.factor_round);
+
+		return factor;
+	}
+
+	inline void index_step_(
+		Decimal& indx,
+		const std::chrono::year_month_day& start,
+		const std::chrono::year_month_day& end,
+		const RateFixings& fix,
+		const rate_fixing_detail& rfd,
+		const index_detail& id
+	)
+	{
+		indx *= index_factor_(start, end, fix, rfd, id);
+
+		if (id.step_trunc)
+			indx = trunc_dp(indx, *id.step_trunc);
+
+		if (id.step_round)
+			indx = round_dp(indx, *id.step_round);
+	}
+
 }

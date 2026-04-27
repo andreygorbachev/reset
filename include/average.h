@@ -47,23 +47,13 @@ namespace reset
 	};
 
 
-
 	inline void average_step_( // should it be the same as index_step_ in index.h?
 		Decimal& a, // should it take a return a value? (no in/out parameter)
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,
 		const rate_fixing_detail& rfd
-	)
-	{
-		const auto& fixing = fix.current_observation(start); // or we can create special average_step_ for the first step when average starts on a non business day (and we need to use the previous reset)
-		const auto rate = static_cast<Decimal>(fixing);
-
-		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
-
-		const auto one = Decimal{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
-		a *= Decimal{ one + rate * year_fraction }; // should these have some kind of units?
-	}
+	);
 
 
 	// maybe this needs a better name? (like compounded average)
@@ -108,6 +98,24 @@ namespace reset
 			average_end,
 			rfd.day_count // or should the average has its own day count? (is there a way to default it to underlying daily rate day count?)
 		};
+	}
+
+
+	inline void average_step_( // should it be the same as index_step_ in index.h?
+		Decimal& a, // should it take a return a value? (no in/out parameter)
+		const std::chrono::year_month_day& start,
+		const std::chrono::year_month_day& end,
+		const RateFixings& fix,
+		const rate_fixing_detail& rfd
+	)
+	{
+		const auto& fixing = fix.current_observation(start); // or we can create special average_step_ for the first step when average starts on a non business day (and we need to use the previous reset)
+		const auto rate = static_cast<Decimal>(fixing);
+
+		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
+
+		const auto one = Decimal{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
+		a *= Decimal{ one + rate * year_fraction }; // should these have some kind of units?
 	}
 
 }

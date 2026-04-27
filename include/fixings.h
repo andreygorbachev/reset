@@ -98,6 +98,7 @@ namespace reset
 	using IndexFixings = fixings<Value>;
 
 
+
 	template<typename Observation>
 	fixings<Observation>::fixings(storage ts, calendar c, decimal_places dp) :
 		ts_{ std::move(ts) },
@@ -105,7 +106,6 @@ namespace reset
 		dp_{ dp }
 	{
 	}
-
 
 
 	template<typename Observation>
