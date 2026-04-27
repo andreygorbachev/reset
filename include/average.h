@@ -47,8 +47,8 @@ namespace reset
 	};
 
 
-	inline void average_step_( // should it be the same as index_step_ in index.h?
-		Decimal& a, // should it take a return a value? (no in/out parameter)
+	inline void average_step_(
+		Decimal& a,
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,
@@ -102,7 +102,7 @@ namespace reset
 
 
 	inline void average_step_( // should it be the same as index_step_ in index.h?
-		Decimal& a, // should it take a return a value? (no in/out parameter)
+		Decimal& a, // should it take and return a value? (no in/out parameter)
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,
