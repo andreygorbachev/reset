@@ -61,6 +61,8 @@ namespace reset
 //		EXPECT_EQ(expected2, fix.get_publication_calendar());
 	}
 
+	// should test the case where ts starts before the start of calendar, ends after the end of calendar etc.
+
 	TEST(fixings, operator_square_brackets)
 	{
 		auto ts = time_series<optional<Percent>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
