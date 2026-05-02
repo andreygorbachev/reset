@@ -174,14 +174,14 @@ namespace reset
 	template<typename Observation>
 	void fixings<Observation>::check_()
 	{
-//		const auto& p = ts_.get_period();
-//		for (
-//			auto d = p.get_from();
-//			d <= p.get_until();
-//			d = std::chrono::sys_days{ d } + std::chrono::days{ 1 }
-//		)
-//			if (c_.is_business_day(d) != ts_[d].has_value())
-//				throw std::out_of_range{ "Inconsistent timemseries and calendar in fixings" }; // is this the right exception to throw?
+		const auto& p = ts_.get_period();
+		for (
+			auto d = p.get_from();
+			d <= p.get_until();
+			d = std::chrono::sys_days{ d } + std::chrono::days{ 1 }
+		)
+			if (c_.is_business_day(d) != ts_[d].has_value())
+				throw std::out_of_range{ "Inconsistent time series and calendar in fixings" }; // is this the right exception to throw?
 	}
 
 }

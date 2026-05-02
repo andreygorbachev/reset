@@ -119,33 +119,5 @@ int main()
 		<< index(EuroSTR, rfd, date, id).get_value()
 		<< endl;
 
-	const auto& EuroSTR_compounded_index_calendar = EuroSTR_compounded_index.get_calendar();
-
-	// look for inconsistencies in the data
-	const auto index_dates = EuroSTR_compounded_index_calendar.make_business_days_schedule(
-		EuroSTR_compounded_index.get_time_series().get_period()
-	);
-	for (const auto& d : index_dates.get_dates())
-	{
-		if (d == *index_dates.get_dates().crbegin())
-			break;
-		// temporary only, unit we sort out start/end of RFR/RFR Index
-
-		const auto& indx = EuroSTR_compounded_index[d];
-		assert(indx);
-
-		if (*indx != index(EuroSTR, rfd, d, id))
-			cout
-			<< fixed
-			<< setprecision(EuroSTR_compounded_index.get_decimal_places())
-			<< "For "
-			<< d
-			<< " EuroSTR Compounded Index is "
-			<< indx->get_value()
-			<< " and the same computed value is "
-			<< index(EuroSTR, rfd, d, id).get_value()
-			<< endl;
-	}
-
 	return 0;
 }

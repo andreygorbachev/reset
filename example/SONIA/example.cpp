@@ -114,32 +114,6 @@ int main()
 		<< index(SONIA, rfd, date, id).get_value()
 		<< endl;
 
-	// see if we need a fallback
-	const auto& London_calendar = locate_calendar("Europe/London", date);
-
-	const auto dates =
-//		London_calendar.make_business_days_schedule(SONIA.get_time_series().get_period());
-		London_calendar.make_business_days_schedule(days_period{ 2018y / April / 23d, date });
-	for (const auto& d : dates.get_dates())
-		if (SONIA.needs_fallback(d))
-			cout
-				<< "Fallback was needed on "
-				<< d
-				<< endl;
-
-	// see if we have any unexpected fixings
-	for (
-		auto d = Epoch.get_from(); // should really check that it is not before SONIA started
-		d <= date;
-		d = sys_days{ d } + days{ 1 }
-	)
-		if(London_calendar.is_non_business_day(d) && SONIA[d])
-			cout
-				<< "For "
-				<< d
-				<< " we have a SONIA fixing, but no fixing was expected"
-				<< endl;
-
 	// look for inconsistencies in the index data
 	const auto period = SONIA_compounded_index.get_time_series().get_period();
 	for (
