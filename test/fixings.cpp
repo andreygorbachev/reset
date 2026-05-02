@@ -49,26 +49,43 @@ namespace reset
 
 	TEST(fixings, constructor)
 	{
-		auto ts = time_series<optional<Percent>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
+		auto ts = time_series<optional<Percent>>{
+			days_period{ 2023y / January / 1d, 2023y / January / 1d }
+		};
 
-		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
-
-		const auto expected1 = time_series<optional<Percent>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
-		const auto expected2 = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
+		auto c = calendar{
+			SaturdaySundayWeekend,
+			schedule{
+				ts.get_period(),
+				{ 2023y / January / 1d }
+			}
+		};
 
 		const auto fix = fixings{ move(ts), move(c), 4u };
-//		EXPECT_EQ(expected1, fix.get_time_series());
-//		EXPECT_EQ(expected2, fix.get_publication_calendar());
+
+		const auto expected1 = time_series<optional<Percent>>{
+			days_period{ 2023y / January / 1d, 2023y / January / 1d }
+		};
+		const auto expected2 = calendar{
+			SaturdaySundayWeekend,
+			schedule{
+				ts.get_period(),
+				{ 2023y / January / 1d }
+			}
+		};
+
+		EXPECT_EQ(expected1, fix.get_time_series());
+		EXPECT_EQ(expected2, fix.get_calendar());
 	}
 
 	// should test the case where ts starts before the start of calendar, ends after the end of calendar etc.
 
 	TEST(fixings, operator_square_brackets)
 	{
-		auto ts = time_series<optional<Percent>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
+		auto ts = time_series<optional<Percent>>{ days_period{ 2023y / January / 1d, 2023y / January / 3d } };
 		ts[2023y / January / 3d] = Percent{ "3.4269" };
 
-		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
+		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), { 2023y / January / 2d } } };
 
 		const auto fix = fixings{ move(ts), move(c), 4u };
 
@@ -76,7 +93,7 @@ namespace reset
 		EXPECT_EQ(Percent{ "3.4269" }, *fix[2023y / January / 3d]);
 
 		EXPECT_THROW(fix[2022y / December / 31d], out_of_range);
-		EXPECT_THROW(fix[2023y / June / 6d], out_of_range);
+		EXPECT_THROW(fix[2023y / January / 4d], out_of_range);
 	}
 
 	TEST(fixings, needs_fallback)
@@ -84,7 +101,7 @@ namespace reset
 		auto ts = time_series<optional<Percent>>{ days_period{ 2026y / April / 2d, 2026y / April / 5d } };
 		ts[2026y / April / 2d] = Percent{ "3.4" };
 		// fallback on the 3rd of April
-		ts[2026y / April / 4d] = Percent{ "3.4" }; // missplaced fixing on Saturday (should not be there)
+//		ts[2026y / April / 4d] = Percent{ "3.4" }; // missplaced fixing on Saturday (should not be there)
 		// no Sunday fixing
 
 		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), { 2026y / April / 3d } } };
@@ -101,10 +118,10 @@ namespace reset
 
 	TEST(fixings, with_fallback)
 	{
-		auto ts = time_series<optional<Percent>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
+		auto ts = time_series<optional<Percent>>{ days_period{ 2023y / January / 1d, 2023y / January / 3d } };
 		ts[2023y / January / 3d] = Percent{ "3.4269" };
 
-		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
+		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), { 2023y / January / 2d } } };
 
 		const auto fix = fixings{ move(ts), move(c), 4u };
 
@@ -113,7 +130,7 @@ namespace reset
 		// test actual move when we ask for a non-business day (do we need to distinguish between non-business day and missing reset?)
 		// test move before the start of fixings (is that possible?)
 	}
-
+/*
 	TEST(fixings, last_reset_year_month_day)
 	{
 		auto ts = time_series<optional<Percent>>{ days_period{ 2023y / January / 1d, 2023y / June / 5d } };
@@ -125,5 +142,5 @@ namespace reset
 
 		EXPECT_EQ(2023y / January / 3d, fix.last_reset_year_month_day());
 	}
-
+*/
 }

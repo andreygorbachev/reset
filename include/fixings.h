@@ -84,7 +84,7 @@ namespace reset
 
 	public:
 
-		auto last_reset_year_month_day() const noexcept -> std::chrono::year_month_day;
+//		auto last_reset_year_month_day() const noexcept -> std::chrono::year_month_day;
 
 	private:
 
@@ -159,7 +159,7 @@ namespace reset
 		return dp_;
 	}
 
-
+	/*
 	template<typename Observation>
 	auto fixings<Observation>::last_reset_year_month_day() const noexcept -> std::chrono::year_month_day
 	{
@@ -169,7 +169,7 @@ namespace reset
 
 		return result;
 	}
-
+	*/
 
 	template<typename Observation>
 	void fixings<Observation>::check_()
