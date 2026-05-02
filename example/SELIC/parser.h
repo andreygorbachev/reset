@@ -25,10 +25,9 @@
 #include <scaled_value.h>
 #include <fixings.h>
 
+#include <static_data.h>
+
 #include <period.h>
-#include <weekend.h>
-#include <schedule.h>
-#include <calendar.h>
 
 #include <string>
 #include <chrono>
@@ -94,26 +93,6 @@ inline auto _parse_csv_fixings_storage(
 }
 
 
-inline auto _make_calendar(const reset::RateFixings::storage& ts)
-{
-	const auto& fu = ts.get_period();
-
-	auto hols = gregorian::schedule::dates{};
-	for (
-		auto d = fu.get_from();
-		d <= fu.get_until();
-		d = std::chrono::sys_days{ d } + std::chrono::days{ 1 }
-	)
-		if (ts[d] == std::nullopt)
-			hols.insert(d);
-
-	return gregorian::calendar{
-		gregorian::NoWeekend,
-		gregorian::schedule{ fu, hols }
-	};
-}
-
-
 inline auto parse_csv_fixings(
 	const std::string& fileName,
 	const std::chrono::year_month_day& from, // these could also be read from the file
@@ -130,7 +109,12 @@ inline auto parse_csv_fixings(
 	auto ts = _parse_csv_fixings_storage(fs, from, until);
 	// we can check the fixings vs decimal places
 
-	auto c = _make_calendar(ts);
-
-	return reset::fixings{ std::move(ts), std::move(c), 2u };
+	return reset::fixings{
+		std::move(ts),
+		gregorian::static_data::locate_calendar(
+			"America/ANBIMA",
+			std::chrono::year{ 2014 } / std::chrono::March / std::chrono::day{ 21u }
+		),
+		2u
+	};
 }

@@ -24,9 +24,9 @@
 
 #include <scaled_value.h>
 
-#include <period.h>
-
 #include <static_data.h>
+
+#include <period.h>
 
 #include <string>
 #include <chrono>
