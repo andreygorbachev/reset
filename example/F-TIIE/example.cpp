@@ -171,6 +171,7 @@ int main()
 	cal_id.initial_date = 2006y / January / 2d;
 	cal_id.step_round = 16u;
 	cal_id.final_round = 4u;
+	cal_id.calendar = FTIIE_compounded_on_calendar_days_index.get_calendar();
 
 //	const auto date = 2026y / April / 27d;
 	const auto date = 2026y / April / 24d;

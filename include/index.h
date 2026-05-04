@@ -24,7 +24,7 @@
 
 #include <ranges>
 #include <optional>
-#include <cassert>
+//#include <cassert>
 
 #include <period.h>
 
@@ -52,6 +52,7 @@ namespace reset
 		std::optional<unsigned int> step_round = std::nullopt;
 		std::optional<unsigned int> final_trunc = std::nullopt;
 		std::optional<unsigned int> final_round = std::nullopt; // should roundings and truncations be int?
+		std::optional<gregorian::calendar> calendar = std::nullopt; // does it need to be optional? does it need to be a copy?
 	};
 
 
@@ -76,7 +77,9 @@ namespace reset
 		// should throw an exception if we requested an index on a business day before the first reset
 		// but we do not have information about relevant calendar at the moment
 
-		const auto& c = fix.get_calendar();
+		const auto& c = id.calendar ?
+			*id.calendar :
+			fix.get_calendar();
 		const auto schedule = c.make_business_days_schedule(
 			gregorian::util::days_period{ id.initial_date, ymd }
 		); // is this a wrong data structure?
@@ -112,9 +115,11 @@ namespace reset
 		const index_detail& detail
 	)
 	{
-		const auto& fixing = fix[start];
-		assert(fixing);
-		const auto rate = static_cast<Decimal>(*fixing);
+//		const auto& fixing = fix[start];
+//		assert(fixing);
+//		const auto rate = static_cast<Decimal>(*fixing);
+		const auto& fixing = fix.with_fallback(start);
+		const auto rate = static_cast<Decimal>(fixing);
 
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
