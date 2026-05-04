@@ -118,7 +118,7 @@ static auto parse_csv_fixings_FTIIE_182_day() -> RateFixings
 int main()
 {
 	const auto FTIIE = parse_csv_fixings_FTIIE();
-
+/*
 	auto rfd = rate_fixing_detail{};
 	rfd.day_count = actual_360<Decimal>{};
 
@@ -175,6 +175,6 @@ int main()
 		<< " and the same computed value is "
 		<< index(FTIIE, rfd, date, cal_id).get_value()
 		<< endl;
-
+*/
 	return 0;
 }
