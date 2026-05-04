@@ -29,6 +29,12 @@
 
 #include <actual_360.h>
 
+#include <period.h>
+#include <weekend.h>
+#include <schedule.h>
+#include <calendar.h>
+#include <static_data.h>
+
 #include <chrono>
 #include <iostream>
 #include <iomanip>
@@ -37,6 +43,10 @@
 
 using namespace std;
 using namespace std::chrono;
+
+using namespace gregorian;
+using namespace gregorian::util;
+using namespace gregorian::static_data;
 
 using namespace fin_calendar;
 
@@ -52,8 +62,20 @@ static auto parse_csv_fixings_FTIIE() -> RateFixings
 		0u,
 		2006y / January / 2d,
 		2026y / April / 24d,
+		locate_calendar("America/CNBV", 2026y / April / 24u),
 		2u
 	);
+}
+
+static auto make_empty_calendar()
+{
+	return calendar{
+		NoWeekend,
+		schedule{
+			days_period{ 2006y / January / 2d, 2026y / April / 27d },
+			{}
+		}
+	};
 }
 
 static auto parse_csv_fixings_FTIIE_compounded_on_business_days_index() -> IndexFixings
@@ -64,6 +86,7 @@ static auto parse_csv_fixings_FTIIE_compounded_on_business_days_index() -> Index
 		1u,
 		2006y / January / 2d,
 		2026y / April / 27d,
+		make_empty_calendar(),
 		4u
 	);
 }
@@ -76,6 +99,7 @@ static auto parse_csv_fixings_FTIIE_compounded_on_calendar_days_index() -> Index
 		0u,
 		2006y / January / 2d,
 		2026y / April / 27d,
+		make_empty_calendar(),
 		4u
 	);
 }
@@ -88,6 +112,7 @@ static auto parse_csv_fixings_FTIIE_28_day() -> RateFixings
 		2u,
 		2006y / January / 31d, // not 100% sure why these started later than the index
 		2026y / April / 27d,
+		locate_calendar("America/CNBV", 2026y / April / 24u),
 		4u
 	);
 }
@@ -99,6 +124,7 @@ static auto parse_csv_fixings_FTIIE_91_day() -> RateFixings
 		3u,
 		2006y / January / 31d,
 		2026y / April / 27d,
+		locate_calendar("America/CNBV", 2026y / April / 24u),
 		4u
 	);
 }
@@ -110,6 +136,7 @@ static auto parse_csv_fixings_FTIIE_182_day() -> RateFixings
 		4u,
 		2006y / January / 31d,
 		2026y / April / 27d,
+		locate_calendar("America/CNBV", 2026y / April / 24u),
 		4u
 	);
 }
@@ -118,7 +145,7 @@ static auto parse_csv_fixings_FTIIE_182_day() -> RateFixings
 int main()
 {
 	const auto FTIIE = parse_csv_fixings_FTIIE();
-/*
+
 	auto rfd = rate_fixing_detail{};
 	rfd.day_count = actual_360<Decimal>{};
 
@@ -175,6 +202,6 @@ int main()
 		<< " and the same computed value is "
 		<< index(FTIIE, rfd, date, cal_id).get_value()
 		<< endl;
-*/
+
 	return 0;
 }

@@ -24,9 +24,8 @@
 
 #include <scaled_value.h>
 
-#include <static_data.h>
-
 #include <period.h>
+#include <calendar.h>
 
 #include <string>
 #include <chrono>
@@ -118,6 +117,7 @@ auto parse_csv_fixings(
 	const unsigned skip, // how many columns to skip after date before observation
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until,
+	const gregorian::calendar& c,
 	const unsigned int dp
 ) -> Fixings
 {
@@ -136,10 +136,7 @@ auto parse_csv_fixings(
 
 	return Fixings{
 		std::move(ts),
-		gregorian::static_data::locate_calendar(
-			"America/CNBV",
-			std::chrono::year{ 2026 } / std::chrono::April / std::chrono::day{ 24u }
-		),
+		c,
 		dp
 	};
 }
