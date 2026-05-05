@@ -145,20 +145,24 @@ static auto parse_csv_fixings_FTIIE_compounded_in_advance_182_day() -> RateFixin
 
 static auto compounded_in_advance( // is this important enough to move to the main library?
 	const IndexFixings& fix,
-	const std::chrono::year_month_day& ymd,
-	const int tenor // or should it be Decimal?
+	const std::chrono::year_month_day& d,
+	const Decimal& tenor
 )
 {
-	const auto& _index_d = fix[ymd];
+	const auto& _index_d = fix[d];
 	assert(_index_d); // we assume that requests are only made for business days, but actually index is given for all calendar days
 	const auto index_d = static_cast<Decimal>(*_index_d);
 
-	const auto d_28n = sys_days{ ymd } - days{ 28 };
+	const auto d_28n = sys_days{ d } - days{ 28 };
 	const auto& _index_d_28n = fix[d_28n];
 	const auto index_d_28n = static_cast<Decimal>(*_index_d_28n);
 
-	auto rate = (pow(index_d / index_d_28n, tenor / 28) - Decimal{ 1 }) * Decimal{ 360 } / Decimal{ tenor }; // should we use day count?
-	rate = round_dp(rate, 6u); // or should we be able to apply 4dp to the recultin percentage? (that would be closer to the documentatio, which deals in percents)
+	const auto _1 = Decimal{ 1 };
+	const auto _28 = Decimal{ 28 };
+	const auto _360 = Decimal{ 360 };
+
+	auto rate = Decimal{ (pow(index_d / index_d_28n, tenor / _28) - _1) * _360 / tenor }; // should we use day count?
+	rate = round_dp(rate, 6u); // or should we be able to apply 4dp to the resultin percentage? (that would be closer to the documentatio, which deals in percents)
 	// should round_dp accept units for the power? (6dp or something like that)
 
 	return Percent{ rate };
@@ -239,7 +243,35 @@ int main()
 		<< " F-TIIE Compounded In Advance Index (28 days) is "
 		<< _28d_indx->get_value()
 		<< " and the same computed value is "
-		<< compounded_in_advance(FTIIE_compounded_on_business_days_index, date, 28).get_value()
+		<< compounded_in_advance(FTIIE_compounded_on_business_days_index, date, Decimal{ 28 }).get_value()
+		<< endl;
+
+	const auto& _91d_indx = FTIIE_compounded_in_advance_91_day[date];
+	assert(_28d_indx);
+
+	cout
+		<< fixed
+		<< setprecision(FTIIE_compounded_in_advance_91_day.get_decimal_places())
+		<< "For "
+		<< date
+		<< " F-TIIE Compounded In Advance Index (91 days) is "
+		<< _91d_indx->get_value()
+		<< " and the same computed value is "
+		<< compounded_in_advance(FTIIE_compounded_on_business_days_index, date, Decimal{ 91 }).get_value()
+		<< endl;
+
+	const auto& _182d_indx = FTIIE_compounded_in_advance_182_day[date];
+	assert(_182d_indx);
+
+	cout
+		<< fixed
+		<< setprecision(FTIIE_compounded_in_advance_182_day.get_decimal_places())
+		<< "For "
+		<< date
+		<< " F-TIIE Compounded In Advance Index (182 days) is "
+		<< _182d_indx->get_value()
+		<< " and the same computed value is "
+		<< compounded_in_advance(FTIIE_compounded_on_business_days_index, date, Decimal{ 182 }).get_value()
 		<< endl;
 
 	return 0;
