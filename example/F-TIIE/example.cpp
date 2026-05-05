@@ -149,7 +149,7 @@ static auto non_business_day_index( // is this important enough to move to the m
 	const rate_fixing_detail& rfd,
 	const std::chrono::year_month_day& ymd,
 	const index_detail& id = index_detail{} // does it need a default?
-) -> Value
+)
 {
 	if (fix.get_calendar().is_business_day(ymd))
 		return index(fix, rfd, ymd, id);
@@ -167,7 +167,7 @@ static auto non_business_day_index( // is this important enough to move to the m
 		if (id.final_round)
 			indx = round_dp(indx, *id.final_round);
 
-		return indx;
+		return Value{ indx };
 	}
 }
 
