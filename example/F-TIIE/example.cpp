@@ -162,7 +162,7 @@ static auto compounded_in_advance( // is this important enough to move to the ma
 	const auto _360 = Decimal{ 360 };
 
 	auto rate = Decimal{ (pow(index_d / index_d_28n, tenor / _28) - _1) * _360 / tenor }; // should we use day count?
-	rate = round_dp(rate, 6u); // or should we be able to apply 4dp to the resultin percentage? (that would be closer to the documentatio, which deals in percents)
+	rate = round_dp(rate, 6u); // or should we be able to apply 4dp to the resulting percentage? (that would be closer to the documentation, which deals in percents)
 	// should round_dp accept units for the power? (6dp or something like that)
 
 	return Percent{ rate };
