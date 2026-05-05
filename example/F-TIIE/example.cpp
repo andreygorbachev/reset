@@ -28,6 +28,7 @@
 #include <fixings.h>
 
 #include <actual_360.h>
+#include <preceding.h>
 
 #include <period.h>
 #include <weekend.h>
@@ -143,6 +144,33 @@ static auto parse_csv_fixings_FTIIE_compounded_in_advance_182_day() -> RateFixin
 
 
 
+static auto non_business_day_index( // is this important enough to move to the main library?
+	const RateFixings& fix,
+	const rate_fixing_detail& rfd,
+	const std::chrono::year_month_day& ymd,
+	const index_detail& id = index_detail{} // does it need a default?
+) -> Value
+{
+	if (fix.get_calendar().is_business_day(ymd))
+		return index(fix, rfd, ymd, id);
+	else
+	{
+		constexpr auto preceding = fin_calendar::preceding{};
+		const auto prev = preceding.adjust(ymd, fix.get_calendar());
+
+		auto indx = index(fix, rfd, prev, id).get_value();
+		index_step_(indx, prev, ymd, fix, rfd, id);
+
+		if (id.final_trunc)
+			indx = trunc_dp(indx, *id.final_trunc);
+
+		if (id.final_round)
+			indx = round_dp(indx, *id.final_round);
+
+		return indx;
+	}
+}
+
 static auto compounded_in_advance( // is this important enough to move to the main library?
 	const IndexFixings& fix,
 	const std::chrono::year_month_day& d,
@@ -206,6 +234,7 @@ int main()
 
 	const auto& bus_indx = FTIIE_compounded_on_business_days_index[date];
 	assert(bus_indx);
+	assert(FTIIE.get_calendar().is_business_day(date));
 
 	cout
 		<< fixed
@@ -215,7 +244,7 @@ int main()
 		<< " F-TIIE Compounded Index (business days) is "
 		<< bus_indx->get_value()
 		<< " and the same computed value is "
-		<< index(FTIIE, rfd, date, bus_id).get_value()
+		<< index(FTIIE, rfd, date, bus_id).get_value() // we checked that date is a business day
 		<< endl;
 
 	const auto& cal_indx = FTIIE_compounded_on_calendar_days_index[date];
@@ -273,6 +302,28 @@ int main()
 		<< " and the same computed value is "
 		<< compounded_in_advance(FTIIE_compounded_on_business_days_index, date, Decimal{ 182 }).get_value()
 		<< endl;
+
+	// look for inconsistencies in the index data
+	const auto period = FTIIE_compounded_on_business_days_index.get_time_series().get_period();
+	for (
+		auto d = period.get_from();
+		d <= period.get_until();
+		d = sys_days{ d } + days{ 1 }
+	)
+	{
+		const auto& fix = FTIIE_compounded_on_business_days_index[d];
+		assert(fix); // index is published for each calendar day
+		const auto computed_fix = non_business_day_index(FTIIE, rfd, d, bus_id); // also handles business days
+		if (*fix != computed_fix)
+			cout
+			<< "For "
+			<< d
+			<< " F-TIIE Compounded Index (business days) is "
+			<< fix->get_value()
+			<< " and the same computed value is "
+			<< computed_fix.get_value()
+			<< endl;
+	}
 
 	return 0;
 }
