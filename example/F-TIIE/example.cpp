@@ -105,7 +105,7 @@ static auto parse_csv_fixings_FTIIE_compounded_on_calendar_days_index() -> Index
 }
 
 
-static auto parse_csv_fixings_FTIIE_28_day() -> RateFixings
+static auto parse_csv_fixings_FTIIE_compounded_in_advance_28_day() -> RateFixings
 {
 	return parse_csv_fixings<RateFixings>(
 		"Overnight Funding TIIE indexes and compounded in advance Overnight Funding TIIE.csv",
@@ -117,7 +117,7 @@ static auto parse_csv_fixings_FTIIE_28_day() -> RateFixings
 	);
 }
 
-static auto parse_csv_fixings_FTIIE_91_day() -> RateFixings
+static auto parse_csv_fixings_FTIIE_compounded_in_advance_91_day() -> RateFixings
 {
 	return parse_csv_fixings<RateFixings>(
 		"Overnight Funding TIIE indexes and compounded in advance Overnight Funding TIIE.csv",
@@ -129,7 +129,7 @@ static auto parse_csv_fixings_FTIIE_91_day() -> RateFixings
 	);
 }
 
-static auto parse_csv_fixings_FTIIE_182_day() -> RateFixings
+static auto parse_csv_fixings_FTIIE_compounded_in_advance_182_day() -> RateFixings
 {
 	return parse_csv_fixings<RateFixings>(
 		"Overnight Funding TIIE indexes and compounded in advance Overnight Funding TIIE.csv",
@@ -142,6 +142,30 @@ static auto parse_csv_fixings_FTIIE_182_day() -> RateFixings
 }
 
 
+
+static auto compounded_in_advance( // is this important enough to move to the main library?
+	const IndexFixings& fix,
+	const std::chrono::year_month_day& ymd,
+	const int tenor // or should it be Decimal?
+)
+{
+	const auto& _index_d = fix[ymd];
+	assert(_index_d); // we assume that requests are only made for business days, but actually index is given for all calendar days
+	const auto index_d = static_cast<Decimal>(*_index_d);
+
+	const auto d_28n = sys_days{ ymd } - days{ 28 };
+	const auto& _index_d_28n = fix[d_28n];
+	const auto index_d_28n = static_cast<Decimal>(*_index_d_28n);
+
+	auto rate = (pow(index_d / index_d_28n, tenor / 28) - Decimal{ 1 }) * Decimal{ 360 } / Decimal{ tenor }; // should we use day count?
+	rate = round_dp(rate, 6u); // or should we be able to apply 4dp to the recultin percentage? (that would be closer to the documentatio, which deals in percents)
+	// should round_dp accept units for the power? (6dp or something like that)
+
+	return Percent{ rate };
+}
+
+
+
 int main()
 {
 	const auto FTIIE = parse_csv_fixings_FTIIE();
@@ -152,9 +176,9 @@ int main()
 	const auto FTIIE_compounded_on_business_days_index = parse_csv_fixings_FTIIE_compounded_on_business_days_index();
 	const auto FTIIE_compounded_on_calendar_days_index = parse_csv_fixings_FTIIE_compounded_on_calendar_days_index();
 
-	const auto FTIIE_28_day = parse_csv_fixings_FTIIE_28_day();
-	const auto FTIIE_91_day = parse_csv_fixings_FTIIE_91_day();
-	const auto FTIIE_182_day = parse_csv_fixings_FTIIE_182_day();
+	const auto FTIIE_compounded_in_advance_28_day = parse_csv_fixings_FTIIE_compounded_in_advance_28_day();
+	const auto FTIIE_compounded_in_advance_91_day = parse_csv_fixings_FTIIE_compounded_in_advance_91_day();
+	const auto FTIIE_compounded_in_advance_182_day = parse_csv_fixings_FTIIE_compounded_in_advance_182_day();
 
 	// from
 	// "Determination of the Overnight Funding TIIE Index compounded on business days,
@@ -202,6 +226,20 @@ int main()
 		<< cal_indx->get_value()
 		<< " and the same computed value is "
 		<< index(FTIIE, rfd, date, cal_id).get_value()
+		<< endl;
+
+	const auto& _28d_indx = FTIIE_compounded_in_advance_28_day[date];
+	assert(_28d_indx);
+
+	cout
+		<< fixed
+		<< setprecision(FTIIE_compounded_in_advance_28_day.get_decimal_places())
+		<< "For "
+		<< date
+		<< " F-TIIE Compounded In Advance Index (28 days) is "
+		<< _28d_indx->get_value()
+		<< " and the same computed value is "
+		<< compounded_in_advance(FTIIE_compounded_on_business_days_index, date, 28).get_value()
 		<< endl;
 
 	return 0;
