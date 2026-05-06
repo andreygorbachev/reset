@@ -55,15 +55,16 @@ using namespace reset;
 
 
 
+// from https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=18&accion=consultarCuadro&idCuadro=CF101&locale=en
+
 static auto parse_csv_fixings_FTIIE() -> RateFixings
 {
-	// from https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?&sector=18&accion=consultarDirectorioCuadros&locale=en
 	return parse_csv_fixings<RateFixings>(
-		"Overnight TIIE Funding Rate.csv",
-		0u,
+		"CF101.csv",
+		1u,
 		2006y / January / 2d,
-		2026y / April / 24d,
-		locate_calendar("America/CNBV", 2026y / April / 24u),
+		2026y / May / 5d,
+		locate_calendar("America/CNBV", 2026y / May / 6d),
 		2u
 	);
 }
@@ -73,7 +74,7 @@ static auto make_empty_calendar()
 	return calendar{
 		NoWeekend,
 		schedule{
-			days_period{ 2006y / January / 2d, 2026y / April / 27d },
+			days_period{ 2006y / January / 2d, 2026y / May / 6d },
 			{}
 		}
 	};
@@ -81,12 +82,11 @@ static auto make_empty_calendar()
 
 static auto parse_csv_fixings_FTIIE_compounded_on_business_days_index() -> IndexFixings
 {
-	// from https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=18&accion=consultarCuadroAnalitico&idCuadro=CA766&locale=en
 	return parse_csv_fixings<IndexFixings>(
-		"Overnight Funding TIIE indexes and compounded in advance Overnight Funding TIIE.csv",
-		1u,
+		"CF101.csv",
+		6u,
 		2006y / January / 2d,
-		2026y / April / 27d,
+		2026y / May / 6d,
 		make_empty_calendar(),
 		4u
 	);
@@ -94,12 +94,11 @@ static auto parse_csv_fixings_FTIIE_compounded_on_business_days_index() -> Index
 
 static auto parse_csv_fixings_FTIIE_compounded_on_calendar_days_index() -> IndexFixings
 {
-	// from https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=18&accion=consultarCuadroAnalitico&idCuadro=CA766&locale=en
 	return parse_csv_fixings<IndexFixings>(
-		"Overnight Funding TIIE indexes and compounded in advance Overnight Funding TIIE.csv",
-		0u,
+		"CF101.csv",
+		5u,
 		2006y / January / 2d,
-		2026y / April / 27d,
+		2026y / May / 6d,
 		make_empty_calendar(),
 		4u
 	);
@@ -109,11 +108,11 @@ static auto parse_csv_fixings_FTIIE_compounded_on_calendar_days_index() -> Index
 static auto parse_csv_fixings_FTIIE_compounded_in_advance_28_day() -> RateFixings
 {
 	return parse_csv_fixings<RateFixings>(
-		"Overnight Funding TIIE indexes and compounded in advance Overnight Funding TIIE.csv",
-		2u,
+		"CF101.csv",
+		7u,
 		2006y / January / 31d, // not 100% sure why these started later than the index
-		2026y / April / 27d,
-		locate_calendar("America/CNBV", 2026y / April / 24u),
+		2026y / May / 6d,
+		locate_calendar("America/CNBV", 2026y / May / 6d),
 		4u
 	);
 }
@@ -121,11 +120,11 @@ static auto parse_csv_fixings_FTIIE_compounded_in_advance_28_day() -> RateFixing
 static auto parse_csv_fixings_FTIIE_compounded_in_advance_91_day() -> RateFixings
 {
 	return parse_csv_fixings<RateFixings>(
-		"Overnight Funding TIIE indexes and compounded in advance Overnight Funding TIIE.csv",
-		3u,
+		"CF101.csv",
+		8u,
 		2006y / January / 31d,
-		2026y / April / 27d,
-		locate_calendar("America/CNBV", 2026y / April / 24u),
+		2026y / May / 6d,
+		locate_calendar("America/CNBV", 2026y / May / 6d),
 		4u
 	);
 }
@@ -133,11 +132,11 @@ static auto parse_csv_fixings_FTIIE_compounded_in_advance_91_day() -> RateFixing
 static auto parse_csv_fixings_FTIIE_compounded_in_advance_182_day() -> RateFixings
 {
 	return parse_csv_fixings<RateFixings>(
-		"Overnight Funding TIIE indexes and compounded in advance Overnight Funding TIIE.csv",
-		4u,
+		"CF101.csv",
+		9u,
 		2006y / January / 31d,
-		2026y / April / 27d,
-		locate_calendar("America/CNBV", 2026y / April / 24u),
+		2026y / May / 6d,
+		locate_calendar("America/CNBV", 2026y / May / 6d),
 		4u
 	);
 }
@@ -229,8 +228,8 @@ int main()
 	cal_id.final_round = 4u;
 	cal_id.calendar = FTIIE_compounded_on_calendar_days_index.get_calendar();
 
-//	const auto date = 2026y / April / 27d;
-	const auto date = 2026y / April / 24d;
+//	const auto date = 2026y / May / 6d;
+	const auto date = 2026y / May / 5d;
 
 	const auto& bus_indx = FTIIE_compounded_on_business_days_index[date];
 	assert(bus_indx);
@@ -304,7 +303,7 @@ int main()
 		<< endl;
 
 	// look for inconsistencies in the index data
-
+/*
 	const auto bus_period = FTIIE_compounded_on_business_days_index.get_time_series().get_period();
 	for (
 		auto d = bus_period.get_from();
@@ -346,6 +345,6 @@ int main()
 			<< computed_fix.get_value()
 			<< endl;
 	}
-
+*/
 	return 0;
 }

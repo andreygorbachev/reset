@@ -88,7 +88,7 @@ auto _parse_csv_fixings_storage(
 	{
 		const auto ymd = _parse_date(fs);
 
-		if (ymd >= from)
+		if (ymd >= from && ymd <= until) // or should we have a period and check if ymd is in the period?
 		{
 			auto s = std::string{};
 			std::getline(fs, s, ','); // skip ","
