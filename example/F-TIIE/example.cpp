@@ -69,6 +69,18 @@ static auto parse_csv_fixings_FTIIE() -> RateFixings
 	);
 }
 
+static auto parse_csv_fixings_FTIIE_28_day() -> RateFixings
+{
+	return parse_csv_fixings<RateFixings>(
+		"CF101.csv",
+		2u,
+		2006y / January / 31d, // not 100% sure why these started later than the index
+		2026y / May / 6d,
+		locate_calendar("America/CNBV", 2026y / May / 6d),
+		4u
+	);
+}
+
 static auto make_empty_calendar()
 {
 	return calendar{
@@ -217,6 +229,7 @@ int main()
 	rfd.day_count = actual_360<Decimal>{};
 
 //	const auto target_rate = parse_csv_fixings_target_rate();
+	const auto FTIIE_28_day = parse_csv_fixings_FTIIE_28_day();
 
 	const auto FTIIE_compounded_on_business_days_index = parse_csv_fixings_FTIIE_compounded_on_business_days_index();
 	const auto FTIIE_compounded_on_calendar_days_index = parse_csv_fixings_FTIIE_compounded_on_calendar_days_index();
