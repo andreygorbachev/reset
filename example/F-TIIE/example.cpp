@@ -304,10 +304,11 @@ int main()
 		<< endl;
 
 	// look for inconsistencies in the index data
-	const auto period = FTIIE_compounded_on_business_days_index.get_time_series().get_period();
+
+	const auto bus_period = FTIIE_compounded_on_business_days_index.get_time_series().get_period();
 	for (
-		auto d = period.get_from();
-		d <= period.get_until();
+		auto d = bus_period.get_from();
+		d <= bus_period.get_until();
 		d = sys_days{ d } + days{ 1 }
 	)
 	{
@@ -319,6 +320,27 @@ int main()
 			<< "For "
 			<< d
 			<< " F-TIIE Compounded Index (business days) is "
+			<< fix->get_value()
+			<< " and the same computed value is "
+			<< computed_fix.get_value()
+			<< endl;
+	}
+
+	const auto cal_period = FTIIE_compounded_on_calendar_days_index.get_time_series().get_period();
+	for (
+		auto d = cal_period.get_from();
+		d <= cal_period.get_until();
+		d = sys_days{ d } + days{ 1 }
+	)
+	{
+		const auto& fix = FTIIE_compounded_on_calendar_days_index[d];
+		assert(fix); // index is published for each calendar day
+		const auto computed_fix = index(FTIIE, rfd, d, cal_id);
+		if (*fix != computed_fix)
+			cout
+			<< "For "
+			<< d
+			<< " F-TIIE Compounded Index (calendar days) is "
 			<< fix->get_value()
 			<< " and the same computed value is "
 			<< computed_fix.get_value()
