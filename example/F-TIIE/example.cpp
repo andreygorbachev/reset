@@ -80,6 +80,18 @@ static auto make_empty_calendar()
 	};
 }
 
+static auto parse_csv_fixings_target_rate() -> RateFixings
+{
+	return parse_csv_fixings<RateFixings>(
+		"CF101.csv",
+		0u,
+		2008y / January / 21d,
+		2026y / May / 6d,
+		make_empty_calendar(),
+		2u
+	);
+}
+
 static auto parse_csv_fixings_FTIIE_compounded_on_business_days_index() -> IndexFixings
 {
 	return parse_csv_fixings<IndexFixings>(
@@ -203,6 +215,8 @@ int main()
 
 	auto rfd = rate_fixing_detail{};
 	rfd.day_count = actual_360<Decimal>{};
+
+//	const auto target_rate = parse_csv_fixings_target_rate();
 
 	const auto FTIIE_compounded_on_business_days_index = parse_csv_fixings_FTIIE_compounded_on_business_days_index();
 	const auto FTIIE_compounded_on_calendar_days_index = parse_csv_fixings_FTIIE_compounded_on_calendar_days_index();
