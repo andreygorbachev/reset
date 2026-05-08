@@ -29,6 +29,7 @@
 
 #include <calendar.h>
 
+#include <business_day_convention.h>
 #include <day_count.h>
 
 #include "decimal.h"
@@ -43,6 +44,7 @@ namespace reset
 	struct average_detail // should it be called metadata?
 	{
 		std::chrono::days term{}; // for 30 day average, do we want it to be days{ 30 } or days{ -30 }?
+		fin_calendar::business_day_convention business_day_convention = fin_calendar::no_adjustment{};
 		std::optional<unsigned int> final_round = std::nullopt; // should rounding and truncation be int?
 	};
 
@@ -66,7 +68,11 @@ namespace reset
 	{
 		// do we handle the case where detail.term is empty?
 
-		const auto average_start = std::chrono::sys_days{ ymd } - detail.term;
+		const auto average_start = fin_calendar::make_business_day(
+			std::chrono::sys_days{ ymd } - detail.term,
+			detail.business_day_convention,
+			fix.get_calendar()
+		);
 		const auto average_end = ymd; // I think we assume that ymd is a good business day - should we check for that?
 
 		const auto& c = fix.get_calendar();

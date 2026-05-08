@@ -118,6 +118,7 @@ int main()
 
 	auto _1wd = average_detail{};
 	_1wd.term = days{ 7 }; // 1 week
+	_1wd.business_day_convention = modified_preceding{};
 	_1wd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
 
 //	const auto date = 2026y / April / 24d;
