@@ -26,6 +26,7 @@
 #include <scaled_value.h>
 #include <fixings.h>
 #include <index.h>
+#include <average.h>
 
 #include <actual_360.h>
 
@@ -115,6 +116,10 @@ int main()
 //	id.step_round = 8u;
 	// not 100% sure that above is correct
 
+	auto _1wd = average_detail{};
+	_1wd.term = days{ 7 }; // 1 week
+	_1wd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+
 //	const auto date = 2026y / April / 24d;
 	const auto date = 2026y / April / 23d;
 
@@ -130,6 +135,20 @@ int main()
 		<< indx->get_value()
 		<< " and the same computed value is "
 		<< index(EuroSTR, rfd, date, id).get_value()
+		<< endl;
+
+	const auto& _1w_cmp = EuroSTR_1_week_compounded[date];
+	assert(_1w_cmp);
+
+	cout
+		<< fixed
+		<< setprecision(EuroSTR_1_week_compounded.get_decimal_places())
+		<< "For "
+		<< date
+		<< " EuroST 1 Week Compounded Average is "
+		<< _1w_cmp->get_value()
+		<< " and the same computed value is "
+		<< average(EuroSTR, rfd, date, _1wd).percent.get_value()
 		<< endl;
 
 	return 0;
