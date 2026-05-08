@@ -1,6 +1,5 @@
 import csv
 from decimal import Decimal
-from decimal import ROUND_HALF_UP
 
 ftiie_array = []
 
