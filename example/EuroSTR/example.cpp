@@ -118,7 +118,7 @@ int main()
 
 	auto _1wd = average_detail{};
 	_1wd.term = days{ 7 }; // 1 week
-	_1wd.business_day_convention = modified_preceding{};
+	_1wd.business_day_convention = preceding{};
 	_1wd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
 
 //	const auto date = 2026y / April / 24d;
@@ -152,5 +152,28 @@ int main()
 		<< average(EuroSTR, rfd, date, _1wd).percent.get_value()
 		<< endl;
 
+	// look for inconsistencies in the data
+
+	const auto& EuroSTR_1_week_compounded_calendar = EuroSTR_1_week_compounded.get_calendar();
+	const auto _1_week_dates = EuroSTR_1_week_compounded_calendar.make_business_days_schedule(
+		EuroSTR_1_week_compounded.get_time_series().get_period()
+	);
+	for (const auto& d : _1_week_dates.get_dates())
+	{
+		const auto& _1w_avg = EuroSTR_1_week_compounded[d];
+		assert(_1w_avg);
+
+		if (*_1w_avg != average(EuroSTR, rfd, d, _1wd).percent)
+			cout
+			<< fixed
+			<< setprecision(EuroSTR_1_week_compounded.get_decimal_places())
+			<< "For "
+			<< d
+			<< " EuroSTR 1 Week Compounded Average is "
+			<< EuroSTR_1_week_compounded[d]->get_value()
+			<< " and the same computed value is "
+			<< average(EuroSTR, rfd, d, _1wd).percent.get_value()
+			<< endl;
+	}
 	return 0;
 }
