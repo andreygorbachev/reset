@@ -85,12 +85,20 @@ auto _parse_csv_fixings_storage(
 	{
 		const auto ymd = _parse_date(fs);
 
-		auto s = std::string{};
-		std::getline(fs, s, ','); // skip ","
-		for (auto i = 0u; i < skip; ++i)
-			std::getline(fs, s, ','); // skip "xyz,"
+		if (ymd >= from && ymd <= until) // or should we have a period and check if ymd is in the period?
+		{
+			auto s = std::string{};
+			std::getline(fs, s, ','); // skip ","
+			for (auto i = 0u; i < skip; ++i)
+				std::getline(fs, s, ','); // skip "xyz,"
 
-		result[ymd] = _parse_observation<Fixings>(fs);
+			result[ymd] = _parse_observation<Fixings>(fs);
+		}
+		else
+		{
+			auto s = std::string{};
+			std::getline(fs, s); // skip
+		}
 
 		if (fs.eof())
 			break;

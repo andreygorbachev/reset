@@ -80,6 +80,17 @@ static auto parse_csv_fixings_EuroSTR_compounded_index() -> IndexFixings
 	);
 }
 
+static auto parse_csv_fixings_EuroSTR_1_week_compounded() -> RateFixings
+{
+	return parse_csv_fixings<RateFixings>(
+		"Compounded euro-short term rates and index.csv",
+		2u,
+		2019y / October / 8d,
+		2026y / April / 24d,
+		5u
+	);
+}
+
 
 
 int main()
@@ -93,6 +104,8 @@ int main()
 	rfd.day_count = actual_360<Decimal>{};
 
 	const auto EuroSTR_compounded_index = parse_csv_fixings_EuroSTR_compounded_index();
+
+	const auto EuroSTR_1_week_compounded = parse_csv_fixings_EuroSTR_1_week_compounded();
 
 	// from ...
 	auto id = index_detail{};
