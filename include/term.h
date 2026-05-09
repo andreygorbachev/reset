@@ -51,6 +51,10 @@ namespace reset
             [&ymd](const std::chrono::years& ys) { ymd += ys; },
             }, trm);
 
+        // fix "bad" dates
+        if (!ymd.ok())
+            ymd = ymd.year() / ymd.month() / std::chrono::last;
+
         return ymd;
     }
 
@@ -62,6 +66,10 @@ namespace reset
             [&ymd](const std::chrono::months& ms) { ymd -= ms; },
             [&ymd](const std::chrono::years& ys) { ymd -= ys; },
             }, trm);
+
+        // fix "bad" dates
+        if (!ymd.ok())
+            ymd = ymd.year() / ymd.month() / std::chrono::last;
 
         return ymd;
     }

@@ -29,6 +29,7 @@
 #include <average.h>
 
 #include <preceding.h>
+#include <modified_preceding.h>
 #include <actual_360.h>
 
 #include <chrono>
@@ -93,6 +94,17 @@ static auto parse_csv_fixings_EuroSTR_1_week_compounded() -> RateFixings
 	);
 }
 
+static auto parse_csv_fixings_EuroSTR_1_month_compounded() -> RateFixings
+{
+	return parse_csv_fixings<RateFixings>(
+		"Compounded euro-short term rates and index.csv",
+		3u,
+		2019y / November / 1d,
+		2026y / April / 24d,
+		5u
+	);
+}
+
 
 
 int main()
@@ -108,6 +120,7 @@ int main()
 	const auto EuroSTR_compounded_index = parse_csv_fixings_EuroSTR_compounded_index();
 
 	const auto EuroSTR_1_week_compounded = parse_csv_fixings_EuroSTR_1_week_compounded();
+	const auto EuroSTR_1_month_compounded = parse_csv_fixings_EuroSTR_1_month_compounded();
 
 	// from
 	// "Compounded €STR average rates and index"
@@ -121,6 +134,11 @@ int main()
 	_1wd.business_day_convention = preceding{};
 	_1wd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
 
+	auto _1md = average_detail{};
+	_1md.term = months{ 1 };
+	_1md.business_day_convention = modified_preceding{};
+	_1md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+
 //	const auto date = 2026y / April / 24d;
 	const auto date = 2026y / April / 23d;
 
@@ -132,7 +150,7 @@ int main()
 		<< setprecision(EuroSTR_compounded_index.get_decimal_places())
 		<< "For "
 		<< date
-		<< " SOFR Compounded Index is "
+		<< " EuroSTR Compounded Index is "
 		<< indx->get_value()
 		<< " and the same computed value is "
 		<< index(EuroSTR, rfd, date, id).get_value()
@@ -146,10 +164,24 @@ int main()
 		<< setprecision(EuroSTR_1_week_compounded.get_decimal_places())
 		<< "For "
 		<< date
-		<< " EuroST 1 Week Compounded Average is "
+		<< " EuroSTR 1 Week Compounded Average is "
 		<< _1w_cmp->get_value()
 		<< " and the same computed value is "
 		<< average(EuroSTR, rfd, date, _1wd).percent.get_value()
+		<< endl;
+
+	const auto& _1m_cmp = EuroSTR_1_month_compounded[date];
+	assert(_1m_cmp);
+
+	cout
+		<< fixed
+		<< setprecision(EuroSTR_1_month_compounded.get_decimal_places())
+		<< "For "
+		<< date
+		<< " EuroSTR 1 Month Compounded Average is "
+		<< _1m_cmp->get_value()
+		<< " and the same computed value is "
+		<< average(EuroSTR, rfd, date, _1md).percent.get_value()
 		<< endl;
 
 	// look for inconsistencies in the data
@@ -175,5 +207,28 @@ int main()
 			<< average(EuroSTR, rfd, d, _1wd).percent.get_value()
 			<< endl;
 	}
+
+	const auto& EuroSTR_1_month_compounded_calendar = EuroSTR_1_month_compounded.get_calendar();
+	const auto _1_month_dates = EuroSTR_1_month_compounded_calendar.make_business_days_schedule(
+		EuroSTR_1_month_compounded.get_time_series().get_period()
+	);
+	for (const auto& d : _1_month_dates.get_dates())
+	{
+		const auto& _1m_avg = EuroSTR_1_month_compounded[d];
+		assert(_1m_avg);
+
+		if (*_1m_avg != average(EuroSTR, rfd, d, _1md).percent)
+			cout
+			<< fixed
+			<< setprecision(EuroSTR_1_month_compounded.get_decimal_places())
+			<< "For "
+			<< d
+			<< " EuroSTR 1 Month Compounded Average is "
+			<< EuroSTR_1_month_compounded[d]->get_value()
+			<< " and the same computed value is "
+			<< average(EuroSTR, rfd, d, _1md).percent.get_value()
+			<< endl;
+	}
+
 	return 0;
 }
