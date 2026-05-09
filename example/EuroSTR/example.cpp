@@ -116,7 +116,7 @@ int main()
 	id.final_round = 8u;
 
 	auto _1wd = average_detail{};
-	_1wd.term = days{ 7 }; // 1 week
+	_1wd.term = days{ 7 }; // should really be weeks{ 1 }
 	_1wd.business_day_convention = preceding{};
 	_1wd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
 
