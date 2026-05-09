@@ -1,5 +1,5 @@
 import csv
-from decimal import Decimal
+from decimal import Decimal, ROUND_HALF_UP
 
 ftiie_array = []
 
@@ -35,8 +35,8 @@ index = Decimal("100000")
 
 for rate in ftiie_array:
     index = index * (Decimal("1") + Decimal("1") / Decimal("360") * rate / Decimal("100"))
-    index = index.quantize(Decimal("0.000000000000"))
+    index = index.quantize(Decimal("0.000000000000"), ROUND_HALF_UP)
 
-index = index.quantize(Decimal("0.0000"))
+index = index.quantize(Decimal("0.0000"), ROUND_HALF_UP)
 
 print(index)
