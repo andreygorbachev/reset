@@ -28,6 +28,7 @@
 #include <index.h>
 #include <average.h>
 
+#include <preceding.h>
 #include <actual_360.h>
 
 #include <chrono>
