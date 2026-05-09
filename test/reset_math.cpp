@@ -42,6 +42,11 @@ namespace reset
 		// "Compounded €STR average rates and index"
 		EXPECT_EQ(Decimal{ "-1.00001" }, round_dp(Decimal{ "-1.000005" }, 5u));
 		EXPECT_EQ(Decimal{ "1.00001" }, round_dp(Decimal{ "1.000005" }, 5u));
+
+		// to check that we do Rounding Half Up 
+		EXPECT_EQ(Decimal{ 3 }, round_dp(Decimal{ "2.5" }, 0u));
+//		EXPECT_EQ(Decimal{ 2 }, round_dp(Decimal{ "2.5" }, 0u)); // we do not do Banker's Rounding (Half-to-Even)
+		EXPECT_EQ(Decimal{ 4 }, round_dp(Decimal{ "3.5" }, 0u));
 	}
 
 	TEST(resets_math, trunc_dp1)
