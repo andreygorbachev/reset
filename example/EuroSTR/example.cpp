@@ -108,18 +108,19 @@ int main()
 
 	const auto EuroSTR_1_week_compounded = parse_csv_fixings_EuroSTR_1_week_compounded();
 
-	// from ...
+	// from
+	// "Compounded €STR average rates and index"
 	auto id = index_detail{};
 	id.initial_value = Value{ "100" };
 	id.initial_date = 2019y / October / 1d;
 	id.final_round = 8u;
-//	id.step_round = 8u;
-	// not 100% sure that above is correct
 
 	auto _1wd = average_detail{};
 	_1wd.term = days{ 7 }; // 1 week
 	_1wd.business_day_convention = preceding{};
 	_1wd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	// Rates are rounded to the nearest one hundred - thousandth of a percentage point, with ties rounded
+	// away from zero, so that -1.000005% becomes -1.00001% and 1.000005% becomes 1.00001%. // make this a test case
 
 //	const auto date = 2026y / April / 24d;
 	const auto date = 2026y / April / 23d;
