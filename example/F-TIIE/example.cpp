@@ -26,6 +26,7 @@
 #include <scaled_value.h>
 #include <index.h>
 #include <fixings.h>
+#include <reset_math.h>
 
 #include <actual_360.h>
 #include <preceding.h>
