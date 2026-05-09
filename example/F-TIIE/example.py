@@ -1,5 +1,8 @@
 import csv
+import decimal
 from decimal import Decimal, ROUND_HALF_UP
+
+decimal.getcontext().prec = 50
 
 ftiie_array = []
 
