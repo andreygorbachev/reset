@@ -119,8 +119,6 @@ int main()
 	_1wd.term = days{ 7 }; // 1 week
 	_1wd.business_day_convention = preceding{};
 	_1wd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
-	// Rates are rounded to the nearest one hundred - thousandth of a percentage point, with ties rounded
-	// away from zero, so that -1.000005% becomes -1.00001% and 1.000005% becomes 1.00001%. // make this a test case
 
 //	const auto date = 2026y / April / 24d;
 	const auto date = 2026y / April / 23d;

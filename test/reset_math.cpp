@@ -38,7 +38,10 @@ namespace reset
 
 	TEST(resets_math, round_dp2)
 	{
-		EXPECT_EQ(Decimal{ "1.01" }, round_dp(Decimal{ "1.011111" }, 2u));
+		// from
+		// "Compounded €STR average rates and index"
+		EXPECT_EQ(Decimal{ "-1.00001" }, round_dp(Decimal{ "-1.000005" }, 5u));
+		EXPECT_EQ(Decimal{ "1.00001" }, round_dp(Decimal{ "1.000005" }, 5u));
 	}
 
 	TEST(resets_math, trunc_dp1)
