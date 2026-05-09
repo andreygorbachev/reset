@@ -9,6 +9,7 @@ add_library(${PROJECT_NAME} INTERFACE
   index.h
   average.h
   accrued.h
+  term.h
 )
 
 target_include_directories(${PROJECT_NAME} INTERFACE .)

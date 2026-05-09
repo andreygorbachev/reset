@@ -21,6 +21,7 @@ add_executable(${PROJECT_NAME}
   index.cpp
   average.cpp
   accrued.cpp
+  term.cpp
   setup.h
 )
 
