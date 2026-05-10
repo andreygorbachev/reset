@@ -70,7 +70,7 @@ static auto parse_csv_fixings_FTIIE() -> RateFixings
 	);
 }
 
-static auto parse_csv_fixings_FTIIE_28_day() -> RateFixings
+static auto parse_csv_fixings_TIIE_fallback_28_day() -> RateFixings
 {
 	return parse_csv_fixings<RateFixings>(
 		"CF101.csv",
@@ -239,6 +239,9 @@ static auto fallback( // is this important enough to move to the main library?
 
 	// we should also adjust for a possible base rate change between prev and d
 
+	const auto _spread = BasisPoints{ "24" }; // constexpr?
+	const auto spread = static_cast<Decimal>(_spread);
+
 	const auto _1 = Decimal{ 1 };
 	const auto _360 = Decimal{ 360 };
 
@@ -246,7 +249,7 @@ static auto fallback( // is this important enough to move to the main library?
 	rate = round_dp(rate, 6u); // or should we be able to apply 4dp to the resulting percentage? (that would be closer to the documentation, which deals in percents)
 	// should round_dp accept units for the power? (6dp or something like that)
 
-	return Percent{ rate };
+	return Percent{ rate + spread };
 }
 
 
@@ -259,7 +262,7 @@ int main()
 	rfd.day_count = actual_360<Decimal>{};
 
 //	const auto target_rate = parse_csv_fixings_target_rate();
-	const auto FTIIE_28_day = parse_csv_fixings_FTIIE_28_day();
+	const auto TIIE_fallback_28_day = parse_csv_fixings_TIIE_fallback_28_day();
 
 	const auto FTIIE_compounded_on_business_days_index = parse_csv_fixings_FTIIE_compounded_on_business_days_index();
 	const auto FTIIE_compounded_on_calendar_days_index = parse_csv_fixings_FTIIE_compounded_on_calendar_days_index();
@@ -357,6 +360,20 @@ int main()
 		<< _182d_indx->get_value()
 		<< " and the same computed value is "
 		<< compounded_in_advance(FTIIE_compounded_on_business_days_index, date, Decimal{ 182 }).get_value()
+		<< endl;
+
+	const auto& _28d_fallback = TIIE_fallback_28_day[date];
+	assert(_28d_fallback);
+
+	cout
+		<< fixed
+		<< setprecision(TIIE_fallback_28_day.get_decimal_places())
+		<< "For "
+		<< date
+		<< " TIIE Fallback (28 days) is "
+		<< _28d_fallback->get_value()
+		<< " and the same computed value is "
+		<< fallback(FTIIE, date, Decimal{ 28 }).get_value()
 		<< endl;
 
 	// look for inconsistencies in the index data
