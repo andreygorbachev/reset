@@ -53,6 +53,8 @@ static auto parse_csv_fixings_SARON_and_SARON_compounded_index() -> pair<RateFix
 		2020y / February / 17d
 	);
 }
+// I think SARON is published several times a day
+// but for SAION (SARON Compounded Index) we need to know the value at the end of the day (18:00)
 
 
 
