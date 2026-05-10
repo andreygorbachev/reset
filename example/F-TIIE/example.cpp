@@ -247,7 +247,7 @@ static auto compounded_in_advance( // is this important enough to move to the ma
 
 static auto fallback( // is this important enough to move to the main library?
 	const RateFixings& fix,
-	const std::chrono::year_month_day& d,
+	const std::chrono::year_month_day& d, // do we assume it is always a good business day?
 	const Decimal& tenor
 )
 {
