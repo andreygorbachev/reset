@@ -87,7 +87,19 @@ static auto parse_csv_fixings_TIIE_fallback_91_day() -> RateFixings
 	return parse_csv_fixings<RateFixings>(
 		"CF101.csv",
 		3u,
-		2008y / August / 4d, // not 100% sure why these started later than the index
+		2008y / August / 4d, // not 100% sure why these started later than the index // why 28 and 91 started on different dates?
+		2026y / May / 6d,
+		locate_calendar("America/CNBV", 2026y / May / 6d),
+		4u
+	);
+}
+
+static auto parse_csv_fixings_TIIE_fallback_182_day() -> RateFixings
+{
+	return parse_csv_fixings<RateFixings>(
+		"CF101.csv",
+		4u,
+		2024y / January / 3d, // not 100% sure why these started later than the index // why 28 and 182 started on different dates?
 		2026y / May / 6d,
 		locate_calendar("America/CNBV", 2026y / May / 6d),
 		4u
@@ -276,6 +288,7 @@ int main()
 //	const auto target_rate = parse_csv_fixings_target_rate();
 	const auto TIIE_fallback_28_day = parse_csv_fixings_TIIE_fallback_28_day();
 	const auto TIIE_fallback_91_day = parse_csv_fixings_TIIE_fallback_91_day();
+	const auto TIIE_fallback_182_day = parse_csv_fixings_TIIE_fallback_182_day();
 
 	const auto FTIIE_compounded_on_business_days_index = parse_csv_fixings_FTIIE_compounded_on_business_days_index();
 	const auto FTIIE_compounded_on_calendar_days_index = parse_csv_fixings_FTIIE_compounded_on_calendar_days_index();
@@ -401,6 +414,20 @@ int main()
 		<< _91d_fallback->get_value()
 		<< " and the same computed value is "
 		<< fallback(FTIIE, date, Decimal{ 91 }).get_value()
+		<< endl;
+
+	const auto& _182d_fallback = TIIE_fallback_182_day[date];
+	assert(_182d_fallback);
+
+	cout
+		<< fixed
+		<< setprecision(TIIE_fallback_182_day.get_decimal_places())
+		<< "For "
+		<< date
+		<< " TIIE Fallback (182 days) is "
+		<< _182d_fallback->get_value()
+		<< " and the same computed value is "
+		<< fallback(FTIIE, date, Decimal{ 182 }).get_value()
 		<< endl;
 
 	// look for inconsistencies in the index data
