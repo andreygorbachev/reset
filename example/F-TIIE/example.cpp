@@ -207,6 +207,7 @@ static auto compounded_in_advance( // is this important enough to move to the ma
 
 	const auto d_28n = sys_days{ d } - days{ 28 };
 	const auto& _index_d_28n = fix[d_28n];
+	assert(_index_d_28n);
 	const auto index_d_28n = static_cast<Decimal>(*_index_d_28n);
 
 	const auto _1 = Decimal{ 1 };
@@ -214,6 +215,34 @@ static auto compounded_in_advance( // is this important enough to move to the ma
 	const auto _360 = Decimal{ 360 };
 
 	auto rate = Decimal{ (pow(index_d / index_d_28n, tenor / _28) - _1) * _360 / tenor }; // should we use day count?
+	rate = round_dp(rate, 6u); // or should we be able to apply 4dp to the resulting percentage? (that would be closer to the documentation, which deals in percents)
+	// should round_dp accept units for the power? (6dp or something like that)
+
+	return Percent{ rate };
+}
+
+static auto fallback( // is this important enough to move to the main library?
+	const RateFixings& fix,
+	const std::chrono::year_month_day& d,
+	const Decimal& tenor
+)
+{
+	constexpr auto preceding = fin_calendar::preceding{};
+	const auto prev = preceding.adjust(
+		sys_days{ d } - days{ 1 },
+		fix.get_calendar()
+	);
+
+	const auto& _fixing = fix[prev];
+	assert(_fixing);
+	const auto fixing = static_cast<Decimal>(*_fixing);
+
+	// we should also adjust for a possible base rate change between prev and d
+
+	const auto _1 = Decimal{ 1 };
+	const auto _360 = Decimal{ 360 };
+
+	auto rate = Decimal{ (pow(_1 + fixing / _360, tenor) - _1) * _360 / tenor }; // should we use day count?
 	rate = round_dp(rate, 6u); // or should we be able to apply 4dp to the resulting percentage? (that would be closer to the documentation, which deals in percents)
 	// should round_dp accept units for the power? (6dp or something like that)
 
