@@ -263,7 +263,7 @@ static auto fallback( // is this important enough to move to the main library?
 
 	// we should also adjust for a possible base rate change between prev and d
 
-	const auto _spread = BasisPoints{ "24" }; // constexpr?
+	const auto _spread = BasisPoints{ "24" }; // constexpr? // is this right that it is the same spread for all tenors?
 	const auto spread = static_cast<Decimal>(_spread);
 
 	const auto _1 = Decimal{ 1 };
@@ -273,7 +273,7 @@ static auto fallback( // is this important enough to move to the main library?
 	rate = round_dp(rate, 6u); // or should we be able to apply 4dp to the resulting percentage? (that would be closer to the documentation, which deals in percents)
 	// should round_dp accept units for the power? (6dp or something like that)
 
-	return Percent{ rate + spread };
+	return Percent{ rate + spread }; // or do we need to apply the spread before rounding?
 }
 
 
