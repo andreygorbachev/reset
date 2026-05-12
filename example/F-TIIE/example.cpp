@@ -122,10 +122,10 @@ static auto parse_csv_fixings_target_rate() -> RateFixings
 	return parse_csv_fixings<RateFixings>(
 		"CF101.csv",
 		0u,
-		2008y / January / 21d,
+		2025y / January / 1d, // 2008y / January / 21d,
 		2026y / May / 6d,
-		make_empty_calendar(),
-		2u
+		make_empty_calendar(), // locate_calendar("America/CNBV", 2026y / May / 6d),
+		4u // 2u?
 	);
 }
 
@@ -285,7 +285,7 @@ int main()
 	auto rfd = rate_fixing_detail{};
 	rfd.day_count = actual_360<Decimal>{};
 
-//	const auto target_rate = parse_csv_fixings_target_rate();
+	const auto target_rate = parse_csv_fixings_target_rate();
 	const auto TIIE_fallback_28_day = parse_csv_fixings_TIIE_fallback_28_day();
 	const auto TIIE_fallback_91_day = parse_csv_fixings_TIIE_fallback_91_day();
 	const auto TIIE_fallback_182_day = parse_csv_fixings_TIIE_fallback_182_day();
