@@ -247,6 +247,7 @@ static auto compounded_in_advance( // is this important enough to move to the ma
 
 static auto fallback( // is this important enough to move to the main library?
 	const RateFixings& fix,
+	const RateFixings& target_rate_fix,
 	const std::chrono::year_month_day& d, // do we assume it is always a good business day?
 	const Decimal& tenor
 )
@@ -261,6 +262,14 @@ static auto fallback( // is this important enough to move to the main library?
 	assert(_fixing);
 	const auto fixing = static_cast<Decimal>(*_fixing);
 
+	const auto& _target_rate_fixing = target_rate_fix[d];
+	assert(_target_rate_fixing);
+	const auto& _target_rate_prev_fixing = target_rate_fix[prev];
+	assert(_target_rate_prev_fixing);
+	const auto Banxico_move =
+		static_cast<Decimal>(*_target_rate_fixing) -
+		static_cast<Decimal>(*_target_rate_prev_fixing);
+
 	// we should also adjust for a possible base rate change between prev and d
 
 	const auto _spread = BasisPoints{ "24" }; // constexpr? // is this right that it is the same spread for all tenors?
@@ -269,7 +278,7 @@ static auto fallback( // is this important enough to move to the main library?
 	const auto _1 = Decimal{ 1 };
 	const auto _360 = Decimal{ 360 };
 
-	auto rate = Decimal{ (pow(_1 + fixing / _360, tenor) - _1) * _360 / tenor }; // should we use day count?
+	auto rate = Decimal{ (pow(_1 + (fixing + Banxico_move) / _360, tenor) - _1) * _360 / tenor }; // should we use day count?
 	rate = round_dp(rate, 6u); // or should we be able to apply 4dp to the resulting percentage? (that would be closer to the documentation, which deals in percents)
 	// should round_dp accept units for the power? (6dp or something like that)
 
@@ -406,7 +415,7 @@ int main()
 		<< " TIIE Fallback (28 days) is "
 		<< _28d_fallback->get_value()
 		<< " and the same computed value is "
-		<< fallback(FTIIE, date, Decimal{ 28 }).get_value()
+		<< fallback(FTIIE, target_rate, date, Decimal{ 28 }).get_value()
 		<< endl;
 
 	const auto& _91d_fallback = TIIE_fallback_91_day[_date];
@@ -420,7 +429,7 @@ int main()
 		<< " TIIE Fallback (91 days) is "
 		<< _91d_fallback->get_value()
 		<< " and the same computed value is "
-		<< fallback(FTIIE, date, Decimal{ 91 }).get_value()
+		<< fallback(FTIIE, target_rate, date, Decimal{ 91 }).get_value()
 		<< endl;
 
 	const auto& _182d_fallback = TIIE_fallback_182_day[_date];
@@ -434,7 +443,7 @@ int main()
 		<< " TIIE Fallback (182 days) is "
 		<< _182d_fallback->get_value()
 		<< " and the same computed value is "
-		<< fallback(FTIIE, date, Decimal{ 182 }).get_value()
+		<< fallback(FTIIE, target_rate, date, Decimal{ 182 }).get_value()
 		<< endl;
 
 	// look for inconsistencies in the index data
