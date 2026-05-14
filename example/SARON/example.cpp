@@ -57,11 +57,31 @@ static auto parse_csv_fixings_SARON() -> RateFixings
 // I think SARON is published several times a day
 // but for SAION we need to know the value at the end of the day (18:00)
 
+static auto parse_csv_fixings_current_rate() -> RateFixings
+{
+	return parse_csv_fixings<RateFixings>(
+		"hsrron.csv",
+		3u,
+		1999y / June / 30d,
+		2026y / May / 12d
+	);
+}
+
 static auto parse_csv_fixings_SAION() -> IndexFixings
 {
 	return parse_csv_fixings<IndexFixings>(
 		"hsrron.csv",
 		4u,
+		1999y / June / 30d,
+		2026y / May / 12d
+	);
+}
+
+static auto parse_csv_fixings_current_index() -> IndexFixings
+{
+	return parse_csv_fixings<IndexFixings>(
+		"hsrron.csv",
+		5u,
 		1999y / June / 30d,
 		2026y / May / 12d
 	);
@@ -74,7 +94,9 @@ int main()
 	// from https://indexdata.six-group.com/swiss_reference_rates/reference_rates.html
 
 	const auto SARON = parse_csv_fixings_SARON();
+	const auto current_rate = parse_csv_fixings_current_rate();
 	const auto SAION = parse_csv_fixings_SAION();
+	const auto current_index = parse_csv_fixings_current_index();
 
 	auto rfd = rate_fixing_detail{};
 	rfd.day_count = actual_360<Decimal>{};
@@ -99,7 +121,22 @@ int main()
 		<< " SAION is "
 		<< indx->get_value()
 		<< " and the same computed value is "
-		<< index(SARON, rfd, date, id).get_value();
+		<< index(SARON, rfd, date, id).get_value()
+		<< endl;
+
+	const auto& current_indx = current_index[date];
+	assert(current_indx);
+
+	cout
+		<< fixed
+		<< setprecision(current_index.get_decimal_places())
+		<< "For "
+		<< date
+		<< " Current Index is "
+		<< current_indx->get_value()
+		<< " and the same computed value is "
+		<< index(current_rate, rfd, date, id).get_value()
+		<< endl;
 
 	return 0;
 }
