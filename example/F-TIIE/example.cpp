@@ -489,7 +489,7 @@ int main()
 				<< computed_fix.get_value()
 				<< endl;
 	}
-*/
+
 	const auto& _28d_fallback_calendar = TIIE_fallback_28_day.get_calendar();
 	const auto _28d_fallback_dates = _28d_fallback_calendar.make_business_days_schedule(
 //		TIIE_fallback_28_day.get_time_series().get_period()
@@ -497,11 +497,7 @@ int main()
 	);
 	for (const auto& d : _28d_fallback_dates.get_dates())
 	{
-		const auto _d = preceding.adjust(
-			sys_days{ d } - days{ 1 },
-			FTIIE.get_calendar()
-		);
-		const auto& fix = TIIE_fallback_28_day[_d];
+		const auto& fix = TIIE_fallback_28_day[d];
 		assert(fix);
 		const auto fb = fallback(FTIIE, target_rate, d, Decimal{ 28 });
 		if (*fix != fb)
@@ -516,6 +512,6 @@ int main()
 				<< fb.get_value()
 				<< endl;
 	}
-
+*/
 	return 0;
 }
