@@ -45,10 +45,13 @@ inline auto _parse_date(std::istream& fs)
 	auto ymd = std::chrono::year_month_day{};
 
 #ifdef _MSC_BUILD 
-	std::chrono::from_stream(fs, "%d/%m/%Y", ymd);
+	std::chrono::from_stream(fs, "%d.%m.%Y", ymd);
 #else
 	throw std::domain_error{ "Not implemented" };
 #endif
+
+	auto s = std::string{};
+	std::getline(fs, s, ';');
 
 	return ymd;
 }
@@ -56,8 +59,8 @@ inline auto _parse_date(std::istream& fs)
 inline auto _parse_observation1(std::istream& fs)
 {
 	auto o = std::string{};
-	std::getline(fs, o, ','); // can we make _parse_observation1 and _parse_observation2 the same (and parse the comma in the caller)?
-	// should we check decimal places?
+	std::getline(fs, o, ' ');
+	std::getline(fs, o, ';');
 
 	return reset::Percent{ o };
 }
@@ -65,8 +68,8 @@ inline auto _parse_observation1(std::istream& fs)
 inline auto _parse_observation2(std::istream& fs)
 {
 	auto o = std::string{};
-	std::getline(fs, o);
-	// should we check decimal places?
+	std::getline(fs, o, ' ');
+	std::getline(fs, o, ';');
 
 	return reset::Value{ o };
 }
@@ -85,12 +88,16 @@ inline auto _parse_csv_fixings_storage_x2(
 	{
 		const auto ymd = _parse_date(fs);
 
-		auto s1 = std::string{};
-		std::getline(fs, s1, ','); // skip the comma
-
 		result1[ymd] = _parse_observation1(fs);
 
+		auto s = std::string{};
+		std::getline(fs, s, ';');
+		std::getline(fs, s, ';');
+		std::getline(fs, s, ';');
+
 		result2[ymd] = _parse_observation2(fs);
+
+		std::getline(fs, s);
 
 		if (fs.eof())
 			break;
@@ -125,13 +132,16 @@ inline auto parse_csv_fixings_x2(
 	const std::string& fileName,
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
-) -> std::tuple<reset::RateFixings, reset::IndexFixings> // SARON, SARON Compounded Index
+) -> std::tuple<reset::RateFixings, reset::IndexFixings> // SARON, SAION
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
 	assert(fs);
 
-	// skip the first line (header)
+	// skip the first 4 lines (header)
 	auto t = std::string{};
+	std::getline(fs, t);
+	std::getline(fs, t);
+	std::getline(fs, t);
 	std::getline(fs, t);
 
 	auto [ts1, ts2] = _parse_csv_fixings_storage_x2(fs, from, until);
@@ -142,6 +152,6 @@ inline auto parse_csv_fixings_x2(
 
 	return {
 		reset::RateFixings{ std::move(ts1), std::move(c1), 6u },
-		reset::IndexFixings{ std::move(ts2), std::move(c2), 5u }
-	}; // index needs to be checked a bit more
+		reset::IndexFixings{ std::move(ts2), std::move(c2), 6u }
+	};
 }

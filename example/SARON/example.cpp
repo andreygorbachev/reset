@@ -45,24 +45,24 @@ using namespace reset;
 
 
 
-static auto parse_csv_fixings_SARON_and_SARON_compounded_index() -> pair<RateFixings, IndexFixings>
+static auto parse_csv_fixings_SARON_and_SAION() -> pair<RateFixings, IndexFixings>
 {
 	return parse_csv_fixings_x2(
-		"saron_compound_calculator.csv",
+		"hsrron.csv",
 		1999y / June / 30d,
-		2020y / February / 17d
+		2026y / May / 12d
 	);
 }
 // I think SARON is published several times a day
-// but for SAION (SARON Compounded Index) we need to know the value at the end of the day (18:00)
+// but for SAION we need to know the value at the end of the day (18:00)
 
 
 
 int main()
 {
-	// from saron_compound_calculator.xls from SIX
+	// from https://indexdata.six-group.com/swiss_reference_rates/reference_rates.html
 
-	const auto [SARON, SARON_compounded_index] = parse_csv_fixings_SARON_and_SARON_compounded_index();
+	const auto [SARON, SAION] = parse_csv_fixings_SARON_and_SAION();
 
 	auto rfd = rate_fixing_detail{};
 	rfd.day_count = actual_360<Decimal>{};
@@ -70,20 +70,21 @@ int main()
 	auto id = index_detail{};
 	id.initial_value = Value{ "10000" };
 	id.initial_date = 1999y / June / 30d;
-	id.final_round = 4u;
+	id.step_round = 6u;
+	id.final_round = 6u; // not needed?
 
-//	const auto date = 2020y / February / 17d;
-	const auto date = 2020y / January / 24d; // then things don't work
+//	const auto date = 2026y / May / 12d;
+	const auto date = 2026y / May / 11d;
 
-	const auto& indx = SARON_compounded_index[date];
+	const auto& indx = SAION[date];
 	assert(indx);
 
 	cout
 		<< fixed
-		<< setprecision(SARON_compounded_index.get_decimal_places())
+		<< setprecision(SAION.get_decimal_places())
 		<< "For "
 		<< date
-		<< " SARON Compounded Index is "
+		<< " SAION is "
 		<< indx->get_value()
 		<< " and the same computed value is "
 		<< index(SARON, rfd, date, id).get_value();
