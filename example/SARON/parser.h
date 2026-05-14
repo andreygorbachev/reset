@@ -56,46 +56,36 @@ inline auto _parse_date(std::istream& fs)
 	return ymd;
 }
 
-inline auto _parse_observation1(std::istream& fs)
+template<typename Fixings>
+auto _parse_observation(std::istream& fs)
 {
 	auto o = std::string{};
 	std::getline(fs, o, ' ');
 	std::getline(fs, o, ';');
 
-	return reset::Percent{ o };
-}
-
-inline auto _parse_observation2(std::istream& fs)
-{
-	auto o = std::string{};
-	std::getline(fs, o, ' ');
-	std::getline(fs, o, ';');
-
-	return reset::Value{ o };
+	return typename Fixings::observation{ o };
 }
 
 
-inline auto _parse_csv_fixings_storage_x2(
+template<typename Fixings>
+auto _parse_csv_fixings_storage(
 	std::istream& fs,
+	const unsigned skip,
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
 )
 {
-	auto result1 = reset::RateFixings::storage{ gregorian::util::days_period{ from, until } };
-	auto result2 = reset::IndexFixings::storage{ gregorian::util::days_period{ from, until } };
+	auto result = typename Fixings::storage{ gregorian::util::days_period{ from, until } };
 
 	for (;;)
 	{
 		const auto ymd = _parse_date(fs);
 
-		result1[ymd] = _parse_observation1(fs);
-
 		auto s = std::string{};
-		std::getline(fs, s, ';');
-		std::getline(fs, s, ';');
-		std::getline(fs, s, ';');
+		for (auto i = 0u; i < skip; ++i)
+			std::getline(fs, s, ';');
 
-		result2[ymd] = _parse_observation2(fs);
+		result[ymd] = _parse_observation<Fixings>(fs);
 
 		std::getline(fs, s);
 
@@ -103,7 +93,7 @@ inline auto _parse_csv_fixings_storage_x2(
 			break;
 	}
 
-	return std::tuple{ result1, result2 };
+	return result;
 }
 
 
@@ -128,11 +118,13 @@ auto _make_calendar(const typename Fixings::storage& ts)
 }
 
 
-inline auto parse_csv_fixings_x2(
+template<typename Fixings>
+auto parse_csv_fixings(
 	const std::string& fileName,
+	const unsigned skip, // how many columns to skip after date before observation
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
-) -> std::tuple<reset::RateFixings, reset::IndexFixings> // SARON, SAION
+) -> Fixings
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
 	assert(fs);
@@ -144,14 +136,10 @@ inline auto parse_csv_fixings_x2(
 	std::getline(fs, t);
 	std::getline(fs, t);
 
-	auto [ts1, ts2] = _parse_csv_fixings_storage_x2(fs, from, until);
+	auto ts = _parse_csv_fixings_storage<Fixings>(fs, skip, from, until);
 	// we can check the fixings vs decimal places
 
-	auto c1 = _make_calendar<reset::RateFixings>(ts1);
-	auto c2 = _make_calendar<reset::IndexFixings>(ts2);
+	auto c = _make_calendar<Fixings>(ts);
 
-	return {
-		reset::RateFixings{ std::move(ts1), std::move(c1), 6u },
-		reset::IndexFixings{ std::move(ts2), std::move(c2), 6u }
-	};
+	return Fixings{ std::move(ts), std::move(c), 6u };
 }

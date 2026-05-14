@@ -45,10 +45,11 @@ using namespace reset;
 
 
 
-static auto parse_csv_fixings_SARON_and_SAION() -> pair<RateFixings, IndexFixings>
+static auto parse_csv_fixings_SARON() -> RateFixings
 {
-	return parse_csv_fixings_x2(
+	return parse_csv_fixings<RateFixings>(
 		"hsrron.csv",
+		0u,
 		1999y / June / 30d,
 		2026y / May / 12d
 	);
@@ -56,13 +57,24 @@ static auto parse_csv_fixings_SARON_and_SAION() -> pair<RateFixings, IndexFixing
 // I think SARON is published several times a day
 // but for SAION we need to know the value at the end of the day (18:00)
 
+static auto parse_csv_fixings_SAION() -> IndexFixings
+{
+	return parse_csv_fixings<IndexFixings>(
+		"hsrron.csv",
+		4u,
+		1999y / June / 30d,
+		2026y / May / 12d
+	);
+}
+
 
 
 int main()
 {
 	// from https://indexdata.six-group.com/swiss_reference_rates/reference_rates.html
 
-	const auto [SARON, SAION] = parse_csv_fixings_SARON_and_SAION();
+	const auto SARON = parse_csv_fixings_SARON();
+	const auto SAION = parse_csv_fixings_SAION();
 
 	auto rfd = rate_fixing_detail{};
 	rfd.day_count = actual_360<Decimal>{};
