@@ -460,13 +460,13 @@ int main()
 		const auto computed_fix = non_business_day_index(FTIIE, rfd, d, bus_id); // also handles business days
 		if (*fix != computed_fix)
 			cout
-			<< "For "
-			<< d
-			<< " F-TIIE Compounded Index (business days) is "
-			<< fix->get_value()
-			<< " and the same computed value is "
-			<< computed_fix.get_value()
-			<< endl;
+				<< "For "
+				<< d
+				<< " F-TIIE Compounded Index (business days) is "
+				<< fix->get_value()
+				<< " and the same computed value is "
+				<< computed_fix.get_value()
+				<< endl;
 	}
 
 	const auto cal_period = FTIIE_compounded_on_calendar_days_index.get_time_series().get_period();
@@ -481,14 +481,41 @@ int main()
 		const auto computed_fix = index(FTIIE, rfd, d, cal_id);
 		if (*fix != computed_fix)
 			cout
-			<< "For "
-			<< d
-			<< " F-TIIE Compounded Index (calendar days) is "
-			<< fix->get_value()
-			<< " and the same computed value is "
-			<< computed_fix.get_value()
-			<< endl;
+				<< "For "
+				<< d
+				<< " F-TIIE Compounded Index (calendar days) is "
+				<< fix->get_value()
+				<< " and the same computed value is "
+				<< computed_fix.get_value()
+				<< endl;
 	}
 */
+	const auto& _28d_fallback_calendar = TIIE_fallback_28_day.get_calendar();
+	const auto _28d_fallback_dates = _28d_fallback_calendar.make_business_days_schedule(
+//		TIIE_fallback_28_day.get_time_series().get_period()
+		days_period{ 2025y / January / 3d, date }
+	);
+	for (const auto& d : _28d_fallback_dates.get_dates())
+	{
+		const auto _d = preceding.adjust(
+			sys_days{ d } - days{ 1 },
+			FTIIE.get_calendar()
+		);
+		const auto& fix = TIIE_fallback_28_day[_d];
+		assert(fix);
+		const auto fb = fallback(FTIIE, target_rate, d, Decimal{ 28 });
+		if (*fix != fb)
+			cout
+				<< fixed
+				<< setprecision(TIIE_fallback_28_day.get_decimal_places())
+				<< "For "
+				<< d
+				<< " TIIE Fallback (28 days) is "
+				<< fix->get_value()
+				<< " and the same computed value is "
+				<< fb.get_value()
+				<< endl;
+	}
+
 	return 0;
 }
