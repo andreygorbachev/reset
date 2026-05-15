@@ -36,10 +36,10 @@ saron_array.pop() # to match what we currently calculate in the cpp example
 
 index = Decimal("10000")
 
-prev_date = datetime(1, 1, 1)
-prev_rate = Decimal("0")
+prev_date = None
+prev_rate = None
 for date, rate in zip(date_array, saron_array):
-    if date != datetime(1, 1, 1):
+    if prev_date:
         days = (date - prev_date).days
         index = index * (Decimal("1") + Decimal(days) / Decimal("360") * prev_rate / Decimal("100"))
         index = index.quantize(Decimal("0.000000"), ROUND_HALF_UP)
