@@ -22,9 +22,6 @@
 
 #pragma once
 
-#include <scaled_value.h>
-#include <fixings.h>
-
 #include <period.h>
 #include <weekend.h>
 #include <calendar.h>
@@ -37,6 +34,7 @@
 #include <utility>
 #include <cassert>
 #include <optional>
+#include <algorithm>
 
 
 inline auto _parse_date(std::istream& fs)
