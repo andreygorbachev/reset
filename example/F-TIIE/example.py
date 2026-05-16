@@ -19,7 +19,7 @@ with open(r"data\CF101.csv", "r") as f:
             raise Exception("File has fewer than 19 lines")
 
     # Read data rows
-    prev_ftiie = "N/E"
+    prev_ftiie = None
     for row in reader:
         ftiie = row[2]
 
