@@ -22,10 +22,9 @@
 
 #pragma once
 
+#include <static_data.h>
+
 #include <period.h>
-#include <weekend.h>
-#include <schedule.h>
-#include <calendar.h>
 
 #include <string>
 #include <chrono>
@@ -34,8 +33,6 @@
 #include <stdexcept>
 #include <utility>
 #include <cassert>
-#include <optional>
-#include <algorithm>
 
 
 inline auto _parse_date(std::istream& fs)
@@ -98,27 +95,6 @@ auto _parse_csv_fixings_storage(
 
 
 template<typename Fixings>
-auto _make_calendar(const typename Fixings::storage& ts)
-{
-	const auto& fu = ts.get_period();
-
-	auto hols = gregorian::schedule::dates{};
-	for (
-		auto d = fu.get_from();
-		d <= fu.get_until();
-		d = std::chrono::sys_days{ d } + std::chrono::days{ 1 }
-	)
-		if (ts[d] == std::nullopt)
-			hols.insert(d);
-
-	return gregorian::calendar{
-		gregorian::NoWeekend,
-		gregorian::schedule{ fu, hols }
-	};
-}
-
-
-template<typename Fixings>
 auto parse_csv_fixings(
 	const std::string& fileName,
 	const unsigned skip, // how many columns to skip after date before observation
@@ -139,7 +115,12 @@ auto parse_csv_fixings(
 	auto ts = _parse_csv_fixings_storage<Fixings>(fs, skip, from, until);
 	// we can check the fixings vs decimal places
 
-	auto c = _make_calendar<Fixings>(ts);
-
-	return Fixings{ std::move(ts), std::move(c), 6u };
+	return Fixings{
+		std::move(ts),
+		gregorian::static_data::locate_calendar(
+			"Europe/Zurich",
+			std::chrono::year{ 2026 } / std::chrono::May / std::chrono::day{ 12u }
+		),
+		6u
+	};
 }
