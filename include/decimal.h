@@ -22,12 +22,16 @@
 
 #pragma once
 
+#include <boost/multiprecision/number.hpp>
 #include <boost/multiprecision/cpp_dec_float.hpp>
 
 
 namespace reset
 {
 
-	using Decimal = boost::multiprecision::cpp_dec_float_50;
+//	using Decimal64 = boost::multiprecision::number<boost::multiprecision::cpp_dec_float<16>>;
+	using Decimal128 = boost::multiprecision::number<boost::multiprecision::cpp_dec_float<34>>;
+
+	using Decimal = Decimal128;
 
 }
