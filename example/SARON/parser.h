@@ -49,8 +49,8 @@ inline auto _parse_date(std::istream& fs)
 	throw std::domain_error{ "Not implemented" };
 #endif
 
-	auto s = std::string{};
-	std::getline(fs, s, ';');
+	auto skip = std::string{};
+	std::getline(fs, skip, ';');
 
 	return ymd;
 }
@@ -58,8 +58,10 @@ inline auto _parse_date(std::istream& fs)
 template<typename Fixings>
 auto _parse_observation(std::istream& fs)
 {
+	auto skip = std::string{};
+	std::getline(fs, skip, ' ');
+
 	auto o = std::string{};
-	std::getline(fs, o, ' ');
 	std::getline(fs, o, ';');
 
 	return typename Fixings::observation{ o };
@@ -129,11 +131,11 @@ auto parse_csv_fixings(
 	assert(fs);
 
 	// skip the first 4 lines (header)
-	auto t = std::string{};
-	std::getline(fs, t);
-	std::getline(fs, t);
-	std::getline(fs, t);
-	std::getline(fs, t);
+	auto s = std::string{};
+	std::getline(fs, s);
+	std::getline(fs, s);
+	std::getline(fs, s);
+	std::getline(fs, s);
 
 	auto ts = _parse_csv_fixings_storage<Fixings>(fs, skip, from, until);
 	// we can check the fixings vs decimal places
