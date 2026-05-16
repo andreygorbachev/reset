@@ -3,7 +3,7 @@ import decimal
 from decimal import Decimal, ROUND_HALF_UP
 from datetime import datetime
 
-decimal.getcontext().prec = 50
+decimal.getcontext().prec = 16
 
 date_array = []
 saron_array = []
