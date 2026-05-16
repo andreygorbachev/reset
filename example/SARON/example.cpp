@@ -96,6 +96,7 @@ int main()
 	const auto current_rate = parse_csv_fixings_current_rate();
 	const auto SAION = parse_csv_fixings_SAION();
 	const auto current_index = parse_csv_fixings_current_index();
+	// we can assert consistency between what was read above
 
 	auto rfd = rate_fixing_detail{};
 	rfd.day_count = actual_360<Decimal>{};
@@ -105,7 +106,7 @@ int main()
 	id.initial_date = 1999y / June / 30d;
 	id.step_round = 6u;
 
-	const auto date = 2026y / May / 12d;
+	const auto& date = SARON.get_time_series().get_period().get_until();
 
 	const auto& indx = SAION[date];
 	assert(indx);
