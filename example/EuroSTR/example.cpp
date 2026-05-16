@@ -190,8 +190,7 @@ int main()
 	_12md.business_day_convention = modified_preceding{};
 	_12md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
 
-//	const auto date = 2026y / April / 24d;
-	const auto date = 2026y / April / 23d;
+	const auto date = 2026y / April / 24d;
 
 	const auto& indx = EuroSTR_compounded_index[date];
 	assert(indx);
