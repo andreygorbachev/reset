@@ -96,8 +96,7 @@ int main()
 	id.step_round = 18u;
 	id.final_round = 8u;
 
-//	const auto date = 2025y / May / 13d;
-	const auto date = 2025y / May / 12d;
+	const auto date = 2025y / May / 13d;
 
 	const auto& indx = SONIA_compounded_index[date];
 	assert(indx);
