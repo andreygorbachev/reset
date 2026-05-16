@@ -323,8 +323,7 @@ int main()
 	cal_id.final_round = 4u;
 	cal_id.calendar = FTIIE_compounded_on_calendar_days_index.get_calendar();
 
-//	const auto date = 2026y / May / 6d;
-	const auto date = 2026y / May / 5d;
+	const auto date = 2026y / May / 6d;
 
 	const auto& bus_indx = FTIIE_compounded_on_business_days_index[date];
 	assert(bus_indx);

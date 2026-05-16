@@ -2,9 +2,10 @@ import csv
 import decimal
 from decimal import Decimal, ROUND_HALF_UP
 
-decimal.getcontext().prec = 50
+decimal.getcontext().prec = 34
 
 ftiie_array = []
+tiie_array = []
 
 with open(r"data\CF101.csv", "r") as f:
 
@@ -20,19 +21,22 @@ with open(r"data\CF101.csv", "r") as f:
     # Read data rows
     prev_ftiie = "N/E"
     for row in reader:
-        if len(row) >= 3:
-            ftiie = row[2]
+        ftiie = row[2]
 
+        if ftiie:
             if ftiie in ("N/E"):
                 ftiie = prev_ftiie
 
-            if ftiie:
-                ftiie_array.append(Decimal(ftiie))
+            ftiie_array.append(Decimal(ftiie))
 
             prev_ftiie = ftiie
 
+        tiie = row[6]
+
+        if tiie:
+            tiie_array.append(Decimal(tiie))
+
 ftiie_array.pop()
-ftiie_array.pop() # to match what we currently calculate in the cpp example
 
 index = Decimal("100000")
 
@@ -42,4 +46,4 @@ for rate in ftiie_array:
 
 index = index.quantize(Decimal("0.0000"), ROUND_HALF_UP)
 
-print(index)
+print("Overnight Funding TIIE Index, Compounded on calendar days is", tiie_array[-1], "and the same computed value is", index)
