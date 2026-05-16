@@ -31,8 +31,6 @@ with open(r"data\hsrron.csv", "r") as f:
 
 date_array.reverse()
 saron_array.reverse()
-date_array.pop() # to match what we currently calculate in the cpp example
-saron_array.pop() # to match what we currently calculate in the cpp example
 
 index = Decimal("10000")
 

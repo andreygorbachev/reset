@@ -34,7 +34,6 @@
 #include <iomanip>
 #include <ios>
 #include <cassert>
-#include <utility>
 
 using namespace std;
 using namespace std::chrono;
@@ -107,8 +106,7 @@ int main()
 	id.step_round = 6u;
 	id.final_round = 6u; // not needed?
 
-//	const auto date = 2026y / May / 12d;
-	const auto date = 2026y / May / 11d;
+	const auto date = 2026y / May / 12d;
 
 	const auto& indx = SAION[date];
 	assert(indx);
