@@ -7,6 +7,7 @@ decimal.getcontext().prec = 50
 
 date_array = []
 saron_array = []
+saion_array = []
 
 with open(r"data\hsrron.csv", "r") as f:
 
@@ -28,9 +29,14 @@ with open(r"data\hsrron.csv", "r") as f:
         saron = row[1]
         if saron:
             saron_array.append(Decimal(saron))
+        
+        saion = row[5]
+        if saion:
+            saion_array.append(Decimal(saion))
 
 date_array.reverse()
 saron_array.reverse()
+saion_array.reverse()
 
 index = Decimal("10000")
 
@@ -45,4 +51,4 @@ for date, rate in zip(date_array, saron_array):
     prev_date = date
     prev_rate = rate
 
-print(index)
+print("For", date_array[-1].strftime("%d %b %Y"), "SAION is", saion_array[-1], "and the same computed value is", index)
