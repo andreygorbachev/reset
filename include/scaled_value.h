@@ -45,7 +45,7 @@ namespace reset
     public:
 
         friend bool operator==(const scaled_value& x, const scaled_value& y) = default;
-        friend bool operator<=>(const scaled_value& x, const scaled_value& y) = default;
+        friend auto operator<=>(const scaled_value& x, const scaled_value& y) = default;
 
         // note that we do this implicitly
         operator Decimal() const; // noexcept?
