@@ -24,6 +24,7 @@
 
 #include <period.h>
 #include <weekend.h>
+#include <schedule.h>
 #include <calendar.h>
 
 #include <string>
