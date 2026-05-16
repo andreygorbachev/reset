@@ -51,4 +51,4 @@ for date, rate in zip(date_array, saron_array):
     prev_date = date
     prev_rate = rate
 
-print("For", date_array[-1].strftime("%d %b %Y"), "SAION is", saion_array[-1], "and the same computed value is", index)
+print("For", date_array[-1].strftime("%d.%m.%Y"), "SAION is", saion_array[-1], "and the same computed value is", index)
