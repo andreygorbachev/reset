@@ -104,7 +104,6 @@ int main()
 	id.initial_value = Value{ "10000" };
 	id.initial_date = 1999y / June / 30d;
 	id.step_round = 6u;
-	id.final_round = 6u; // not needed?
 
 	const auto date = 2026y / May / 12d;
 
