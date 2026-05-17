@@ -245,6 +245,7 @@ static auto compounded_in_advance( // is this important enough to move to the ma
 	return Percent{ rate };
 }
 
+// or should we call it synthetic?
 static auto fallback( // is this important enough to move to the main library?
 	const RateFixings& fix,
 	const RateFixings& target_rate_fix,
