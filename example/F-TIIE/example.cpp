@@ -267,13 +267,13 @@ static auto fallback( // is this important enough to move to the main library?
 	assert(_fixing);
 	const auto fixing = static_cast<Decimal>(*_fixing);
 
-	const auto& _target_rate_fixing = target_rate_fix[prev];
-	assert(_target_rate_fixing);
-	const auto& _target_rate_prev_fixing = target_rate_fix[prevprev];
+	const auto& _target_rate_prev_fixing = target_rate_fix[prev];
 	assert(_target_rate_prev_fixing);
+	const auto& _target_rate_prevprev_fixing = target_rate_fix[prevprev];
+	assert(_target_rate_prevprev_fixing);
 	const auto Banxico_move =
-		static_cast<Decimal>(*_target_rate_fixing) -
-		static_cast<Decimal>(*_target_rate_prev_fixing);
+		static_cast<Decimal>(*_target_rate_prev_fixing) -
+		static_cast<Decimal>(*_target_rate_prevprev_fixing);
 
 	const auto _spread = BasisPoints{ "24" }; // constexpr? // is this right that it is the same spread for all tenors?
 	const auto spread = static_cast<Decimal>(_spread);
