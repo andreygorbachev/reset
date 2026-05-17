@@ -255,17 +255,22 @@ static auto fallback( // is this important enough to move to the main library?
 {
 	constexpr auto preceding = fin_calendar::preceding{};
 	const auto prev = preceding.adjust(
-		sys_days{ d } - days{ 2 }, // find source for 2
+		sys_days{ d } - days{ 1 }, 
 		fix.get_calendar()
 	);
+	const auto prevprev = preceding.adjust(
+		prev - days{ 1 }, // find source for 2 business day delay
+		fix.get_calendar()
+	);
+	// is there a better way to make 2 business day step back?
 
-	const auto& _fixing = fix[prev];
+	const auto& _fixing = fix[prevprev];
 	assert(_fixing);
 	const auto fixing = static_cast<Decimal>(*_fixing);
 
 	const auto& _target_rate_fixing = target_rate_fix[d];
 	assert(_target_rate_fixing);
-	const auto& _target_rate_prev_fixing = target_rate_fix[prev];
+	const auto& _target_rate_prev_fixing = target_rate_fix[prevprev];
 	assert(_target_rate_prev_fixing);
 	const auto Banxico_move =
 		static_cast<Decimal>(*_target_rate_fixing) -
@@ -480,11 +485,11 @@ int main()
 				<< computed_fix.get_value()
 				<< endl;
 	}
-
+*/
 	const auto& _28d_fallback_calendar = TIIE_fallback_28_day.get_calendar();
 	const auto _28d_fallback_dates = _28d_fallback_calendar.make_business_days_schedule(
 //		TIIE_fallback_28_day.get_time_series().get_period()
-		days_period{ 2025y / January / 3d, date }
+		days_period{ 2025y / January / 6d, date }
 	);
 	for (const auto& d : _28d_fallback_dates.get_dates())
 	{
@@ -503,6 +508,6 @@ int main()
 				<< fb.get_value()
 				<< endl;
 	}
-*/
+
 	return 0;
 }
