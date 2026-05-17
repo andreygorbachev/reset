@@ -78,17 +78,16 @@ template<typename Fixings>
 auto _parse_csv_fixings_storage(
 	std::istream& fs,
 	const unsigned skip, // how many columns to skip after date before observation
-	const std::chrono::year_month_day& from, // these could also be read from the file
-	const std::chrono::year_month_day& until
+	const gregorian::util::days_period& period
 )
 {
-	auto result = typename Fixings::storage{ gregorian::util::days_period{ from, until } };
+	auto result = typename Fixings::storage{ period };
 
 	while (!fs.eof())
 	{
 		const auto ymd = _parse_date(fs);
 
-		if (ymd >= from && ymd <= until) // or should we have a period and check if ymd is in the period?
+		if (period.contains(ymd))
 		{
 			auto s = std::string{};
 			std::getline(fs, s, ','); // skip ","
@@ -126,7 +125,11 @@ auto parse_csv_fixings(
 	for (auto i = 0; i < 19; ++i)
 		std::getline(fs, s);
 
-	auto ts = _parse_csv_fixings_storage<Fixings>(fs, skip, from, until);
+	auto ts = _parse_csv_fixings_storage<Fixings>(
+		fs,
+		skip,
+		gregorian::util::days_period{ from, until }
+	);
 	// we can check the fixings vs decimal places
 
 	return Fixings{
