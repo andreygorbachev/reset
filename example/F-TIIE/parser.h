@@ -36,6 +36,7 @@
 #include <algorithm>
 #include <cassert>
 #include <optional>
+#include <climits>
 
 
 inline auto _parse_date(std::istream& fs)
@@ -48,8 +49,7 @@ inline auto _parse_date(std::istream& fs)
 	throw std::domain_error{ "Not implemented" };
 #endif
 
-	auto s = std::string{};
-	std::getline(fs, s, ','); // skip ","
+	fs.ignore(1, ',');
 
 	return ymd;
 }
@@ -92,16 +92,14 @@ auto _parse_csv_fixings_storage(
 
 		if (period.contains(ymd))
 		{
-			auto s = std::string{};
 			for (auto i = 0u; i < skip; ++i)
-				std::getline(fs, s, ','); // skip "xyz,"
+				fs.ignore(INT_MAX, ',');
 
 			result[ymd] = _parse_observation<Fixings>(fs);
 		}
 		else
 		{
-			auto s = std::string{};
-			std::getline(fs, s); // skip
+			fs.ignore(INT_MAX, '\n');
 		}
 	}
 
@@ -123,9 +121,8 @@ auto parse_csv_fixings(
 	assert(fs);
 
 	// skip the header
-	auto s = std::string{};
 	for (auto i = 0u; i < 19u; ++i)
-		std::getline(fs, s);
+		fs.ignore(INT_MAX, '\n');
 
 	auto ts = _parse_csv_fixings_storage<Fixings>(
 		fs,
