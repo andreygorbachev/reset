@@ -122,7 +122,7 @@ auto parse_csv_fixings(
 
 	// skip the header
 	auto s = std::string{};
-	for (auto i = 0; i < 19; ++i)
+	for (auto i = 0u; i < 19u; ++i)
 		std::getline(fs, s);
 
 	auto ts = _parse_csv_fixings_storage<Fixings>(
