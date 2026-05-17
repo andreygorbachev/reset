@@ -81,7 +81,7 @@ auto _parse_csv_fixings_storage(
 {
 	auto result = typename Fixings::storage{ gregorian::util::days_period{ from, until } };
 
-	for (;;)
+	while (!fs.eof())
 	{
 		const auto ymd = _parse_date(fs);
 
@@ -99,9 +99,6 @@ auto _parse_csv_fixings_storage(
 			auto s = std::string{};
 			std::getline(fs, s); // skip
 		}
-
-		if (fs.eof())
-			break;
 	}
 
 	return result;

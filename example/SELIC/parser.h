@@ -76,7 +76,7 @@ inline auto _parse_csv_fixings_storage(
 {
 	auto result = reset::RateFixings::storage{ gregorian::util::days_period{ from, until } };
 
-	for (;;)
+	while (!fs.eof())
 	{
 		const auto ymd = _parse_date(fs);
 
@@ -84,9 +84,6 @@ inline auto _parse_csv_fixings_storage(
 		std::getline(fs, s, ';'); // skip the delimiter
 
 		result[ymd] = _parse_observation(fs);
-
-		if (fs.eof())
-			break;
 	}
 
 	return result;
