@@ -270,8 +270,6 @@ static auto fallback( // is this important enough to move to the main library?
 		static_cast<Decimal>(*_target_rate_fixing) -
 		static_cast<Decimal>(*_target_rate_prev_fixing);
 
-	// we should also adjust for a possible base rate change between prev and d
-
 	const auto _spread = BasisPoints{ "24" }; // constexpr? // is this right that it is the same spread for all tenors?
 	const auto spread = static_cast<Decimal>(_spread);
 
