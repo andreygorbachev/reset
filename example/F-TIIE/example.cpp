@@ -509,5 +509,51 @@ int main()
 				<< endl;
 	}
 
+	const auto& _91d_fallback_calendar = TIIE_fallback_91_day.get_calendar();
+	const auto _91d_fallback_dates = _91d_fallback_calendar.make_business_days_schedule(
+//		TIIE_fallback_91_day.get_time_series().get_period()
+		days_period{ 2025y / January / 6d, date }
+	);
+	for (const auto& d : _91d_fallback_dates.get_dates())
+	{
+		const auto& fix = TIIE_fallback_91_day[d];
+		assert(fix);
+		const auto fb = fallback(FTIIE, target_rate, d, Decimal{ 91 });
+		if (*fix != fb)
+			cout
+			<< fixed
+			<< setprecision(TIIE_fallback_91_day.get_decimal_places())
+			<< "For "
+			<< d
+			<< " TIIE Fallback (91 days) is "
+			<< fix->get_value()
+			<< " and the same computed value is "
+			<< fb.get_value()
+			<< endl;
+	}
+
+	const auto& _182d_fallback_calendar = TIIE_fallback_182_day.get_calendar();
+	const auto _182d_fallback_dates = _182d_fallback_calendar.make_business_days_schedule(
+//		TIIE_fallback_182_day.get_time_series().get_period()
+		days_period{ 2025y / January / 6d, date }
+	);
+	for (const auto& d : _182d_fallback_dates.get_dates())
+	{
+		const auto& fix = TIIE_fallback_182_day[d];
+		assert(fix);
+		const auto fb = fallback(FTIIE, target_rate, d, Decimal{ 182 });
+		if (*fix != fb)
+			cout
+			<< fixed
+			<< setprecision(TIIE_fallback_182_day.get_decimal_places())
+			<< "For "
+			<< d
+			<< " TIIE Fallback (182 days) is "
+			<< fix->get_value()
+			<< " and the same computed value is "
+			<< fb.get_value()
+			<< endl;
+	}
+
 	return 0;
 }
