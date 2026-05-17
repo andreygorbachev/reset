@@ -122,11 +122,9 @@ auto parse_csv_fixings(
 	assert(fs);
 
 	// skip the header
+	auto s = std::string{};
 	for (auto i = 0; i < 19; ++i)
-	{
-		auto t = std::string{};
-		std::getline(fs, t);
-	}
+		std::getline(fs, s);
 
 	auto ts = _parse_csv_fixings_storage<Fixings>(fs, skip, from, until);
 	// we can check the fixings vs decimal places
