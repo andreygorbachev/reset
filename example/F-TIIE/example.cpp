@@ -262,13 +262,12 @@ static auto fallback( // is this important enough to move to the main library?
 		prev - days{ 1 }, // find source for 2 business day delay
 		fix.get_calendar()
 	);
-	// is there a better way to make 2 business day step back?
 
 	const auto& _fixing = fix[prevprev];
 	assert(_fixing);
 	const auto fixing = static_cast<Decimal>(*_fixing);
 
-	const auto& _target_rate_fixing = target_rate_fix[d];
+	const auto& _target_rate_fixing = target_rate_fix[prev];
 	assert(_target_rate_fixing);
 	const auto& _target_rate_prev_fixing = target_rate_fix[prevprev];
 	assert(_target_rate_prev_fixing);
