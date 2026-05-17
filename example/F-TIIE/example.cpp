@@ -254,7 +254,7 @@ static auto fallback( // is this important enough to move to the main library?
 {
 	constexpr auto preceding = fin_calendar::preceding{};
 	const auto prev = preceding.adjust(
-		sys_days{ d } - days{ 1 },
+		sys_days{ d } - days{ 2 }, // find source for 2
 		fix.get_calendar()
 	);
 
@@ -396,14 +396,7 @@ int main()
 		<< compounded_in_advance(FTIIE_compounded_on_business_days_index, date, Decimal{ 182 }).get_value()
 		<< endl;
 
-	// temporary workaround while we figure out fallback dates in CF101
-	constexpr auto preceding = fin_calendar::preceding{};
-	const auto _date = preceding.adjust(
-		sys_days{ date } - days{ 1 },
-		FTIIE.get_calendar()
-	);
-
-	const auto& _28d_fallback = TIIE_fallback_28_day[_date];
+	const auto& _28d_fallback = TIIE_fallback_28_day[date];
 	assert(_28d_fallback);
 
 	cout
@@ -417,7 +410,7 @@ int main()
 		<< fallback(FTIIE, target_rate, date, Decimal{ 28 }).get_value()
 		<< endl;
 
-	const auto& _91d_fallback = TIIE_fallback_91_day[_date];
+	const auto& _91d_fallback = TIIE_fallback_91_day[date];
 	assert(_91d_fallback);
 
 	cout
@@ -431,7 +424,7 @@ int main()
 		<< fallback(FTIIE, target_rate, date, Decimal{ 91 }).get_value()
 		<< endl;
 
-	const auto& _182d_fallback = TIIE_fallback_182_day[_date];
+	const auto& _182d_fallback = TIIE_fallback_182_day[date];
 	assert(_182d_fallback);
 
 	cout
