@@ -65,7 +65,7 @@ auto _parse_observation(std::istream& fs)
 template<typename Fixings>
 auto _parse_csv_fixings_storage(
 	std::istream& fs,
-	const unsigned skip, // how many columns to skip after date before observation
+	const unsigned int skip, // how many columns to skip after date before observation
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until
 )
@@ -114,7 +114,7 @@ auto _make_calendar(const typename Fixings::storage& ts)
 template<typename Fixings>
 auto parse_csv_fixings(
 	const std::string& fileName,
-	const unsigned skip, // how many columns to skip after date before observation
+	const unsigned int skip, // how many columns to skip after date before observation
 	const std::chrono::year_month_day& from, // these could also be read from the file
 	const std::chrono::year_month_day& until,
 	const unsigned int dp
