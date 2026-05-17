@@ -46,4 +46,9 @@ for rate in ftiie_array:
 
 index = index.quantize(Decimal("0.0000"), ROUND_HALF_UP)
 
-print("Overnight Funding TIIE Index, Compounded on calendar days is", tiie_array[-1], "and the same computed value is", index)
+print(
+    "Overnight Funding TIIE Index, Compounded on calendar days is",
+    tiie_array[-1],
+    "and the same computed value is",
+    index
+)
