@@ -485,6 +485,78 @@ int main()
 				<< endl;
 	}
 */
+	const auto& _28d_compounded_in_advance_calendar = FTIIE_compounded_in_advance_28_day.get_calendar();
+	const auto _28d_compounded_in_advance_dates = _28d_compounded_in_advance_calendar.make_business_days_schedule(
+//		FTIIE_compounded_in_advance_28_day.get_time_series().get_period()
+		days_period{ 2025y / January / 6d, date }
+	);
+	for (const auto& d : _28d_compounded_in_advance_dates.get_dates())
+	{
+		const auto& fix = FTIIE_compounded_in_advance_28_day[d];
+		assert(fix);
+
+		const auto cia = compounded_in_advance(FTIIE_compounded_on_business_days_index, d, Decimal{ 28 });
+		if (*fix != cia)
+			cout
+				<< fixed
+				<< setprecision(FTIIE_compounded_in_advance_28_day.get_decimal_places())
+				<< "For "
+				<< d
+				<< " F-TIIE Compounded In Advance Index (28 days) is "
+				<< fix->get_value()
+				<< " and the same computed value is "
+				<< cia.get_value()
+				<< endl;
+	}
+
+	const auto& _91d_compounded_in_advance_calendar = FTIIE_compounded_in_advance_91_day.get_calendar();
+	const auto _91d_compounded_in_advance_dates = _91d_compounded_in_advance_calendar.make_business_days_schedule(
+//		FTIIE_compounded_in_advance_91_day.get_time_series().get_period()
+		days_period{ 2025y / January / 6d, date }
+	);
+	for (const auto& d : _91d_compounded_in_advance_dates.get_dates())
+	{
+		const auto& fix = FTIIE_compounded_in_advance_91_day[d];
+		assert(fix);
+
+		const auto cia = compounded_in_advance(FTIIE_compounded_on_business_days_index, d, Decimal{ 91 });
+		if (*fix != cia)
+			cout
+				<< fixed
+				<< setprecision(FTIIE_compounded_in_advance_91_day.get_decimal_places())
+				<< "For "
+				<< d
+				<< " F-TIIE Compounded In Advance Index (91 days) is "
+				<< fix->get_value()
+				<< " and the same computed value is "
+				<< cia.get_value()
+				<< endl;
+	}
+
+	const auto& _182d_compounded_in_advance_calendar = FTIIE_compounded_in_advance_182_day.get_calendar();
+	const auto _182d_compounded_in_advance_dates = _182d_compounded_in_advance_calendar.make_business_days_schedule(
+//		FTIIE_compounded_in_advance_182_day.get_time_series().get_period()
+		days_period{ 2025y / January / 6d, date }
+	);
+	for (const auto& d : _182d_compounded_in_advance_dates.get_dates())
+	{
+		const auto& fix = FTIIE_compounded_in_advance_182_day[d];
+		assert(fix);
+
+		const auto cia = compounded_in_advance(FTIIE_compounded_on_business_days_index, d, Decimal{ 182 });
+		if (*fix != cia)
+			cout
+				<< fixed
+				<< setprecision(FTIIE_compounded_in_advance_182_day.get_decimal_places())
+				<< "For "
+				<< d
+				<< " F-TIIE Compounded In Advance Index (182 days) is "
+				<< fix->get_value()
+				<< " and the same computed value is "
+				<< cia.get_value()
+				<< endl;
+	}
+
 	const auto& _28d_fallback_calendar = TIIE_fallback_28_day.get_calendar();
 	const auto _28d_fallback_dates = _28d_fallback_calendar.make_business_days_schedule(
 //		TIIE_fallback_28_day.get_time_series().get_period()
