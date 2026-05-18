@@ -488,7 +488,7 @@ int main()
 	const auto& _28d_compounded_in_advance_calendar = FTIIE_compounded_in_advance_28_day.get_calendar();
 	const auto _28d_compounded_in_advance_dates = _28d_compounded_in_advance_calendar.make_business_days_schedule(
 //		FTIIE_compounded_in_advance_28_day.get_time_series().get_period()
-		days_period{ 2024y / January / 2d, date }
+		days_period{ 2019y / January / 2d, date }
 	);
 	for (const auto& d : _28d_compounded_in_advance_dates.get_dates())
 	{
@@ -512,7 +512,7 @@ int main()
 	const auto& _91d_compounded_in_advance_calendar = FTIIE_compounded_in_advance_91_day.get_calendar();
 	const auto _91d_compounded_in_advance_dates = _91d_compounded_in_advance_calendar.make_business_days_schedule(
 //		FTIIE_compounded_in_advance_91_day.get_time_series().get_period()
-		days_period{ 2024y / January / 2d, date }
+		days_period{ 2019y / January / 2d, date }
 	);
 	for (const auto& d : _91d_compounded_in_advance_dates.get_dates())
 	{
@@ -536,7 +536,7 @@ int main()
 	const auto& _182d_compounded_in_advance_calendar = FTIIE_compounded_in_advance_182_day.get_calendar();
 	const auto _182d_compounded_in_advance_dates = _182d_compounded_in_advance_calendar.make_business_days_schedule(
 //		FTIIE_compounded_in_advance_182_day.get_time_series().get_period()
-		days_period{ 2024y / January / 2d, date }
+		days_period{ 2019y / January / 2d, date }
 	);
 	for (const auto& d : _182d_compounded_in_advance_dates.get_dates())
 	{
