@@ -28,7 +28,7 @@
 #include <index.h>
 #include <average.h>
 
-#include <actual_360.h>
+#include <actual_365_fixed.h>
 
 #include <static_data.h>
 #include <calendar.h>
@@ -72,6 +72,16 @@ static auto parse_csv_fixings_TONA() -> RateFixings
 int main()
 {
 	const auto TONA = parse_csv_fixings_TONA();
+
+	auto rfd = rate_fixing_detail{};
+	rfd.day_count = actual_365_fixed<Decimal>{};
+
+	auto id = index_detail{};
+	id.initial_value = Value{ "100" };
+	id.initial_date = 2017y / March / 8d;
+	id.step_round = 5u;
+
+	// I think that (compounded) averages are calculated via the index, rather than "long formula"
 
 	return 0;
 }
