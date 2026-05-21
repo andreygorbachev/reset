@@ -39,7 +39,7 @@
 #include <climits>
 
 
-inline auto _parse_date(std::istream& fs)
+inline auto _parse_date(std::istream& fs) // I think we can factor out these functions as a separate little library for examples
 {
 	auto ymd = std::chrono::year_month_day{};
 
