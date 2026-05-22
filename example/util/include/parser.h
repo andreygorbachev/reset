@@ -173,7 +173,7 @@ auto parse_csv_fixings(
 	auto ts = _parse_csv_fixings_storage<Fixings>(fs, detail);
 	// we can check the fixings vs decimal places
 
-	const auto calendar =
+	auto calendar =
 		calendar_name ?
 		gregorian::static_data::locate_calendar(*calendar_name,	detail.until) :
 		_make_empty_calendar(detail);
