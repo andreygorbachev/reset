@@ -33,6 +33,7 @@
 #include <stdexcept>
 #include <utility>
 #include <cassert>
+#include <climits>
 
 
 struct parser_detail // should it be called metadata?
@@ -128,9 +129,9 @@ auto parse_csv_fixings(
 	return Fixings{
 		std::move(ts),
 		gregorian::static_data::locate_calendar(
-			"Europe/Zurich",
+			"Europe/Zurich", // is this a sperate parameter? or a detail of the file?
 			detail.until
 		),
-		6u
+		6u // is this a sperate parameter? or a detail of the file?
 	};
 }
