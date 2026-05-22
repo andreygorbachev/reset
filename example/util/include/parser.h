@@ -44,14 +44,14 @@
 
 struct parser_detail // should it be called metadata?
 {
-	const unsigned int header_lines = 1u; // how many lines to skip at the beginning of the file
-	const std::chrono::year_month_day& from; // this could also be read from the file
-	const std::chrono::year_month_day& until; // this could also be read from the file
-	const std::string date_format; // should we default it to ISO?
-	const char separator = ','; // the character that separates columns in the file
-	const std::optional<char> padder; // the character that pads observation columns in the file
-	const std::optional<std::string> not_available; // the string that indicates that the observation is not available
-	const unsigned int skip_columns = 0u; // how many columns to skip after the date column to get to the required observation column
+	unsigned int header_lines = 1u; // how many lines to skip at the beginning of the file
+	std::chrono::year_month_day from; // this could also be read from the file
+	std::chrono::year_month_day until; // this could also be read from the file
+	std::string date_format; // should we default it to ISO?
+	char separator = ','; // the character that separates columns in the file
+	std::optional<char> padder; // the character that pads observation columns in the file
+	std::optional<std::string> not_available; // the string that indicates that the observation is not available
+	unsigned int skip_columns = 0u; // how many columns to skip after the date column to get to the required observation column
 };
 
 template<typename Fixings>
