@@ -48,6 +48,12 @@ struct parser_detail // should it be called metadata?
 	const unsigned int skip_columns = 0u; // how many columns to skip after the date column to get to the required observation column
 };
 
+template<typename Fixings>
+auto parse_csv_fixings(
+	const std::string& fileName,
+	const parser_detail& detail
+) -> Fixings;
+
 
 
 inline auto _parse_date(
@@ -83,7 +89,6 @@ auto _parse_observation(
 
 	return typename Fixings::observation{ o };
 }
-
 
 
 template<typename Fixings>
