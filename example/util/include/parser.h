@@ -35,7 +35,21 @@
 #include <cassert>
 
 
-inline auto _parse_date(std::istream& fs)
+struct parser_detail // should it be called metadata?
+{
+	const unsigned int header_lines = 1u; // how many lines to skip at the beginning of the file
+	const std::chrono::year_month_day& from; // this could also be read from the file
+	const std::chrono::year_month_day& until; // this could also be read from the file
+	const char separator = ','; // the character that separates columns in the file
+	const unsigned int skip_columns = 0u; // how many columns to skip after the date column to get to the required observation column
+};
+
+
+
+inline auto _parse_date(
+	std::istream& fs,
+	const parser_detail& detail
+)
 {
 	auto ymd = std::chrono::year_month_day{};
 
@@ -45,33 +59,25 @@ inline auto _parse_date(std::istream& fs)
 	throw std::domain_error{ "Not implemented" };
 #endif
 
-	auto skip = std::string{};
-	std::getline(fs, skip, ';');
+	fs.ignore(1, detail.separator);
 
 	return ymd;
 }
 
 template<typename Fixings>
-auto _parse_observation(std::istream& fs)
+auto _parse_observation(
+	std::istream& fs,
+	const parser_detail& detail
+)
 {
 	auto skip = std::string{};
 	std::getline(fs, skip, ' ');
 
 	auto o = std::string{};
-	std::getline(fs, o, ';');
+	std::getline(fs, o, detail.separator);
 
 	return typename Fixings::observation{ o };
 }
-
-
-
-struct parser_detail // should it be called metadata?
-{
-	const unsigned int header_lines = 1u; // how many lines to skip at the beginning of the file
-	const std::chrono::year_month_day& from; // this could also be read from the file
-	const std::chrono::year_month_day& until; // this could also be read from the file
-	const unsigned int skip_columns = 0u; // how many columns to skip after the date column to get to the required observation column
-};
 
 
 
@@ -85,13 +91,13 @@ auto _parse_csv_fixings_storage(
 
 	while (!fs.eof())
 	{
-		const auto ymd = _parse_date(fs);
+		const auto ymd = _parse_date(fs, detail);
 
 		auto s = std::string{};
 		for (auto i = 0u; i < detail.skip_columns; ++i)
-			std::getline(fs, s, ';');
+			std::getline(fs, s, detail.separator);
 
-		result[ymd] = _parse_observation<Fixings>(fs);
+		result[ymd] = _parse_observation<Fixings>(fs, detail);
 
 		std::getline(fs, s);
 	}
