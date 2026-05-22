@@ -47,6 +47,7 @@ using namespace reset;
 static auto parse_csv_fixings_SARON() -> RateFixings
 {
 	const auto d = parser_detail{
+		4u,
 		1999y / June / 30d,
 		2026y / May / 12d,
 		0u
@@ -63,6 +64,7 @@ static auto parse_csv_fixings_SARON() -> RateFixings
 static auto parse_csv_fixings_current_rate() -> RateFixings
 {
 	const auto d = parser_detail{
+		4u,
 		1999y / June / 30d,
 		2026y / May / 12d,
 		3u
@@ -77,6 +79,7 @@ static auto parse_csv_fixings_current_rate() -> RateFixings
 static auto parse_csv_fixings_SAION() -> IndexFixings
 {
 	const auto d = parser_detail{
+		4u,
 		1999y / June / 30d,
 		2026y / May / 12d,
 		4u
@@ -91,6 +94,7 @@ static auto parse_csv_fixings_SAION() -> IndexFixings
 static auto parse_csv_fixings_current_index() -> IndexFixings
 {
 	const auto d = parser_detail{
+		4u,
 		1999y / June / 30d,
 		2026y / May / 12d,
 		5u

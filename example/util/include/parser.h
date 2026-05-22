@@ -67,6 +67,7 @@ auto _parse_observation(std::istream& fs)
 
 struct parser_detail // should it be called metadata?
 {
+	const unsigned int header_lines = 1u; // how many lines to skip at the beginning of the file
 	const std::chrono::year_month_day& from; // this could also be read from the file
 	const std::chrono::year_month_day& until; // this could also be read from the file
 	const unsigned int skip_columns = 0u; // how many columns to skip after the date column to get to the required observation column
@@ -109,12 +110,9 @@ auto parse_csv_fixings(
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
 	assert(fs);
 
-	// skip the first 4 lines (header)
-	auto s = std::string{};
-	std::getline(fs, s);
-	std::getline(fs, s);
-	std::getline(fs, s);
-	std::getline(fs, s);
+	// skip the header
+	for (auto i = 0u; i < detail.header_lines; ++i)
+		fs.ignore(INT_MAX, '\n');
 
 	auto ts = _parse_csv_fixings_storage<Fixings>(fs, detail);
 	// we can check the fixings vs decimal places
