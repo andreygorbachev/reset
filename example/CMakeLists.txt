@@ -1,5 +1,6 @@
 project("${PROJECT_NAME}_example" LANGUAGES NONE)
 
+add_subdirectory(util)
 add_subdirectory(SOFR)
 add_subdirectory(EuroSTR)
 add_subdirectory(SONIA)
