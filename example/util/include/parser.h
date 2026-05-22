@@ -41,6 +41,7 @@ struct parser_detail // should it be called metadata?
 	const std::chrono::year_month_day& from; // this could also be read from the file
 	const std::chrono::year_month_day& until; // this could also be read from the file
 	const char separator = ','; // the character that separates columns in the file
+	const char padder = ' '; // the character that pads observation columns in the file
 	const unsigned int skip_columns = 0u; // how many columns to skip after the date column to get to the required observation column
 };
 
@@ -70,8 +71,7 @@ auto _parse_observation(
 	const parser_detail& detail
 )
 {
-	auto skip = std::string{};
-	std::getline(fs, skip, ' ');
+	fs.ignore(1, detail.padder);
 
 	auto o = std::string{};
 	std::getline(fs, o, detail.separator);
@@ -93,13 +93,12 @@ auto _parse_csv_fixings_storage(
 	{
 		const auto ymd = _parse_date(fs, detail);
 
-		auto s = std::string{};
 		for (auto i = 0u; i < detail.skip_columns; ++i)
-			std::getline(fs, s, detail.separator);
+			fs.ignore(INT_MAX, detail.separator);
 
 		result[ymd] = _parse_observation<Fixings>(fs, detail);
 
-		std::getline(fs, s);
+		fs.ignore(INT_MAX, '\n');
 	}
 
 	return result;
