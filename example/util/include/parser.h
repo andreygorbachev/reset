@@ -76,6 +76,8 @@ auto _parse_observation(
 	auto o = std::string{};
 	std::getline(fs, o, detail.separator);
 
+	// we do not bother with detail.separator here as the rest of this line will be ignored anyway
+
 	return typename Fixings::observation{ o };
 }
 
