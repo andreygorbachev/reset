@@ -50,6 +50,7 @@ static auto parse_csv_fixings_SARON() -> RateFixings
 		4u,
 		1999y / June / 30d,
 		2026y / May / 12d,
+		"%d.%m.%Y",
 		';',
 		' ',
 		0u
@@ -69,6 +70,7 @@ static auto parse_csv_fixings_current_rate() -> RateFixings
 		4u,
 		1999y / June / 30d,
 		2026y / May / 12d,
+		"%d.%m.%Y",
 		';',
 		' ',
 		3u
@@ -86,6 +88,7 @@ static auto parse_csv_fixings_SAION() -> IndexFixings
 		4u,
 		1999y / June / 30d,
 		2026y / May / 12d,
+		"%d.%m.%Y",
 		';',
 		' ',
 		4u
@@ -103,6 +106,7 @@ static auto parse_csv_fixings_current_index() -> IndexFixings
 		4u,
 		1999y / June / 30d,
 		2026y / May / 12d,
+		"%d.%m.%Y",
 		';',
 		' ',
 		5u
