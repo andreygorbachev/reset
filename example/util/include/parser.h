@@ -64,22 +64,30 @@ auto _parse_observation(std::istream& fs)
 }
 
 
+
+struct parser_detail // should it be called metadata?
+{
+	const std::chrono::year_month_day& from; // this could also be read from the file
+	const std::chrono::year_month_day& until; // this could also be read from the file
+	const unsigned int skip_columns = 0u; // how many columns to skip after the date column to get to the required observation column
+};
+
+
+
 template<typename Fixings>
 auto _parse_csv_fixings_storage(
 	std::istream& fs,
-	const unsigned int skip,
-	const std::chrono::year_month_day& from, // these could also be read from the file
-	const std::chrono::year_month_day& until
+	const parser_detail& detail
 )
 {
-	auto result = typename Fixings::storage{ gregorian::util::days_period{ from, until } };
+	auto result = typename Fixings::storage{ gregorian::util::days_period{ detail.from, detail.until } };
 
 	while (!fs.eof())
 	{
 		const auto ymd = _parse_date(fs);
 
 		auto s = std::string{};
-		for (auto i = 0u; i < skip; ++i)
+		for (auto i = 0u; i < detail.skip_columns; ++i)
 			std::getline(fs, s, ';');
 
 		result[ymd] = _parse_observation<Fixings>(fs);
@@ -91,12 +99,11 @@ auto _parse_csv_fixings_storage(
 }
 
 
+
 template<typename Fixings>
 auto parse_csv_fixings(
 	const std::string& fileName,
-	const unsigned int skip, // how many columns to skip after date before observation
-	const std::chrono::year_month_day& from, // these could also be read from the file
-	const std::chrono::year_month_day& until
+	const parser_detail& detail
 ) -> Fixings
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
@@ -109,7 +116,7 @@ auto parse_csv_fixings(
 	std::getline(fs, s);
 	std::getline(fs, s);
 
-	auto ts = _parse_csv_fixings_storage<Fixings>(fs, skip, from, until);
+	auto ts = _parse_csv_fixings_storage<Fixings>(fs, detail);
 	// we can check the fixings vs decimal places
 
 	return Fixings{

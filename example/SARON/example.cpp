@@ -46,11 +46,15 @@ using namespace reset;
 
 static auto parse_csv_fixings_SARON() -> RateFixings
 {
+	const auto d = parser_detail{
+		1999y / June / 30d,
+		2026y / May / 12d,
+		0u
+	};
+
 	return parse_csv_fixings<RateFixings>(
 		"hsrron.csv",
-		0u,
-		1999y / June / 30d,
-		2026y / May / 12d
+		d
 	);
 }
 // I think SARON is published several times a day
@@ -58,31 +62,43 @@ static auto parse_csv_fixings_SARON() -> RateFixings
 
 static auto parse_csv_fixings_current_rate() -> RateFixings
 {
+	const auto d = parser_detail{
+		1999y / June / 30d,
+		2026y / May / 12d,
+		3u
+	};
+
 	return parse_csv_fixings<RateFixings>(
 		"hsrron.csv",
-		3u,
-		1999y / June / 30d,
-		2026y / May / 12d
+		d
 	);
 }
 
 static auto parse_csv_fixings_SAION() -> IndexFixings
 {
+	const auto d = parser_detail{
+		1999y / June / 30d,
+		2026y / May / 12d,
+		4u
+	};
+
 	return parse_csv_fixings<IndexFixings>(
 		"hsrron.csv",
-		4u,
-		1999y / June / 30d,
-		2026y / May / 12d
+		d
 	);
 }
 
 static auto parse_csv_fixings_current_index() -> IndexFixings
 {
+	const auto d = parser_detail{
+		1999y / June / 30d,
+		2026y / May / 12d,
+		5u
+	};
+
 	return parse_csv_fixings<IndexFixings>(
 		"hsrron.csv",
-		5u,
-		1999y / June / 30d,
-		2026y / May / 12d
+		d
 	);
 }
 
