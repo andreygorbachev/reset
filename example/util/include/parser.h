@@ -34,6 +34,7 @@
 #include <utility>
 #include <cassert>
 #include <climits>
+#include <optional>
 
 
 
@@ -44,7 +45,7 @@ struct parser_detail // should it be called metadata?
 	const std::chrono::year_month_day& until; // this could also be read from the file
 	const std::string date_format; // should we default it to ISO?
 	const char separator = ','; // the character that separates columns in the file
-	const char padder = ' '; // the character that pads observation columns in the file
+	const std::optional<char> padder; // the character that pads observation columns in the file
 	const unsigned int skip_columns = 0u; // how many columns to skip after the date column to get to the required observation column
 };
 
@@ -82,7 +83,8 @@ auto _parse_observation(
 	const parser_detail& detail
 )
 {
-	fs.ignore(1, detail.padder);
+	if (detail.padder)
+		fs.ignore(1, *detail.padder);
 
 	auto o = std::string{};
 	std::getline(fs, o, detail.separator);
