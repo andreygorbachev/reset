@@ -92,14 +92,22 @@ auto _parse_observation(
 		fs.ignore(1, *detail.padder);
 
 	auto o = std::string{};
-	std::getline(fs, o, detail.separator);
+	std::getline(fs, o);
 
 	if (detail.not_available && o.starts_with(*detail.not_available))
 		return std::nullopt;
 
-	// we do not bother with detail.separator here as the rest of this line will be ignored anyway
-
-	return typename Fixings::observation{ o };
+	const auto comma_pos = o.find(detail.separator);
+	if (comma_pos != std::string::npos)
+		// not the last column
+		return typename Fixings::observation{
+			o.substr(0uz, comma_pos)
+		};
+	else
+		// the last column
+		return typename Fixings::observation{
+			o
+		};
 }
 
 
@@ -111,16 +119,23 @@ auto _parse_csv_fixings_storage(
 {
 	auto result = typename Fixings::storage{ gregorian::util::days_period{ detail.from, detail.until } };
 
+	const auto period = gregorian::util::days_period{ detail.from, detail.until };
+
 	while (!fs.eof())
 	{
 		const auto ymd = _parse_date(fs, detail);
 
-		for (auto i = 0u; i < detail.skip_columns; ++i)
-			fs.ignore(INT_MAX, detail.separator);
+		if (period.contains(ymd))
+		{
+			for (auto i = 0u; i < detail.skip_columns; ++i)
+				fs.ignore(INT_MAX, detail.separator);
 
-		result[ymd] = _parse_observation<Fixings>(fs, detail);
-
-		fs.ignore(INT_MAX, '\n');
+			result[ymd] = _parse_observation<Fixings>(fs, detail);
+		}
+		else
+		{
+			fs.ignore(INT_MAX, '\n');
+		}
 	}
 
 	return result;

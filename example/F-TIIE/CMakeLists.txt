@@ -4,10 +4,10 @@ configure_file("data/CF101.csv" "CF101.csv" COPYONLY)
 
 add_executable(${PROJECT_NAME}
   example.cpp
-  parser.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
+  reset_example_util
   reset
   calendar_static-data
 )

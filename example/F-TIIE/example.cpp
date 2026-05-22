@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "parser.h"
+#include <parser.h>
 
 #include <decimal.h>
 #include <scaled_value.h>
@@ -42,6 +42,7 @@
 #include <iomanip>
 #include <ios>
 #include <cassert>
+#include <optional>
 
 using namespace std;
 using namespace std::chrono;
@@ -60,95 +61,147 @@ using namespace reset;
 
 static auto parse_csv_fixings_FTIIE() -> RateFixings
 {
-	return parse_csv_fixings<RateFixings>(
-		"CF101.csv",
-		1u,
+	const auto d = parser_detail{
+		19u,
 		2006y / January / 2d,
 		2026y / May / 5d,
-		locate_calendar("America/CNBV", 2026y / May / 6d),
+		"%m/%d/%Y",
+		',',
+		nullopt,
+		"N/E",
+		1u
+	};
+
+	return parse_csv_fixings<RateFixings>(
+		"CF101.csv",
+		d,
+		"America/CNBV",
 		2u
 	);
 }
 
 static auto parse_csv_fixings_TIIE_fallback_28_day() -> RateFixings
 {
-	return parse_csv_fixings<RateFixings>(
-		"CF101.csv",
-		2u,
+	const auto d = parser_detail{
+		19u,
 		2006y / January / 31d, // not 100% sure why these started later than the index
 		2026y / May / 6d,
-		locate_calendar("America/CNBV", 2026y / May / 6d),
+		"%m/%d/%Y",
+		',',
+		nullopt,
+		"N/E",
+		2u
+	};
+
+	return parse_csv_fixings<RateFixings>(
+		"CF101.csv",
+		d,
+		"America/CNBV",
 		4u
 	);
 }
 
 static auto parse_csv_fixings_TIIE_fallback_91_day() -> RateFixings
 {
-	return parse_csv_fixings<RateFixings>(
-		"CF101.csv",
-		3u,
+	const auto d = parser_detail{
+		19u,
 		2008y / August / 4d, // not 100% sure why these started later than the index // why 28 and 91 started on different dates?
 		2026y / May / 6d,
-		locate_calendar("America/CNBV", 2026y / May / 6d),
+		"%m/%d/%Y",
+		',',
+		nullopt,
+		"N/E",
+		3u
+	};
+
+	return parse_csv_fixings<RateFixings>(
+		"CF101.csv",
+		d,
+		"America/CNBV",
 		4u
 	);
 }
 
 static auto parse_csv_fixings_TIIE_fallback_182_day() -> RateFixings
 {
-	return parse_csv_fixings<RateFixings>(
-		"CF101.csv",
-		4u,
+	const auto d = parser_detail{
+		19u,
 		2024y / January / 3d, // not 100% sure why these started later than the index // why 28 and 182 started on different dates?
 		2026y / May / 6d,
-		locate_calendar("America/CNBV", 2026y / May / 6d),
+		"%m/%d/%Y",
+		',',
+		nullopt,
+		"N/E",
+		4u
+	};
+
+	return parse_csv_fixings<RateFixings>(
+		"CF101.csv",
+		d,
+		"America/CNBV",
 		4u
 	);
 }
 
-static auto make_empty_calendar()
-{
-	return calendar{
-		NoWeekend,
-		schedule{
-			days_period{ 2006y / January / 2d, 2026y / May / 6d },
-			{}
-		}
-	};
-}
-
 static auto parse_csv_fixings_target_rate() -> RateFixings
 {
+	const auto d = parser_detail{
+		19u,
+		2025y / January / 1d, // 2008y / January / 21d,
+		2026y / May / 5d,
+		"%m/%d/%Y",
+		',',
+		nullopt,
+		"N/E",
+		0u
+	};
+
 	return parse_csv_fixings<RateFixings>(
 		"CF101.csv",
-		0u,
-		2025y / January / 1d, // 2008y / January / 21d,
-		2026y / May / 6d,
-		make_empty_calendar(), // locate_calendar("America/CNBV", 2026y / May / 6d),
+		d,
+		nullopt,
 		4u // 2u?
 	);
 }
 
 static auto parse_csv_fixings_FTIIE_compounded_on_business_days_index() -> IndexFixings
 {
-	return parse_csv_fixings<IndexFixings>(
-		"CF101.csv",
-		6u,
+	const auto d = parser_detail{
+		19u,
 		2006y / January / 2d,
 		2026y / May / 6d,
-		make_empty_calendar(),
+		"%m/%d/%Y",
+		',',
+		nullopt,
+		"N/E",
+		6u
+	};
+
+	return parse_csv_fixings<IndexFixings>(
+		"CF101.csv",
+		d,
+		nullopt,
 		4u
 	);
 }
 
 static auto parse_csv_fixings_FTIIE_compounded_on_calendar_days_index() -> IndexFixings
 {
-	return parse_csv_fixings<IndexFixings>(
-		"CF101.csv",
-		5u,
+	const auto d = parser_detail{
+		19u,
 		2006y / January / 2d,
 		2026y / May / 6d,
-		make_empty_calendar(),
+		"%m/%d/%Y",
+		',',
+		nullopt,
+		"N/E",
+		5u
+	};
+
+	return parse_csv_fixings<IndexFixings>(
+		"CF101.csv",
+		d,
+		nullopt,
 		4u
 	);
 }
@@ -156,36 +209,63 @@ static auto parse_csv_fixings_FTIIE_compounded_on_calendar_days_index() -> Index
 
 static auto parse_csv_fixings_FTIIE_compounded_in_advance_28_day() -> RateFixings
 {
-	return parse_csv_fixings<RateFixings>(
-		"CF101.csv",
-		7u,
+	const auto d = parser_detail{
+		19u,
 		2006y / January / 31d, // not 100% sure why these started later than the index
 		2026y / May / 6d,
-		locate_calendar("America/CNBV", 2026y / May / 6d),
+		"%m/%d/%Y",
+		',',
+		nullopt,
+		"N/E",
+		7u
+	};
+
+	return parse_csv_fixings<RateFixings>(
+		"CF101.csv",
+		d,
+		"America/CNBV",
 		4u
 	);
 }
 
 static auto parse_csv_fixings_FTIIE_compounded_in_advance_91_day() -> RateFixings
 {
+	const auto d = parser_detail{
+		19u,
+		2006y / January / 31d, // not 100% sure why these started later than the index
+		2026y / May / 6d,
+		"%m/%d/%Y",
+		',',
+		nullopt,
+		"N/E",
+		8u
+	};
+
 	return parse_csv_fixings<RateFixings>(
 		"CF101.csv",
-		8u,
-		2006y / January / 31d,
-		2026y / May / 6d,
-		locate_calendar("America/CNBV", 2026y / May / 6d),
+		d,
+		"America/CNBV",
 		4u
 	);
 }
 
 static auto parse_csv_fixings_FTIIE_compounded_in_advance_182_day() -> RateFixings
 {
+	const auto d = parser_detail{
+		19u,
+		2006y / January / 31d, // not 100% sure why these started later than the index
+		2026y / May / 6d,
+		"%m/%d/%Y",
+		',',
+		nullopt,
+		"N/E",
+		9u
+	};
+
 	return parse_csv_fixings<RateFixings>(
 		"CF101.csv",
-		9u,
-		2006y / January / 31d,
-		2026y / May / 6d,
-		locate_calendar("America/CNBV", 2026y / May / 6d),
+		d,
+		"America/CNBV",
 		4u
 	);
 }
