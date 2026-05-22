@@ -36,6 +36,7 @@
 #include <climits>
 
 
+
 struct parser_detail // should it be called metadata?
 {
 	const unsigned int header_lines = 1u; // how many lines to skip at the beginning of the file
