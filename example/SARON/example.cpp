@@ -58,7 +58,9 @@ static auto parse_csv_fixings_SARON() -> RateFixings
 
 	return parse_csv_fixings<RateFixings>(
 		"hsrron.csv",
-		d
+		d,
+		"Europe/Zurich",
+		6u
 	);
 }
 // I think SARON is published several times a day
@@ -78,7 +80,9 @@ static auto parse_csv_fixings_current_rate() -> RateFixings
 
 	return parse_csv_fixings<RateFixings>(
 		"hsrron.csv",
-		d
+		d,
+		"Europe/Zurich",
+		6u
 	);
 }
 
@@ -96,7 +100,9 @@ static auto parse_csv_fixings_SAION() -> IndexFixings
 
 	return parse_csv_fixings<IndexFixings>(
 		"hsrron.csv",
-		d
+		d,
+		"Europe/Zurich",
+		6u
 	);
 }
 
@@ -114,7 +120,9 @@ static auto parse_csv_fixings_current_index() -> IndexFixings
 
 	return parse_csv_fixings<IndexFixings>(
 		"hsrron.csv",
-		d
+		d,
+		"Europe/Zurich",
+		6u
 	);
 }
 

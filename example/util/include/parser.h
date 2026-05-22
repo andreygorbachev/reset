@@ -51,7 +51,9 @@ struct parser_detail // should it be called metadata?
 template<typename Fixings>
 auto parse_csv_fixings(
 	const std::string& fileName,
-	const parser_detail& detail
+	const parser_detail& detail,
+	const std::string& calendar_name,
+	typename const Fixings::decimal_places decimal_places
 ) -> Fixings;
 
 
@@ -119,7 +121,9 @@ auto _parse_csv_fixings_storage(
 template<typename Fixings>
 auto parse_csv_fixings(
 	const std::string& fileName,
-	const parser_detail& detail
+	const parser_detail& detail,
+	const std::string& calendar_name,
+	typename const Fixings::decimal_places decimal_places
 ) -> Fixings
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
@@ -135,9 +139,9 @@ auto parse_csv_fixings(
 	return Fixings{
 		std::move(ts),
 		gregorian::static_data::locate_calendar(
-			"Europe/Zurich", // is this a sperate parameter? or a detail of the file?
+			calendar_name,
 			detail.until
 		),
-		6u // is this a sperate parameter? or a detail of the file?
+		decimal_places
 	};
 }
