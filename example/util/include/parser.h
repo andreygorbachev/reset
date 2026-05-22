@@ -129,7 +129,7 @@ auto parse_csv_fixings(
 		std::move(ts),
 		gregorian::static_data::locate_calendar(
 			"Europe/Zurich",
-			std::chrono::year{ 2026 } / std::chrono::May / std::chrono::day{ 12u }
+			detail.until
 		),
 		6u
 	};
