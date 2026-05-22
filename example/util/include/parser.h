@@ -50,6 +50,7 @@ struct parser_detail // should it be called metadata?
 	const std::string date_format; // should we default it to ISO?
 	const char separator = ','; // the character that separates columns in the file
 	const std::optional<char> padder; // the character that pads observation columns in the file
+	const std::optional<std::string> not_available; // the string that indicates that the observation is not available
 	const unsigned int skip_columns = 0u; // how many columns to skip after the date column to get to the required observation column
 };
 
@@ -85,13 +86,16 @@ template<typename Fixings>
 auto _parse_observation(
 	std::istream& fs,
 	const parser_detail& detail
-)
+) -> std::optional<typename Fixings::observation>
 {
 	if (detail.padder)
 		fs.ignore(1, *detail.padder);
 
 	auto o = std::string{};
 	std::getline(fs, o, detail.separator);
+
+	if (detail.not_available && o.starts_with(*detail.not_available))
+		return std::nullopt;
 
 	// we do not bother with detail.separator here as the rest of this line will be ignored anyway
 

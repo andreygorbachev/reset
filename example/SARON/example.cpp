@@ -34,6 +34,7 @@
 #include <iomanip>
 #include <ios>
 #include <cassert>
+#include <optional>
 
 using namespace std;
 using namespace std::chrono;
@@ -53,6 +54,7 @@ static auto parse_csv_fixings_SARON() -> RateFixings
 		"%d.%m.%Y",
 		';',
 		' ',
+		nullopt,
 		0u
 	};
 
@@ -75,6 +77,7 @@ static auto parse_csv_fixings_current_rate() -> RateFixings
 		"%d.%m.%Y",
 		';',
 		' ',
+		nullopt,
 		3u
 	};
 
@@ -95,6 +98,7 @@ static auto parse_csv_fixings_SAION() -> IndexFixings
 		"%d.%m.%Y",
 		';',
 		' ',
+		nullopt,
 		4u
 	};
 
@@ -115,6 +119,7 @@ static auto parse_csv_fixings_current_index() -> IndexFixings
 		"%d.%m.%Y",
 		';',
 		' ',
+		nullopt,
 		5u
 	};
 
