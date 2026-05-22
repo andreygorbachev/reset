@@ -24,6 +24,9 @@
 
 #include <static_data.h>
 
+#include <calendar.h>
+#include <schedule.h>
+#include <weekend.h>
 #include <period.h>
 
 #include <string>
@@ -35,6 +38,7 @@
 #include <cassert>
 #include <climits>
 #include <optional>
+#include <algorithm>
 
 
 
@@ -53,7 +57,7 @@ template<typename Fixings>
 auto parse_csv_fixings(
 	const std::string& fileName,
 	const parser_detail& detail,
-	const std::string& calendar_name,
+	const std::optional<std::string> calendar_name, // empty calendar will be created if this is nullopt
 	typename const Fixings::decimal_places decimal_places
 ) -> Fixings;
 
@@ -119,12 +123,24 @@ auto _parse_csv_fixings_storage(
 }
 
 
+inline auto _make_empty_calendar(const parser_detail& detail)
+{
+	return gregorian::calendar{
+		gregorian::NoWeekend,
+		gregorian::schedule{
+			gregorian::util::days_period{ detail.from, detail.until },
+			{}
+		}
+	};
+}
+
+
 
 template<typename Fixings>
 auto parse_csv_fixings(
 	const std::string& fileName,
 	const parser_detail& detail,
-	const std::string& calendar_name,
+	const std::optional<std::string> calendar_name,
 	typename const Fixings::decimal_places decimal_places
 ) -> Fixings
 {
@@ -138,12 +154,14 @@ auto parse_csv_fixings(
 	auto ts = _parse_csv_fixings_storage<Fixings>(fs, detail);
 	// we can check the fixings vs decimal places
 
+	const auto calendar =
+		calendar_name ?
+		gregorian::static_data::locate_calendar(*calendar_name,	detail.until) :
+		_make_empty_calendar(detail);
+
 	return Fixings{
 		std::move(ts),
-		gregorian::static_data::locate_calendar(
-			calendar_name,
-			detail.until
-		),
+		std::move(calendar),
 		decimal_places
 	};
 }
