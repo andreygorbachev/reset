@@ -94,6 +94,9 @@ auto _parse_observation(
 	auto o = std::string{};
 	std::getline(fs, o);
 
+	if (o.starts_with(detail.separator))
+		return std::nullopt;
+
 	if (detail.not_available && o.starts_with(*detail.not_available))
 		return std::nullopt;
 
