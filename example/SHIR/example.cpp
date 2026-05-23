@@ -42,7 +42,7 @@ using namespace reset;
 
 static auto parse_csv_fixings_SHIR() -> RateFixings
 {
-	// from 
+	// from https://edge.boi.gov.il/FusionDataBrowser/?df=BOI.STATISTICS:BR(1.0)
 
 	const auto d = parser_detail{
 		5u,
