@@ -32,7 +32,6 @@
 #include <preceding.h>
 
 #include <period.h>
-#include <weekend.h>
 #include <schedule.h>
 #include <calendar.h>
 #include <static_data.h>
@@ -333,15 +332,9 @@ static auto fallback( // is this important enough to move to the main library?
 	const Decimal& tenor
 )
 {
-	constexpr auto preceding = fin_calendar::preceding{};
-	const auto prev = preceding.adjust(
-		sys_days{ d } - days{ 1 }, 
-		fix.get_calendar()
-	);
-	const auto prevprev = preceding.adjust(
-		prev - days{ 1 }, // find source for 2 business day delay
-		fix.get_calendar()
-	);
+	const auto& calendar = fix.get_calendar();
+	const auto prev = calendar.shift_business_days(d, days{ -1 });
+	const auto prevprev = calendar.shift_business_days(prev, days{ -1 });
 
 	const auto& _fixing = fix[prevprev];
 	assert(_fixing);
