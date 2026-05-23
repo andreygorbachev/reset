@@ -58,9 +58,9 @@ using namespace reset;
 
 // from https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=18&accion=consultarCuadro&idCuadro=CF101&locale=en
 
-static auto parse_csv_fixings_FTIIE() -> RateFixings
+static auto make_parser_detail() -> parser_detail
 {
-	const auto d = parser_detail{
+	return parser_detail{
 		19u,
 		2006y / January / 2d,
 		2026y / May / 5d,
@@ -70,6 +70,11 @@ static auto parse_csv_fixings_FTIIE() -> RateFixings
 		"N/E",
 		1u
 	};
+}
+
+static auto parse_csv_fixings_FTIIE() -> RateFixings
+{
+	const auto d = make_parser_detail();
 
 	return parse_csv_fixings<RateFixings>(
 		"CF101.csv",
@@ -81,16 +86,10 @@ static auto parse_csv_fixings_FTIIE() -> RateFixings
 
 static auto parse_csv_fixings_TIIE_fallback_28_day() -> RateFixings
 {
-	const auto d = parser_detail{
-		19u,
-		2006y / January / 31d, // not 100% sure why these started later than the index
-		2026y / May / 6d,
-		"%m/%d/%Y",
-		',',
-		nullopt,
-		"N/E",
-		2u
-	};
+	auto d = make_parser_detail();
+	d.from = 2006y / January / 31d; // not 100% sure why these started later than the index
+	d.until = 2026y / May / 6d;
+	d.skip_columns = 2u;
 
 	return parse_csv_fixings<RateFixings>(
 		"CF101.csv",
@@ -102,16 +101,10 @@ static auto parse_csv_fixings_TIIE_fallback_28_day() -> RateFixings
 
 static auto parse_csv_fixings_TIIE_fallback_91_day() -> RateFixings
 {
-	const auto d = parser_detail{
-		19u,
-		2008y / August / 4d, // not 100% sure why these started later than the index // why 28 and 91 started on different dates?
-		2026y / May / 6d,
-		"%m/%d/%Y",
-		',',
-		nullopt,
-		"N/E",
-		3u
-	};
+	auto d = make_parser_detail();
+	d.from = 2008y / August / 4d; // not 100% sure why these started later than the index // why 28 and 91 started on different dates?
+	d.until = 2026y / May / 6d;
+	d.skip_columns = 3u;
 
 	return parse_csv_fixings<RateFixings>(
 		"CF101.csv",
@@ -123,16 +116,10 @@ static auto parse_csv_fixings_TIIE_fallback_91_day() -> RateFixings
 
 static auto parse_csv_fixings_TIIE_fallback_182_day() -> RateFixings
 {
-	const auto d = parser_detail{
-		19u,
-		2024y / January / 3d, // not 100% sure why these started later than the index // why 28 and 182 started on different dates?
-		2026y / May / 6d,
-		"%m/%d/%Y",
-		',',
-		nullopt,
-		"N/E",
-		4u
-	};
+	auto d = make_parser_detail();
+	d.from = 2024y / January / 3d; // not 100% sure why these started later than the index // why 28 and 182 started on different dates?
+	d.until = 2026y / May / 6d;
+	d.skip_columns = 4u;
 
 	return parse_csv_fixings<RateFixings>(
 		"CF101.csv",
@@ -144,16 +131,9 @@ static auto parse_csv_fixings_TIIE_fallback_182_day() -> RateFixings
 
 static auto parse_csv_fixings_target_rate() -> RateFixings
 {
-	const auto d = parser_detail{
-		19u,
-		2025y / January / 1d, // 2008y / January / 21d,
-		2026y / May / 5d,
-		"%m/%d/%Y",
-		',',
-		nullopt,
-		"N/E",
-		0u
-	};
+	auto d = make_parser_detail();
+	d.from = 2025y / January / 1d; // 2008y / January / 21d;
+	d.skip_columns = 0u;
 
 	return parse_csv_fixings<RateFixings>(
 		"CF101.csv",
@@ -165,16 +145,10 @@ static auto parse_csv_fixings_target_rate() -> RateFixings
 
 static auto parse_csv_fixings_FTIIE_compounded_on_business_days_index() -> IndexFixings
 {
-	const auto d = parser_detail{
-		19u,
-		2006y / January / 2d,
-		2026y / May / 6d,
-		"%m/%d/%Y",
-		',',
-		nullopt,
-		"N/E",
-		6u
-	};
+	auto d = make_parser_detail();
+	d.from = 2006y / January / 2d;
+	d.until = 2026y / May / 6d;
+	d.skip_columns = 6u;
 
 	return parse_csv_fixings<IndexFixings>(
 		"CF101.csv",
@@ -186,16 +160,10 @@ static auto parse_csv_fixings_FTIIE_compounded_on_business_days_index() -> Index
 
 static auto parse_csv_fixings_FTIIE_compounded_on_calendar_days_index() -> IndexFixings
 {
-	const auto d = parser_detail{
-		19u,
-		2006y / January / 2d,
-		2026y / May / 6d,
-		"%m/%d/%Y",
-		',',
-		nullopt,
-		"N/E",
-		5u
-	};
+	auto d = make_parser_detail();
+	d.from = 2006y / January / 2d;
+	d.until = 2026y / May / 6d;
+	d.skip_columns = 5u;
 
 	return parse_csv_fixings<IndexFixings>(
 		"CF101.csv",
@@ -208,16 +176,10 @@ static auto parse_csv_fixings_FTIIE_compounded_on_calendar_days_index() -> Index
 
 static auto parse_csv_fixings_FTIIE_compounded_in_advance_28_day() -> RateFixings
 {
-	const auto d = parser_detail{
-		19u,
-		2006y / January / 31d, // not 100% sure why these started later than the index
-		2026y / May / 6d,
-		"%m/%d/%Y",
-		',',
-		nullopt,
-		"N/E",
-		7u
-	};
+	auto d = make_parser_detail();
+	d.from = 2006y / January / 31d; // not 100% sure why these started later than the index
+	d.until = 2026y / May / 6d;
+	d.skip_columns = 7u;
 
 	return parse_csv_fixings<RateFixings>(
 		"CF101.csv",
@@ -229,16 +191,10 @@ static auto parse_csv_fixings_FTIIE_compounded_in_advance_28_day() -> RateFixing
 
 static auto parse_csv_fixings_FTIIE_compounded_in_advance_91_day() -> RateFixings
 {
-	const auto d = parser_detail{
-		19u,
-		2006y / January / 31d, // not 100% sure why these started later than the index
-		2026y / May / 6d,
-		"%m/%d/%Y",
-		',',
-		nullopt,
-		"N/E",
-		8u
-	};
+	auto d = make_parser_detail();
+	d.from = 2006y / January / 31d; // not 100% sure why these started later than the index
+	d.until = 2026y / May / 6d;
+	d.skip_columns = 8u;
 
 	return parse_csv_fixings<RateFixings>(
 		"CF101.csv",
@@ -250,16 +206,10 @@ static auto parse_csv_fixings_FTIIE_compounded_in_advance_91_day() -> RateFixing
 
 static auto parse_csv_fixings_FTIIE_compounded_in_advance_182_day() -> RateFixings
 {
-	const auto d = parser_detail{
-		19u,
-		2006y / January / 31d, // not 100% sure why these started later than the index
-		2026y / May / 6d,
-		"%m/%d/%Y",
-		',',
-		nullopt,
-		"N/E",
-		9u
-	};
+	auto d = make_parser_detail();
+	d.from = 2006y / January / 31d; // not 100% sure why these started later than the index
+	d.until = 2026y / May / 6d;
+	d.skip_columns = 9u;
 
 	return parse_csv_fixings<RateFixings>(
 		"CF101.csv",
