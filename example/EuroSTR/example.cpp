@@ -278,6 +278,29 @@ int main()
 
 	// look for inconsistencies in the data
 
+	const auto period = EuroSTR_compounded_index.get_time_series().get_period();
+	for (
+		auto d = period.get_from();
+		d <= period.get_until();
+		d = sys_days{ d } + days{ 1 }
+	)
+	{
+		const auto& fix = EuroSTR_compounded_index[d];
+		if (fix)
+		{
+			const auto computed_fix = index(EuroSTR, rfd, d, id);
+			if (*fix != computed_fix)
+				cout
+				<< "For "
+				<< d
+				<< " EuroSTR Compounded Index is "
+				<< fix->get_value()
+				<< " and the same computed value is "
+				<< computed_fix.get_value()
+				<< endl;
+		}
+	}
+
 	const auto& EuroSTR_1_week_compounded_calendar = EuroSTR_1_week_compounded.get_calendar();
 	const auto _1_week_dates = EuroSTR_1_week_compounded_calendar.make_business_days_schedule(
 		EuroSTR_1_week_compounded.get_time_series().get_period()

@@ -226,9 +226,32 @@ int main()
 		<< " and the same computed value is "
 		<< average(PolSTR, rfd, date, _6md).percent.get_value()
 		<< endl;
-
+*/
 	// look for inconsistencies in the data
 
+	const auto period = PolSTR_compounded_index.get_time_series().get_period();
+	for (
+		auto d = period.get_from();
+		d <= period.get_until();
+		d = sys_days{ d } + days{ 1 }
+	)
+	{
+		const auto& fix = PolSTR_compounded_index[d];
+		if (fix)
+		{
+			const auto computed_fix = index(PolSTR, rfd, d, id);
+			if (*fix != computed_fix)
+				cout
+				<< "For "
+				<< d
+				<< " PolSTR Compounded Index is "
+				<< fix->get_value()
+				<< " and the same computed value is "
+				<< computed_fix.get_value()
+				<< endl;
+		}
+	}
+/*
 	const auto& PolSTR_1_month_compounded_calendar = PolSTR_1_month_compounded.get_calendar();
 	const auto _1_month_dates = PolSTR_1_month_compounded_calendar.make_business_days_schedule(
 		PolSTR_1_month_compounded.get_time_series().get_period()
