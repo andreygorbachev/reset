@@ -45,17 +45,7 @@ using namespace fin_calendar;
 
 using namespace reset;
 
-/*If a potential Reference Period start date, i.e.resulting from the calendar
-shift5 of a given Reference Period end date backwards by a certain number
-of months, would fall on a day that is not a Business Day or a non - existent
-day(e.g. 30th February), then the nearest Business Day preceding this
-potential Reference Period start date is selected as the Reference Period
-start date, unless it falls already in the month preceding the month of the
-potential Reference Period start date.In this case, the nearest Business Day
-following the potential Reference Period start date shall be selected as the
-Reference Period start date.If, in turn, the potential Reference Period start
-date is a Business Day, that Business Day is selected as the Reference
-Period start date*/
+
 
 // from https://gpwbenchmark.pl/delayed_data
 // and https://gpwbenchmark.pl/historical_data
