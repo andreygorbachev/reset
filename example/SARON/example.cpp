@@ -146,6 +146,8 @@ int main()
 	auto rfd = rate_fixing_detail{};
 	rfd.day_count = actual_360<Decimal>{};
 
+	// from https://indexdata.six-group.com/download/online/vendor_code/six-calculated-indices.xls
+
 	auto id = index_detail{};
 	id.initial_value = Value{ "10000" };
 	id.initial_date = 1999y / June / 30d;
