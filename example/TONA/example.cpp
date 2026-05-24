@@ -23,34 +23,11 @@
 #include "parser.h"
 
 #include <decimal.h>
-#include <scaled_value.h>
 #include <fixings.h>
-#include <index.h>
-#include <average.h>
-
-#include <actual_365_fixed.h>
-
-#include <static_data.h>
-#include <calendar.h>
-#include <schedule.h>
-#include <period.h>
 
 #include <chrono>
-#include <iostream>
-#include <iomanip>
-#include <ios>
-#include <algorithm>
-#include <iterator>
-#include <cassert>
 
-using namespace std;
 using namespace std::chrono;
-
-using namespace gregorian;
-using namespace gregorian::util;
-using namespace gregorian::static_data;
-
-using namespace fin_calendar;
 
 using namespace reset;
 
@@ -73,15 +50,7 @@ int main()
 {
 	const auto TONA = parse_csv_fixings_TONA();
 
-	auto rfd = rate_fixing_detail{};
-	rfd.day_count = actual_365_fixed<Decimal>{};
-
-	auto id = index_detail{};
-	id.initial_value = Value{ "100" };
-	id.initial_date = 2017y / March / 8d;
-	id.step_round = 5u;
-
-	// I think that (compounded) averages are calculated via the index, rather than "long formula"
+	// according to BoJ they do not provide compounded index or compounded averages
 
 	return 0;
 }
