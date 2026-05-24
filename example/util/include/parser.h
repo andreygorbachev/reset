@@ -47,7 +47,7 @@ struct parser_detail // should it be called metadata?
 	unsigned int header_lines = 1u; // how many lines to skip at the beginning of the file
 	std::chrono::year_month_day from; // this could also be read from the file
 	std::chrono::year_month_day until; // this could also be read from the file
-	std::string date_format; // should we default it to ISO?
+	std::string date_format = "%Y-%m-%d";
 	char separator = ','; // the character that separates columns in the file
 	std::optional<char> padder; // the character that pads observation columns in the file
 	std::optional<std::string> not_available; // the string that indicates that the observation is not available
