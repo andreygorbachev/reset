@@ -79,7 +79,7 @@ static auto parse_csv_fixings_PolSTR() -> RateFixings
 	const auto d = make_parser_detail();
 
 	return parse_csv_fixings<RateFixings>(
-		".csv",
+		"PolSTR.csv",
 		d,
 		"Europe/Warsaw",
 		3u
