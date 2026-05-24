@@ -58,7 +58,7 @@ template<typename Fixings>
 auto parse_csv_fixings(
 	const std::string& fileName,
 	const parser_detail& detail,
-	const std::optional<std::string> calendar_name, // empty calendar will be created if this is nullopt
+	const std::string& calendar_name, // empty calendar will be created if this string is empty
 	typename const Fixings::decimal_places decimal_places
 ) -> Fixings;
 
@@ -162,7 +162,7 @@ template<typename Fixings>
 auto parse_csv_fixings(
 	const std::string& fileName,
 	const parser_detail& detail,
-	const std::optional<std::string> calendar_name,
+	const std::string& calendar_name,
 	typename const Fixings::decimal_places decimal_places
 ) -> Fixings
 {
@@ -177,8 +177,8 @@ auto parse_csv_fixings(
 	// we can check the fixings vs decimal places
 
 	auto calendar =
-		calendar_name ?
-		gregorian::static_data::locate_calendar(*calendar_name,	detail.until) :
+		!calendar_name.empty() ?
+		gregorian::static_data::locate_calendar(calendar_name, detail.until) :
 		_make_empty_calendar(detail);
 
 	return Fixings{

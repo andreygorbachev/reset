@@ -138,7 +138,7 @@ static auto parse_csv_fixings_target_rate() -> RateFixings
 	return parse_csv_fixings<RateFixings>(
 		"CF101.csv",
 		d,
-		nullopt,
+		"",
 		4u // 2u?
 	);
 }
@@ -153,7 +153,7 @@ static auto parse_csv_fixings_FTIIE_compounded_on_business_days_index() -> Index
 	return parse_csv_fixings<IndexFixings>(
 		"CF101.csv",
 		d,
-		nullopt,
+		"",
 		4u
 	);
 }
@@ -168,7 +168,7 @@ static auto parse_csv_fixings_FTIIE_compounded_on_calendar_days_index() -> Index
 	return parse_csv_fixings<IndexFixings>(
 		"CF101.csv",
 		d,
-		nullopt,
+		"",
 		4u
 	);
 }
