@@ -99,40 +99,52 @@ static auto parse_csv_fixings_PolSTR_compounded_index() -> IndexFixings
 		8u
 	);
 }
-/*
+
 static auto parse_csv_fixings_PolSTR_1_month_compounded() -> RateFixings
 {
+	auto d = make_parser_detail();
+	d.from = 2021y / February / 1d;
+	d.until = 2026y / May / 5d;
+	d.skip_columns = 1u;
+
 	return parse_csv_fixings<RateFixings>(
-		"Compounded euro-short term rates and index.csv",
-		3u,
-		2019y / November / 1d,
-		2026y / April / 24d,
+		"PolSTR.csv",
+		d,
+		"Europe/Warsaw",
 		5u
 	);
 }
 
 static auto parse_csv_fixings_PolSTR_3_month_compounded() -> RateFixings
 {
+	auto d = make_parser_detail();
+	d.from = 2021y / April / 1d;
+	d.until = 2026y / May / 5d;
+	d.skip_columns = 2u;
+
 	return parse_csv_fixings<RateFixings>(
-		"Compounded euro-short term rates and index.csv",
-		4u,
-		2020y / January / 2d,
-		2026y / April / 24d,
+		"PolSTR.csv",
+		d,
+		"Europe/Warsaw",
 		5u
 	);
 }
 
 static auto parse_csv_fixings_PolSTR_6_month_compounded() -> RateFixings
 {
+	auto d = make_parser_detail();
+	d.from = 2021y / July / 1d;
+	d.until = 2026y / May / 5d;
+	d.skip_columns = 3u;
+
 	return parse_csv_fixings<RateFixings>(
-		"Compounded euro-short term rates and index.csv",
-		5u,
-		2020y / April / 1d,
-		2026y / April / 24d,
+		"PolSTR.csv",
+		d,
+		"Europe/Warsaw",
 		5u
 	);
 }
-*/
+
 
 
 int main()
@@ -143,17 +155,17 @@ int main()
 	rfd.day_count = actual_365_fixed<Decimal>{};
 
 	const auto PolSTR_compounded_index = parse_csv_fixings_PolSTR_compounded_index();
-/*
+
 	const auto PolSTR_1_month_compounded = parse_csv_fixings_PolSTR_1_month_compounded();
 	const auto PolSTR_3_month_compounded = parse_csv_fixings_PolSTR_3_month_compounded();
 	const auto PolSTR_6_month_compounded = parse_csv_fixings_PolSTR_6_month_compounded();
-*/
+
 	// from https://gpwbenchmark.pl/documentation-transaction-based
 	auto id = index_detail{};
 	id.initial_value = Value{ "100" };
 	id.initial_date = 2021y / January / 4d;
 	id.final_round = 8u;
-/*
+
 	auto _1md = average_detail{};
 	_1md.term = months{ 1 };
 	_1md.business_day_convention = modified_preceding{};
@@ -168,7 +180,7 @@ int main()
 	_6md.term = months{ 6 };
 	_6md.business_day_convention = modified_preceding{};
 	_6md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
-*/
+
 	const auto date = PolSTR_compounded_index.get_time_series().get_period().get_until();
 
 	const auto& indx = PolSTR_compounded_index[date];
@@ -184,7 +196,7 @@ int main()
 		<< " and the same computed value is "
 		<< index(PolSTR, rfd, date, id).get_value()
 		<< endl;
-/*
+
 	const auto& _1m_cmp = PolSTR_1_month_compounded[date];
 	assert(_1m_cmp);
 
@@ -226,7 +238,7 @@ int main()
 		<< " and the same computed value is "
 		<< average(PolSTR, rfd, date, _6md).percent.get_value()
 		<< endl;
-*/
+
 	// look for inconsistencies in the data
 
 	const auto period = PolSTR_compounded_index.get_time_series().get_period();
@@ -251,7 +263,7 @@ int main()
 				<< endl;
 		}
 	}
-/*
+
 	const auto& PolSTR_1_month_compounded_calendar = PolSTR_1_month_compounded.get_calendar();
 	const auto _1_month_dates = PolSTR_1_month_compounded_calendar.make_business_days_schedule(
 		PolSTR_1_month_compounded.get_time_series().get_period()
@@ -317,6 +329,6 @@ int main()
 			<< average(PolSTR, rfd, d, _6md).percent.get_value()
 			<< endl;
 	}
-*/
+
 	return 0;
 }
