@@ -65,7 +65,7 @@ static auto make_parser_detail() -> parser_detail
 	return parser_detail{
 		1u,
 		2021y / January / 4d,
-		2026y / May / 14d,
+		2026y / May / 4d,
 		"%Y-%m-%d",
 		',',
 		nullopt,
