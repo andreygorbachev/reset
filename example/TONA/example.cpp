@@ -22,7 +22,6 @@
 
 #include "parser.h"
 
-#include <decimal.h>
 #include <fixings.h>
 
 #include <chrono>
