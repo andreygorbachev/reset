@@ -465,11 +465,15 @@ int main()
 		<< endl;
 
 	// look for inconsistencies in the index data
-/*
+
+	// However, on November 4, 2024, during the calculation of TIIE-F and the referred Index corresponding to November 5, 2024,
+	// a contingency occurred, requiring a manual calculation process, which is contemplated under Circular 3/2012.
+	// On that occasion, the previous day’s Index value was used rounded to four decimal places instead of the prescribed 16 decimal places.
+
 	const auto bus_period = FTIIE_compounded_on_business_days_index.get_time_series().get_period();
 	for (
 		auto d = bus_period.get_from();
-		d <= bus_period.get_until();
+		d <= 2024y / November / 5d;
 		d = sys_days{ d } + days{ 1 }
 	)
 	{
@@ -487,10 +491,34 @@ int main()
 				<< endl;
 	}
 
+	auto bus_id2 = bus_id;
+	bus_id2.initial_date = 2024y / November / 5d;
+	bus_id2.initial_value = FTIIE_compounded_on_business_days_index[bus_id2.initial_date]->get_value();
+
+	for (
+		auto d = 2024y / November / 6d;
+		d <= bus_period.get_until();
+		d = sys_days{ d } + days{ 1 }
+	)
+	{
+		const auto& fix = FTIIE_compounded_on_business_days_index[d];
+		assert(fix); // index is published for each calendar day
+		const auto computed_fix = non_business_day_index(FTIIE, rfd, d, bus_id2); // also handles business days
+		if (*fix != computed_fix)
+			cout
+			<< "For "
+			<< d
+			<< " F-TIIE Compounded Index (business days) is "
+			<< fix->get_value()
+			<< " and the same computed value is "
+			<< computed_fix.get_value()
+			<< endl;
+	}
+
 	const auto cal_period = FTIIE_compounded_on_calendar_days_index.get_time_series().get_period();
 	for (
 		auto d = cal_period.get_from();
-		d <= cal_period.get_until();
+		d <= 2024y / November / 5d;
 		d = sys_days{ d } + days{ 1 }
 	)
 	{
@@ -507,7 +535,31 @@ int main()
 				<< computed_fix.get_value()
 				<< endl;
 	}
-*/
+
+	auto cal_id2 = cal_id;
+	cal_id2.initial_date = 2024y / November / 5d;
+	cal_id2.initial_value = FTIIE_compounded_on_calendar_days_index[cal_id2.initial_date]->get_value();
+
+	for (
+		auto d = 2024y / November / 6d;
+		d <= cal_period.get_until();
+		d = sys_days{ d } + days{ 1 }
+	)
+	{
+		const auto& fix = FTIIE_compounded_on_calendar_days_index[d];
+		assert(fix); // index is published for each calendar day
+		const auto computed_fix = index(FTIIE, rfd, d, cal_id2);
+		if (*fix != computed_fix)
+			cout
+			<< "For "
+			<< d
+			<< " F-TIIE Compounded Index (calendar days) is "
+			<< fix->get_value()
+			<< " and the same computed value is "
+			<< computed_fix.get_value()
+			<< endl;
+	}
+
 	const auto& _28d_compounded_in_advance_calendar = FTIIE_compounded_in_advance_28_day.get_calendar();
 	const auto _28d_compounded_in_advance_dates = _28d_compounded_in_advance_calendar.make_business_days_schedule(
 		FTIIE_compounded_in_advance_28_day.get_time_series().get_period()
