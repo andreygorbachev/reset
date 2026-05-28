@@ -26,7 +26,10 @@
 #include <scaled_value.h>
 #include <fixings.h>
 #include <index.h>
+#include <average.h>
 
+#include <preceding.h>
+#include <modified_preceding.h>
 #include <actual_365_fixed.h>
 
 #include <static_data.h>
@@ -97,6 +100,84 @@ static auto parse_csv_fixings_ZARONIA_compounded_index() -> IndexFixings
 	);
 }
 
+static auto parse_csv_fixings_ZARONIA_1_week_compounded() -> RateFixings
+{
+	auto d = make_parser_detail();
+	d.skip_columns = 0u;
+
+	return parse_csv_fixings<RateFixings>(
+		"ZARONIA-Period-Averages-and-Index.csv",
+		d,
+		"Africa/Johannesburg",
+		5u
+	);
+}
+
+static auto parse_csv_fixings_ZARONIA_1_month_compounded() -> RateFixings
+{
+	auto d = make_parser_detail();
+	d.skip_columns = 1u;
+
+	return parse_csv_fixings<RateFixings>(
+		"ZARONIA-Period-Averages-and-Index.csv",
+		d,
+		"Africa/Johannesburg",
+		5u
+	);
+}
+
+static auto parse_csv_fixings_ZARONIA_3_month_compounded() -> RateFixings
+{
+	auto d = make_parser_detail();
+	d.skip_columns = 2u;
+
+	return parse_csv_fixings<RateFixings>(
+		"ZARONIA-Period-Averages-and-Index.csv",
+		d,
+		"Africa/Johannesburg",
+		5u
+	);
+}
+
+static auto parse_csv_fixings_ZARONIA_6_month_compounded() -> RateFixings
+{
+	auto d = make_parser_detail();
+	d.skip_columns = 3u;
+
+	return parse_csv_fixings<RateFixings>(
+		"ZARONIA-Period-Averages-and-Index.csv",
+		d,
+		"Africa/Johannesburg",
+		5u
+	);
+}
+
+static auto parse_csv_fixings_ZARONIA_9_month_compounded() -> RateFixings
+{
+	auto d = make_parser_detail();
+	d.skip_columns = 4u;
+
+	return parse_csv_fixings<RateFixings>(
+		"ZARONIA-Period-Averages-and-Index.csv",
+		d,
+		"Africa/Johannesburg",
+		5u
+	);
+}
+
+static auto parse_csv_fixings_ZARONIA_12_month_compounded() -> RateFixings
+{
+	auto d = make_parser_detail();
+	d.skip_columns = 5u;
+
+	return parse_csv_fixings<RateFixings>(
+		"ZARONIA-Period-Averages-and-Index.csv",
+		d,
+		"Africa/Johannesburg",
+		5u
+	);
+}
+
 
 
 int main()
@@ -108,6 +189,13 @@ int main()
 
 	const auto ZARONIA_compounded_index = parse_csv_fixings_ZARONIA_compounded_index();
 
+	const auto ZARONIA_1_week_compounded = parse_csv_fixings_ZARONIA_1_week_compounded();
+	const auto ZARONIA_1_month_compounded = parse_csv_fixings_ZARONIA_1_month_compounded();
+	const auto ZARONIA_3_month_compounded = parse_csv_fixings_ZARONIA_3_month_compounded();
+	const auto ZARONIA_6_month_compounded = parse_csv_fixings_ZARONIA_6_month_compounded();
+	const auto ZARONIA_9_month_compounded = parse_csv_fixings_ZARONIA_9_month_compounded();
+	const auto ZARONIA_12_month_compounded = parse_csv_fixings_ZARONIA_12_month_compounded();
+
 	// from
 	// "Compounded ZARONIA period averages and index
 	// Calculation methodology and publication
@@ -116,6 +204,36 @@ int main()
 	id.initial_value = Value{ "100" };
 	id.initial_date = 2022y / November / 1d;
 	id.final_round = 12u;
+
+	auto _1wd = average_detail{};
+	_1wd.term = weeks{ 1 };
+	_1wd.business_day_convention = fin_calendar::preceding{};
+	_1wd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+
+	auto _1md = average_detail{};
+	_1md.term = months{ 1 };
+	_1md.business_day_convention = modified_preceding{};
+	_1md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+
+	auto _3md = average_detail{};
+	_3md.term = months{ 3 };
+	_3md.business_day_convention = modified_preceding{};
+	_3md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+
+	auto _6md = average_detail{};
+	_6md.term = months{ 6 };
+	_6md.business_day_convention = modified_preceding{};
+	_6md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+
+	auto _9md = average_detail{};
+	_9md.term = months{ 9 };
+	_9md.business_day_convention = modified_preceding{};
+	_9md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+
+	auto _12md = average_detail{};
+	_12md.term = months{ 12 };
+	_12md.business_day_convention = modified_preceding{};
+	_12md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
 
 	const auto date = 2026y / May / 27d;
 
@@ -132,6 +250,90 @@ int main()
 		<< indx->get_value()
 		<< " and the same computed value is "
 		<< index(ZARONIA, rfd, date, id).get_value()
+		<< endl;
+
+	const auto& _1w_cmp = ZARONIA_1_week_compounded[date];
+	assert(_1w_cmp);
+
+	cout
+		<< fixed
+		<< setprecision(ZARONIA_1_week_compounded.get_decimal_places())
+		<< "For "
+		<< date
+		<< " ZARONIA 1 Week Compounded Average is "
+		<< _1w_cmp->get_value()
+		<< " and the same computed value is "
+		<< average(ZARONIA, rfd, date, _1wd).percent.get_value()
+		<< endl;
+
+	const auto& _1m_cmp = ZARONIA_1_month_compounded[date];
+	assert(_1m_cmp);
+
+	cout
+		<< fixed
+		<< setprecision(ZARONIA_1_month_compounded.get_decimal_places())
+		<< "For "
+		<< date
+		<< " ZARONIA 1 Month Compounded Average is "
+		<< _1m_cmp->get_value()
+		<< " and the same computed value is "
+		<< average(ZARONIA, rfd, date, _1md).percent.get_value()
+		<< endl;
+
+	const auto& _3m_cmp = ZARONIA_3_month_compounded[date];
+	assert(_3m_cmp);
+
+	cout
+		<< fixed
+		<< setprecision(ZARONIA_3_month_compounded.get_decimal_places())
+		<< "For "
+		<< date
+		<< " ZARONIA 3 Month Compounded Average is "
+		<< _3m_cmp->get_value()
+		<< " and the same computed value is "
+		<< average(ZARONIA, rfd, date, _3md).percent.get_value()
+		<< endl;
+
+	const auto& _6m_cmp = ZARONIA_6_month_compounded[date];
+	assert(_6m_cmp);
+
+	cout
+		<< fixed
+		<< setprecision(ZARONIA_6_month_compounded.get_decimal_places())
+		<< "For "
+		<< date
+		<< " ZARONIA 6 Month Compounded Average is "
+		<< _6m_cmp->get_value()
+		<< " and the same computed value is "
+		<< average(ZARONIA, rfd, date, _6md).percent.get_value()
+		<< endl;
+
+	const auto& _9m_cmp = ZARONIA_9_month_compounded[date];
+	assert(_9m_cmp);
+
+	cout
+		<< fixed
+		<< setprecision(ZARONIA_9_month_compounded.get_decimal_places())
+		<< "For "
+		<< date
+		<< " ZARONIA 9 Month Compounded Average is "
+		<< _9m_cmp->get_value()
+		<< " and the same computed value is "
+		<< average(ZARONIA, rfd, date, _9md).percent.get_value()
+		<< endl;
+
+	const auto& _12m_cmp = ZARONIA_12_month_compounded[date];
+	assert(_12m_cmp);
+
+	cout
+		<< fixed
+		<< setprecision(ZARONIA_12_month_compounded.get_decimal_places())
+		<< "For "
+		<< date
+		<< " ZARONIA 12 Month Compounded Average is "
+		<< _12m_cmp->get_value()
+		<< " and the same computed value is "
+		<< average(ZARONIA, rfd, date, _12md).percent.get_value()
 		<< endl;
 
 	// look for inconsistencies in the index data
