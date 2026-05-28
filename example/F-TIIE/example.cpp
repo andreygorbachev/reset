@@ -349,6 +349,18 @@ int main()
 	cal_id.final_round = 4u;
 	cal_id.calendar = FTIIE_compounded_on_calendar_days_index.get_calendar();
 
+	// However, on November 4, 2024, during the calculation of TIIE-F and the referred Index corresponding to November 5, 2024,
+	// a contingency occurred, requiring a manual calculation process, which is contemplated under Circular 3/2012.
+	// On that occasion, the previous day’s Index value was used rounded to four decimal places instead of the prescribed 16 decimal places.
+
+	auto bus_id2 = bus_id;
+	bus_id2.initial_date = 2024y / November / 5d;
+	bus_id2.initial_value = FTIIE_compounded_on_business_days_index[bus_id2.initial_date]->get_value();
+
+	auto cal_id2 = cal_id;
+	cal_id2.initial_date = 2024y / November / 5d;
+	cal_id2.initial_value = FTIIE_compounded_on_calendar_days_index[cal_id2.initial_date]->get_value();
+
 	const auto date = 2026y / May / 6d;
 
 	const auto& bus_indx = FTIIE_compounded_on_business_days_index[date];
@@ -363,7 +375,7 @@ int main()
 		<< " F-TIIE Compounded Index (business days) is "
 		<< bus_indx->get_value()
 		<< " and the same computed value is "
-		<< index(FTIIE, rfd, date, bus_id).get_value() // we checked that date is a business day
+		<< index(FTIIE, rfd, date, bus_id2).get_value() // we checked that date is a business day
 		<< endl;
 
 	const auto& cal_indx = FTIIE_compounded_on_calendar_days_index[date];
@@ -377,7 +389,7 @@ int main()
 		<< " F-TIIE Compounded Index (calendar days) is "
 		<< cal_indx->get_value()
 		<< " and the same computed value is "
-		<< index(FTIIE, rfd, date, cal_id).get_value()
+		<< index(FTIIE, rfd, date, cal_id2).get_value()
 		<< endl;
 
 	const auto& _28d_indx = FTIIE_compounded_in_advance_28_day[date];
@@ -466,10 +478,6 @@ int main()
 
 	// look for inconsistencies in the index data
 
-	// However, on November 4, 2024, during the calculation of TIIE-F and the referred Index corresponding to November 5, 2024,
-	// a contingency occurred, requiring a manual calculation process, which is contemplated under Circular 3/2012.
-	// On that occasion, the previous day’s Index value was used rounded to four decimal places instead of the prescribed 16 decimal places.
-
 	const auto bus_period = FTIIE_compounded_on_business_days_index.get_time_series().get_period();
 	for (
 		auto d = bus_period.get_from();
@@ -490,10 +498,6 @@ int main()
 				<< computed_fix.get_value()
 				<< endl;
 	}
-
-	auto bus_id2 = bus_id;
-	bus_id2.initial_date = 2024y / November / 5d;
-	bus_id2.initial_value = FTIIE_compounded_on_business_days_index[bus_id2.initial_date]->get_value();
 
 	for (
 		auto d = 2024y / November / 6d;
@@ -535,10 +539,6 @@ int main()
 				<< computed_fix.get_value()
 				<< endl;
 	}
-
-	auto cal_id2 = cal_id;
-	cal_id2.initial_date = 2024y / November / 5d;
-	cal_id2.initial_value = FTIIE_compounded_on_calendar_days_index[cal_id2.initial_date]->get_value();
 
 	for (
 		auto d = 2024y / November / 6d;
