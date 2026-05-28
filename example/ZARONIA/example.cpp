@@ -117,5 +117,22 @@ int main()
 	id.initial_date = 2022y / November / 1d;
 	id.final_round = 12u;
 
+	const auto date = 2026y / May / 27d;
+
+	const auto& indx = ZARONIA_compounded_index[date];
+	assert(indx);
+	assert(ZARONIA.get_calendar().is_business_day(date));
+
+	cout
+		<< fixed
+		<< setprecision(ZARONIA_compounded_index.get_decimal_places())
+		<< "For "
+		<< date
+		<< " ZARONIA Compounded Index is "
+		<< indx->get_value()
+		<< " and the same computed value is "
+		<< index(ZARONIA, rfd, date, id).get_value()
+		<< endl;
+
 	return 0;
 }
