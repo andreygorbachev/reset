@@ -77,7 +77,7 @@ static auto parse_csv_fixings_ZARONIA() -> RateFixings
 	return parse_csv_fixings<RateFixings>(
 		"SARB-benchmark-data.csv",
 		d,
-		"",
+		"Africa/Johannesburg",
 		3u
 	);
 }
