@@ -82,11 +82,40 @@ static auto parse_csv_fixings_ZARONIA() -> RateFixings
 	);
 }
 
+static auto parse_csv_fixings_ZARONIA_compounded_index() -> IndexFixings
+{
+	auto d = make_parser_detail();
+	d.from = 2022y / November / 1d;
+	d.not_available = "0.000000000000";
+	d.skip_columns = 6u;
+
+	return parse_csv_fixings<IndexFixings>(
+		"ZARONIA-Period-Averages-and-Index.csv",
+		d,
+		"Africa/Johannesburg",
+		12u
+	);
+}
+
 
 
 int main()
 {
 	const auto ZARONIA = parse_csv_fixings_ZARONIA();
+
+	auto rfd = rate_fixing_detail{};
+	rfd.day_count = actual_365_fixed<Decimal>{};
+
+	const auto ZARONIA_compounded_index = parse_csv_fixings_ZARONIA_compounded_index();
+
+	// from
+	// "Compounded ZARONIA period averages and index
+	// Calculation methodology and publication
+	// October 2023"
+	auto id = index_detail{};
+	id.initial_value = Value{ "100" };
+	id.initial_date = 2022y / November / 1d;
+	id.final_round = 12u;
 
 	return 0;
 }
