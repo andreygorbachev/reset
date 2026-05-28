@@ -127,13 +127,13 @@ int main()
 			const auto computed_fix = index(SONIA, rfd, d, id);
 			if (*fix != computed_fix)
 				cout
-				<< "For "
-				<< d
-				<< " SONIA Compounded Index is "
-				<< fix->get_value()
-				<< " and the same computed value is "
-				<< computed_fix.get_value()
-				<< endl;
+					<< "For "
+					<< d
+					<< " SONIA Compounded Index is "
+					<< fix->get_value()
+					<< " and the same computed value is "
+					<< computed_fix.get_value()
+					<< endl;
 		}
 	}
 

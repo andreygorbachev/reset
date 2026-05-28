@@ -134,5 +134,30 @@ int main()
 		<< index(ZARONIA, rfd, date, id).get_value()
 		<< endl;
 
+	// look for inconsistencies in the index data
+
+	const auto index_period = ZARONIA_compounded_index.get_time_series().get_period();
+	for (
+		auto d = index_period.get_from();
+		d <= index_period.get_until();
+		d = sys_days{ d } + days{ 1 }
+	)
+	{
+		const auto& fix = ZARONIA_compounded_index[d];
+		if (fix)
+		{
+			const auto computed_fix = index(ZARONIA, rfd, d, id);
+			if (*fix != computed_fix)
+				cout
+					<< "For "
+					<< d
+					<< " ZARONIA Compounded Index is "
+					<< fix->get_value()
+					<< " and the same computed value is "
+					<< computed_fix.get_value()
+					<< endl;
+		}
+	}
+
 	return 0;
 }
