@@ -100,9 +100,13 @@ static auto parse_csv_fixings_ZARONIA_compounded_index() -> IndexFixings
 	);
 }
 
+// The SARB back-casted daily ZARONIA proxy rates for several years before the public launch so risk models could be tested.
+// (we do not handle that at the moment)
+
 static auto parse_csv_fixings_ZARONIA_1_week_compounded() -> RateFixings
 {
 	auto d = make_parser_detail();
+	d.from = 2023y / November / 4d; // we ignore the "observation phase"
 	d.skip_columns = 0u;
 
 	return parse_csv_fixings<RateFixings>(
@@ -116,6 +120,7 @@ static auto parse_csv_fixings_ZARONIA_1_week_compounded() -> RateFixings
 static auto parse_csv_fixings_ZARONIA_1_month_compounded() -> RateFixings
 {
 	auto d = make_parser_detail();
+	d.from = 2023y / November / 4d; // we ignore the "observation phase"
 	d.skip_columns = 1u;
 
 	return parse_csv_fixings<RateFixings>(
@@ -129,6 +134,7 @@ static auto parse_csv_fixings_ZARONIA_1_month_compounded() -> RateFixings
 static auto parse_csv_fixings_ZARONIA_3_month_compounded() -> RateFixings
 {
 	auto d = make_parser_detail();
+	d.from = 2023y / November / 4d; // we ignore the "observation phase"
 	d.skip_columns = 2u;
 
 	return parse_csv_fixings<RateFixings>(
@@ -142,6 +148,7 @@ static auto parse_csv_fixings_ZARONIA_3_month_compounded() -> RateFixings
 static auto parse_csv_fixings_ZARONIA_6_month_compounded() -> RateFixings
 {
 	auto d = make_parser_detail();
+	d.from = 2023y / November / 4d; // we ignore the "observation phase"
 	d.skip_columns = 3u;
 
 	return parse_csv_fixings<RateFixings>(
@@ -155,6 +162,7 @@ static auto parse_csv_fixings_ZARONIA_6_month_compounded() -> RateFixings
 static auto parse_csv_fixings_ZARONIA_9_month_compounded() -> RateFixings
 {
 	auto d = make_parser_detail();
+	d.from = 2023y / November / 4d; // we ignore the "observation phase"
 	d.skip_columns = 4u;
 
 	return parse_csv_fixings<RateFixings>(
@@ -168,6 +176,7 @@ static auto parse_csv_fixings_ZARONIA_9_month_compounded() -> RateFixings
 static auto parse_csv_fixings_ZARONIA_12_month_compounded() -> RateFixings
 {
 	auto d = make_parser_detail();
+	d.from = 2023y / November / 4d; // we ignore the "observation phase"
 	d.skip_columns = 5u;
 
 	return parse_csv_fixings<RateFixings>(
@@ -359,6 +368,138 @@ int main()
 					<< computed_fix.get_value()
 					<< endl;
 		}
+	}
+
+	const auto& ZARONIA_1_week_compounded_calendar = ZARONIA_1_week_compounded.get_calendar();
+	const auto _1_week_dates = ZARONIA_1_week_compounded_calendar.make_business_days_schedule(
+		ZARONIA_1_week_compounded.get_time_series().get_period()
+	);
+	for (const auto& d : _1_week_dates.get_dates())
+	{
+		const auto& _1w_avg = ZARONIA_1_week_compounded[d];
+		assert(_1w_avg);
+
+		if (*_1w_avg != average(ZARONIA, rfd, d, _1wd).percent)
+			cout
+				<< fixed
+				<< setprecision(ZARONIA_1_week_compounded.get_decimal_places())
+				<< "For "
+				<< d
+				<< " ZARONIA 1 Week Compounded Average is "
+				<< ZARONIA_1_week_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< average(ZARONIA, rfd, d, _1wd).percent.get_value()
+				<< endl;
+	}
+
+	const auto& ZARONIA_1_month_compounded_calendar = ZARONIA_1_month_compounded.get_calendar();
+	const auto _1_month_dates = ZARONIA_1_month_compounded_calendar.make_business_days_schedule(
+		ZARONIA_1_month_compounded.get_time_series().get_period()
+	);
+	for (const auto& d : _1_month_dates.get_dates())
+	{
+		const auto& _1m_avg = ZARONIA_1_month_compounded[d];
+		assert(_1m_avg);
+
+		if (*_1m_avg != average(ZARONIA, rfd, d, _1md).percent)
+			cout
+				<< fixed
+				<< setprecision(ZARONIA_1_month_compounded.get_decimal_places())
+				<< "For "
+				<< d
+				<< " ZARONIA 1 Month Compounded Average is "
+				<< ZARONIA_1_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< average(ZARONIA, rfd, d, _1md).percent.get_value()
+				<< endl;
+	}
+
+	const auto& ZARONIA_3_month_compounded_calendar = ZARONIA_3_month_compounded.get_calendar();
+	const auto _3_month_dates = ZARONIA_3_month_compounded_calendar.make_business_days_schedule(
+		ZARONIA_3_month_compounded.get_time_series().get_period()
+	);
+	for (const auto& d : _3_month_dates.get_dates())
+	{
+		const auto& _3m_avg = ZARONIA_3_month_compounded[d];
+		assert(_3m_avg);
+
+		if (*_3m_avg != average(ZARONIA, rfd, d, _3md).percent)
+			cout
+				<< fixed
+				<< setprecision(ZARONIA_3_month_compounded.get_decimal_places())
+				<< "For "
+				<< d
+				<< " ZARONIA 3 Month Compounded Average is "
+				<< ZARONIA_3_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< average(ZARONIA, rfd, d, _3md).percent.get_value()
+				<< endl;
+	}
+
+	const auto& ZARONIA_6_month_compounded_calendar = ZARONIA_6_month_compounded.get_calendar();
+	const auto _6_month_dates = ZARONIA_6_month_compounded_calendar.make_business_days_schedule(
+		ZARONIA_6_month_compounded.get_time_series().get_period()
+	);
+	for (const auto& d : _6_month_dates.get_dates())
+	{
+		const auto& _6m_avg = ZARONIA_6_month_compounded[d];
+		assert(_6m_avg);
+
+		if (*_6m_avg != average(ZARONIA, rfd, d, _6md).percent)
+			cout
+				<< fixed
+				<< setprecision(ZARONIA_6_month_compounded.get_decimal_places())
+				<< "For "
+				<< d
+				<< " ZARONIA 6 Month Compounded Average is "
+				<< ZARONIA_6_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< average(ZARONIA, rfd, d, _6md).percent.get_value()
+				<< endl;
+	}
+
+	const auto& ZARONIA_9_month_compounded_calendar = ZARONIA_9_month_compounded.get_calendar();
+	const auto _9_month_dates = ZARONIA_9_month_compounded_calendar.make_business_days_schedule(
+		ZARONIA_9_month_compounded.get_time_series().get_period()
+	);
+	for (const auto& d : _9_month_dates.get_dates())
+	{
+		const auto& _9m_avg = ZARONIA_9_month_compounded[d];
+		assert(_9m_avg);
+
+		if (*_9m_avg != average(ZARONIA, rfd, d, _9md).percent)
+			cout
+				<< fixed
+				<< setprecision(ZARONIA_9_month_compounded.get_decimal_places())
+				<< "For "
+				<< d
+				<< " ZARONIA 9 Month Compounded Average is "
+				<< ZARONIA_9_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< average(ZARONIA, rfd, d, _9md).percent.get_value()
+				<< endl;
+	}
+
+	const auto& ZARONIA_12_month_compounded_calendar = ZARONIA_12_month_compounded.get_calendar();
+	const auto _12_month_dates = ZARONIA_12_month_compounded_calendar.make_business_days_schedule(
+		ZARONIA_12_month_compounded.get_time_series().get_period()
+	);
+	for (const auto& d : _12_month_dates.get_dates())
+	{
+		const auto& _12m_avg = ZARONIA_12_month_compounded[d];
+		assert(_12m_avg);
+
+		if (*_12m_avg != average(ZARONIA, rfd, d, _12md).percent)
+			cout
+				<< fixed
+				<< setprecision(ZARONIA_12_month_compounded.get_decimal_places())
+				<< "For "
+				<< d
+				<< " ZARONIA 12 Month Compounded Average is "
+				<< ZARONIA_12_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< average(ZARONIA, rfd, d, _12md).percent.get_value()
+				<< endl;
 	}
 
 	return 0;

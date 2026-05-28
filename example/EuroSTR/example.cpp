@@ -291,13 +291,13 @@ int main()
 			const auto computed_fix = index(EuroSTR, rfd, d, id);
 			if (*fix != computed_fix)
 				cout
-				<< "For "
-				<< d
-				<< " EuroSTR Compounded Index is "
-				<< fix->get_value()
-				<< " and the same computed value is "
-				<< computed_fix.get_value()
-				<< endl;
+					<< "For "
+					<< d
+					<< " EuroSTR Compounded Index is "
+					<< fix->get_value()
+					<< " and the same computed value is "
+					<< computed_fix.get_value()
+					<< endl;
 		}
 	}
 
@@ -312,15 +312,15 @@ int main()
 
 		if (*_1w_avg != average(EuroSTR, rfd, d, _1wd).percent)
 			cout
-			<< fixed
-			<< setprecision(EuroSTR_1_week_compounded.get_decimal_places())
-			<< "For "
-			<< d
-			<< " EuroSTR 1 Week Compounded Average is "
-			<< EuroSTR_1_week_compounded[d]->get_value()
-			<< " and the same computed value is "
-			<< average(EuroSTR, rfd, d, _1wd).percent.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(EuroSTR_1_week_compounded.get_decimal_places())
+				<< "For "
+				<< d
+				<< " EuroSTR 1 Week Compounded Average is "
+				<< EuroSTR_1_week_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< average(EuroSTR, rfd, d, _1wd).percent.get_value()
+				<< endl;
 	}
 
 	const auto& EuroSTR_1_month_compounded_calendar = EuroSTR_1_month_compounded.get_calendar();
@@ -334,15 +334,15 @@ int main()
 
 		if (*_1m_avg != average(EuroSTR, rfd, d, _1md).percent)
 			cout
-			<< fixed
-			<< setprecision(EuroSTR_1_month_compounded.get_decimal_places())
-			<< "For "
-			<< d
-			<< " EuroSTR 1 Month Compounded Average is "
-			<< EuroSTR_1_month_compounded[d]->get_value()
-			<< " and the same computed value is "
-			<< average(EuroSTR, rfd, d, _1md).percent.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(EuroSTR_1_month_compounded.get_decimal_places())
+				<< "For "
+				<< d
+				<< " EuroSTR 1 Month Compounded Average is "
+				<< EuroSTR_1_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< average(EuroSTR, rfd, d, _1md).percent.get_value()
+				<< endl;
 	}
 
 	const auto& EuroSTR_3_month_compounded_calendar = EuroSTR_3_month_compounded.get_calendar();
@@ -356,15 +356,15 @@ int main()
 
 		if (*_3m_avg != average(EuroSTR, rfd, d, _3md).percent)
 			cout
-			<< fixed
-			<< setprecision(EuroSTR_3_month_compounded.get_decimal_places())
-			<< "For "
-			<< d
-			<< " EuroSTR 3 Month Compounded Average is "
-			<< EuroSTR_3_month_compounded[d]->get_value()
-			<< " and the same computed value is "
-			<< average(EuroSTR, rfd, d, _3md).percent.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(EuroSTR_3_month_compounded.get_decimal_places())
+				<< "For "
+				<< d
+				<< " EuroSTR 3 Month Compounded Average is "
+				<< EuroSTR_3_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< average(EuroSTR, rfd, d, _3md).percent.get_value()
+				<< endl;
 	}
 
 	const auto& EuroSTR_6_month_compounded_calendar = EuroSTR_6_month_compounded.get_calendar();
@@ -378,15 +378,15 @@ int main()
 
 		if (*_6m_avg != average(EuroSTR, rfd, d, _6md).percent)
 			cout
-			<< fixed
-			<< setprecision(EuroSTR_6_month_compounded.get_decimal_places())
-			<< "For "
-			<< d
-			<< " EuroSTR 6 Month Compounded Average is "
-			<< EuroSTR_6_month_compounded[d]->get_value()
-			<< " and the same computed value is "
-			<< average(EuroSTR, rfd, d, _6md).percent.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(EuroSTR_6_month_compounded.get_decimal_places())
+				<< "For "
+				<< d
+				<< " EuroSTR 6 Month Compounded Average is "
+				<< EuroSTR_6_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< average(EuroSTR, rfd, d, _6md).percent.get_value()
+				<< endl;
 	}
 
 	const auto& EuroSTR_12_month_compounded_calendar = EuroSTR_12_month_compounded.get_calendar();
@@ -400,15 +400,15 @@ int main()
 
 		if (*_12m_avg != average(EuroSTR, rfd, d, _12md).percent)
 			cout
-			<< fixed
-			<< setprecision(EuroSTR_12_month_compounded.get_decimal_places())
-			<< "For "
-			<< d
-			<< " EuroSTR 12 Month Compounded Average is "
-			<< EuroSTR_12_month_compounded[d]->get_value()
-			<< " and the same computed value is "
-			<< average(EuroSTR, rfd, d, _12md).percent.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(EuroSTR_12_month_compounded.get_decimal_places())
+				<< "For "
+				<< d
+				<< " EuroSTR 12 Month Compounded Average is "
+				<< EuroSTR_12_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< average(EuroSTR, rfd, d, _12md).percent.get_value()
+				<< endl;
 	}
 
 	return 0;
