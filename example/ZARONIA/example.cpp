@@ -35,14 +35,11 @@
 #include <static_data.h>
 #include <calendar.h>
 #include <schedule.h>
-#include <period.h>
 
 #include <chrono>
 #include <iostream>
 #include <iomanip>
 #include <ios>
-#include <algorithm>
-#include <iterator>
 #include <cassert>
 #include <optional>
 
