@@ -347,27 +347,25 @@ int main()
 
 	// look for inconsistencies in the index data
 
-	const auto index_period = ZARONIA_compounded_index.get_time_series().get_period();
-	for (
-		auto d = index_period.get_from();
-		d <= index_period.get_until();
-		d = sys_days{ d } + days{ 1 }
-	)
+	const auto& ZARONIA_compounded_index_calendar = ZARONIA_compounded_index.get_calendar();
+	const auto index_dates = ZARONIA_compounded_index_calendar.make_business_days_schedule(
+		ZARONIA_compounded_index.get_time_series().get_period()
+	);
+	for (const auto& d : index_dates.get_dates())
 	{
 		const auto& fix = ZARONIA_compounded_index[d];
-		if (fix)
-		{
-			const auto computed_fix = index(ZARONIA, rfd, d, id);
-			if (*fix != computed_fix)
-				cout
-					<< "For "
-					<< d
-					<< " ZARONIA Compounded Index is "
-					<< fix->get_value()
-					<< " and the same computed value is "
-					<< computed_fix.get_value()
-					<< endl;
-		}
+		assert(fix);
+
+		const auto computed_fix = index(ZARONIA, rfd, d, id);
+		if (*fix != computed_fix)
+			cout
+				<< "For "
+				<< d
+				<< " ZARONIA Compounded Index is "
+				<< fix->get_value()
+				<< " and the same computed value is "
+				<< computed_fix.get_value()
+				<< endl;
 	}
 
 	const auto& ZARONIA_1_week_compounded_calendar = ZARONIA_1_week_compounded.get_calendar();
@@ -379,7 +377,8 @@ int main()
 		const auto& _1w_avg = ZARONIA_1_week_compounded[d];
 		assert(_1w_avg);
 
-		if (*_1w_avg != average(ZARONIA, rfd, d, _1wd).percent)
+		const auto computed_avg = average(ZARONIA, rfd, d, _1wd).percent;
+		if (*_1w_avg != computed_avg)
 			cout
 				<< fixed
 				<< setprecision(ZARONIA_1_week_compounded.get_decimal_places())
@@ -388,7 +387,7 @@ int main()
 				<< " ZARONIA 1 Week Compounded Average is "
 				<< ZARONIA_1_week_compounded[d]->get_value()
 				<< " and the same computed value is "
-				<< average(ZARONIA, rfd, d, _1wd).percent.get_value()
+				<< computed_avg.get_value()
 				<< endl;
 	}
 
@@ -401,7 +400,8 @@ int main()
 		const auto& _1m_avg = ZARONIA_1_month_compounded[d];
 		assert(_1m_avg);
 
-		if (*_1m_avg != average(ZARONIA, rfd, d, _1md).percent)
+		const auto computed_avg = average(ZARONIA, rfd, d, _1md).percent;
+		if (*_1m_avg != computed_avg)
 			cout
 				<< fixed
 				<< setprecision(ZARONIA_1_month_compounded.get_decimal_places())
@@ -410,7 +410,7 @@ int main()
 				<< " ZARONIA 1 Month Compounded Average is "
 				<< ZARONIA_1_month_compounded[d]->get_value()
 				<< " and the same computed value is "
-				<< average(ZARONIA, rfd, d, _1md).percent.get_value()
+				<< computed_avg.get_value()
 				<< endl;
 	}
 
@@ -423,7 +423,8 @@ int main()
 		const auto& _3m_avg = ZARONIA_3_month_compounded[d];
 		assert(_3m_avg);
 
-		if (*_3m_avg != average(ZARONIA, rfd, d, _3md).percent)
+		const auto computed_avg = average(ZARONIA, rfd, d, _3md).percent;
+		if (*_3m_avg != computed_avg)
 			cout
 				<< fixed
 				<< setprecision(ZARONIA_3_month_compounded.get_decimal_places())
@@ -432,7 +433,7 @@ int main()
 				<< " ZARONIA 3 Month Compounded Average is "
 				<< ZARONIA_3_month_compounded[d]->get_value()
 				<< " and the same computed value is "
-				<< average(ZARONIA, rfd, d, _3md).percent.get_value()
+				<< computed_avg.get_value()
 				<< endl;
 	}
 
@@ -445,7 +446,8 @@ int main()
 		const auto& _6m_avg = ZARONIA_6_month_compounded[d];
 		assert(_6m_avg);
 
-		if (*_6m_avg != average(ZARONIA, rfd, d, _6md).percent)
+		const auto computed_avg = average(ZARONIA, rfd, d, _6md).percent;
+		if (*_6m_avg != computed_avg)
 			cout
 				<< fixed
 				<< setprecision(ZARONIA_6_month_compounded.get_decimal_places())
@@ -454,7 +456,7 @@ int main()
 				<< " ZARONIA 6 Month Compounded Average is "
 				<< ZARONIA_6_month_compounded[d]->get_value()
 				<< " and the same computed value is "
-				<< average(ZARONIA, rfd, d, _6md).percent.get_value()
+				<< computed_avg.get_value()
 				<< endl;
 	}
 
@@ -467,7 +469,8 @@ int main()
 		const auto& _9m_avg = ZARONIA_9_month_compounded[d];
 		assert(_9m_avg);
 
-		if (*_9m_avg != average(ZARONIA, rfd, d, _9md).percent)
+		const auto computed_avg = average(ZARONIA, rfd, d, _9md).percent;
+		if (*_9m_avg != computed_avg)
 			cout
 				<< fixed
 				<< setprecision(ZARONIA_9_month_compounded.get_decimal_places())
@@ -476,7 +479,7 @@ int main()
 				<< " ZARONIA 9 Month Compounded Average is "
 				<< ZARONIA_9_month_compounded[d]->get_value()
 				<< " and the same computed value is "
-				<< average(ZARONIA, rfd, d, _9md).percent.get_value()
+				<< computed_avg.get_value()
 				<< endl;
 	}
 
@@ -489,7 +492,8 @@ int main()
 		const auto& _12m_avg = ZARONIA_12_month_compounded[d];
 		assert(_12m_avg);
 
-		if (*_12m_avg != average(ZARONIA, rfd, d, _12md).percent)
+		const auto computed_avg = average(ZARONIA, rfd, d, _12md).percent;
+		if (*_12m_avg != computed_avg)
 			cout
 				<< fixed
 				<< setprecision(ZARONIA_12_month_compounded.get_decimal_places())
@@ -498,7 +502,7 @@ int main()
 				<< " ZARONIA 12 Month Compounded Average is "
 				<< ZARONIA_12_month_compounded[d]->get_value()
 				<< " and the same computed value is "
-				<< average(ZARONIA, rfd, d, _12md).percent.get_value()
+				<< computed_avg.get_value()
 				<< endl;
 	}
 
