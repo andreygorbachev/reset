@@ -22,6 +22,7 @@ add_executable(${PROJECT_NAME}
   average.cpp
   accrued.cpp
   term.cpp
+  compounded.cpp
   setup.h
 )
 

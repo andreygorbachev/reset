@@ -10,6 +10,7 @@ add_library(${PROJECT_NAME} INTERFACE
   average.h
   accrued.h
   term.h
+  compounded.h # also averaged.h ?
 )
 
 target_include_directories(${PROJECT_NAME} INTERFACE .)
