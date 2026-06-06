@@ -69,7 +69,7 @@ static auto parse_csv_fixings_SOFR() -> RateFixings
 		',',
 		nullopt,
 		nullopt,
-		6u
+		1u
 	};
 
 	return parse_csv_fixings<RateFixings>(
@@ -86,7 +86,7 @@ static auto parse_csv_fixings_SOFR_compounded_index() -> IndexFixings
 
 	const auto d = parser_detail{
 		1u,
-		2020y / March / 2d,
+		2020y / March / 2d, // get even earlier data?
 		2026y / April / 10d,
 		"%m/%d/%Y",
 		',',
@@ -202,8 +202,7 @@ int main()
 	_180dd.term = days{ 180 };
 	_180dd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
 
-	//	const auto date = 2026y / April / 10d;
-	const auto date = 2026y / April / 9d;
+	const auto date = 2026y / April / 10d;
 
 	const auto& indx = SOFR_compounded_index[date];
 	assert(indx);
