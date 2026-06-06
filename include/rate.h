@@ -41,6 +41,8 @@ namespace reset
 
 		fin_calendar::day_count<Decimal> day_count;
 
+		unsigned int round; // should this be optional? does it need to be unsigned?
+
 	};
 
 	struct rate

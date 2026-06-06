@@ -71,6 +71,8 @@ namespace reset
 
 		auto rate = (end_fix->get_value() / start_fix->get_value() - Decimal{ 1 }) / year_fraction;
 
+		rate = round_dp(rate, detail.round);
+
 		return {
 			std::move(rate),
 			std::move(detail)

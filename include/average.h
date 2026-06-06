@@ -48,7 +48,7 @@ namespace reset
 	{
 		term term{}; // for 30 day average, do we want it to be days{ 30 } or days{ -30 }?
 		fin_calendar::business_day_convention business_day_convention = fin_calendar::no_adjustment{};
-		std::optional<unsigned int> final_round = std::nullopt; // should rounding and truncation be int?
+		unsigned int final_round; // should rounding and truncation be int?
 	};
 
 
@@ -98,15 +98,15 @@ namespace reset
 		const auto one = Decimal{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
 		auto a = Decimal{ (val - one) / year_fraction };
 
-		if (detail.final_round)
-			a = round_dp(a, *detail.final_round);
+		a = round_dp(a, detail.final_round);
 
 		return {
 			std::move(a),
 			{
 				average_start,
 				average_end,
-				rfd.day_count // or should the average has its own day count? (is there a way to default it to underlying daily rate day count?)
+				rfd.day_count, // or should the average has its own day count? (is there a way to default it to underlying daily rate day count?)
+				detail.final_round
 			}
 		};
 	}
