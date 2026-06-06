@@ -23,9 +23,14 @@
 #pragma once
 
 #include <chrono>
+#include <utility>
+
+#include <day_count.h>
 
 #include "rate.h"
 #include "fixings.h"
+#include "rate.h"
+#include "index.h"
 
 
 namespace reset
@@ -51,15 +56,24 @@ namespace reset
 	// maybe this needs a different name? (like compounded_rate)
 	inline auto compounded(
 		const IndexFixings& fix,
-		std::chrono::year_month_day start, // should it be a period instead?
-		std::chrono::year_month_day end
+		rate_detail detail
 	) -> rate
 	{
+		const auto& start_fix = fix[detail.start];
+		const auto& end_fix = fix[detail.end];
+		// check that they are not nullopt? (or how do we handle non-business days?)
+
+		const auto year_fraction = fin_calendar::fraction(
+			detail.start,
+			detail.end,
+			detail.day_count
+		);
+
+		auto rate = (end_fix->get_value() / start_fix->get_value() - Decimal{ 1 }) / year_fraction;
+
 		return {
-			Percent{"0"}, // temp only
-			start,
-			end,
-			fin_calendar::day_count<Decimal>{}
+			std::move(rate),
+			std::move(detail)
 		};
 	}
 

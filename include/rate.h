@@ -33,15 +33,22 @@
 namespace reset
 {
 
-	struct rate
+	struct rate_detail
 	{
-
-		Percent percent;
 
 		std::chrono::year_month_day start; // usually included
 		std::chrono::year_month_day end; // usually excluded
 
 		fin_calendar::day_count<Decimal> day_count;
+
+	};
+
+	struct rate
+	{
+
+		Percent percent;
+
+		rate_detail detail;
 
 	};
 

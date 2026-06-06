@@ -24,6 +24,7 @@
 
 #include <chrono>
 #include <optional>
+#include <utility>
 
 #include <period.h>
 
@@ -101,10 +102,12 @@ namespace reset
 			a = round_dp(a, *detail.final_round);
 
 		return {
-			a,
-			average_start,
-			average_end,
-			rfd.day_count // or should the average has its own day count? (is there a way to default it to underlying daily rate day count?)
+			std::move(a),
+			{
+				average_start,
+				average_end,
+				rfd.day_count // or should the average has its own day count? (is there a way to default it to underlying daily rate day count?)
+			}
 		};
 	}
 
