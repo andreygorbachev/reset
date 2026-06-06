@@ -24,6 +24,7 @@
 
 #include <chrono>
 #include <utility>
+#include <stdexcept>
 
 #include <day_count.h>
 
@@ -53,15 +54,18 @@ namespace reset
 		};
 	}
 
-	// maybe this needs a different name? (like compounded_rate)
+
 	inline auto compounded(
 		const IndexFixings& fix,
 		rate_detail detail
 	) -> rate
 	{
 		const auto& start_fix = fix[detail.start];
+		if (!start_fix)
+			throw std::runtime_error{ "No fixing for start date" }; // is this a correct exception type?
 		const auto& end_fix = fix[detail.end];
-		// check that they are not nullopt? (or how do we handle non-business days?)
+		if (!end_fix)
+			throw std::runtime_error{ "No fixing for end date" }; // is this a correct exception type?
 
 		const auto year_fraction = fin_calendar::fraction(
 			detail.start,

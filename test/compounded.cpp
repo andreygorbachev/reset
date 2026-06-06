@@ -32,6 +32,14 @@ namespace reset
 
 	TEST(compounded, compounded1)
 	{
+		// "long formula"
+	}
+
+	TEST(compounded, compounded2)
+	{
+		// from the compounded index
+
+		// test that we get an exception on a non business day (start/end)
 	}
 
 }
