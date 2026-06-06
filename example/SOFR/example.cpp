@@ -74,7 +74,7 @@ static auto parse_csv_fixings_SOFR() -> RateFixings
 	return parse_csv_fixings<RateFixings>(
 		"SOFR.csv",
 		d,
-		"America/SIFMA",
+		"America/SOFR",
 		2u
 	);
 }
@@ -97,7 +97,7 @@ static auto parse_csv_fixings_SOFR_compounded_index() -> IndexFixings
 	return parse_csv_fixings<IndexFixings>(
 		"SOFR Compounded Index.csv", // also includes averages, so maybe needs a better name
 		d,
-		"America/SIFMA",
+		"America/SOFR",
 		8u
 	);
 }
@@ -118,7 +118,7 @@ static auto parse_csv_fixings_SOFR_30_day_average() -> RateFixings
 	return parse_csv_fixings<RateFixings>(
 		"SOFR Compounded Index.csv",
 		d,
-		"America/SIFMA",
+		"America/SOFR",
 		5u
 	);
 }
@@ -139,7 +139,7 @@ static auto parse_csv_fixings_SOFR_90_day_average() -> RateFixings
 	return parse_csv_fixings<RateFixings>(
 		"SOFR Compounded Index.csv",
 		d,
-		"America/SIFMA",
+		"America/SOFR",
 		5u
 	);
 }
@@ -160,7 +160,7 @@ static auto parse_csv_fixings_SOFR_180_day_average() -> RateFixings
 	return parse_csv_fixings<RateFixings>(
 		"SOFR Compounded Index.csv",
 		d,
-		"America/SIFMA",
+		"America/SOFR",
 		5u
 	);
 }
