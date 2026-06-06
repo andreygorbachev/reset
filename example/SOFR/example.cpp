@@ -42,6 +42,7 @@
 #include <algorithm>
 #include <iterator>
 #include <cassert>
+#include <optional>
 
 using namespace std;
 using namespace std::chrono;
