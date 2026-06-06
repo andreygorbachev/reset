@@ -308,29 +308,29 @@ int main()
 	}
 
 	// look for inconsistencies in the data
-	const auto index_dates = SOFR_compounded_index_calendar.make_business_days_schedule(
-		SOFR_compounded_index.get_time_series().get_period()
-	);
-	for (const auto& d : index_dates.get_dates())
+	const auto period = SOFR_compounded_index.get_time_series().get_period();
+	for (
+		auto d = period.get_from();
+		d <= period.get_until();
+		d = sys_days{ d } + days{ 1 }
+	)
 	{
-		if (d == *index_dates.get_dates().crbegin())
-			break;
-		// temporary only, unit we sort out start/end of RFR/RFR Index
-
-		const auto& indx = SOFR_compounded_index[d];
-		assert(indx);
-
-		if (*indx != index(SOFR, rfd, d, id))
-			cout
-				<< fixed
-				<< setprecision(SOFR_compounded_index.get_decimal_places())
-				<< "For "
-				<< d
-				<< " SOFR Compounded Index is "
-				<< indx->get_value()
-				<< " and the same computed value is "
-				<< index(SOFR, rfd, d, id).get_value()
-				<< endl;
+		const auto& fix = SOFR_compounded_index[d];
+		if (fix)
+		{
+			const auto computed_fix = index(SOFR, rfd, d, id);
+			if (*fix != computed_fix)
+				cout
+					<< fixed
+					<< setprecision(SOFR_compounded_index.get_decimal_places())
+					<< "For "
+					<< d
+					<< " SOFR Compounded Index is "
+					<< fix->get_value()
+					<< " and the same computed value is "
+					<< computed_fix.get_value()
+					<< endl;
+		}
 	}
 
 	const auto& SOFR_30_day_average_calendar = SOFR_30_day_average.get_calendar();

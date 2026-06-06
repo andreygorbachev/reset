@@ -244,13 +244,15 @@ int main()
 			const auto computed_fix = index(PolSTR, rfd, d, id);
 			if (*fix != computed_fix)
 				cout
-				<< "For "
-				<< d
-				<< " PolSTR Compounded Index is "
-				<< fix->get_value()
-				<< " and the same computed value is "
-				<< computed_fix.get_value()
-				<< endl;
+					<< fixed
+					<< setprecision(PolSTR_compounded_index.get_decimal_places())
+					<< "For "
+					<< d
+					<< " PolSTR Compounded Index is "
+					<< fix->get_value()
+					<< " and the same computed value is "
+					<< computed_fix.get_value()
+					<< endl;
 		}
 	}
 
@@ -265,15 +267,15 @@ int main()
 
 		if (*_1m_avg != average(PolSTR, rfd, d, _1md).percent)
 			cout
-			<< fixed
-			<< setprecision(PolSTR_1_month_compounded.get_decimal_places())
-			<< "For "
-			<< d
-			<< " PolSTR 1 Month Compounded Average is "
-			<< PolSTR_1_month_compounded[d]->get_value()
-			<< " and the same computed value is "
-			<< average(PolSTR, rfd, d, _1md).percent.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(PolSTR_1_month_compounded.get_decimal_places())
+				<< "For "
+				<< d
+				<< " PolSTR 1 Month Compounded Average is "
+				<< PolSTR_1_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< average(PolSTR, rfd, d, _1md).percent.get_value()
+				<< endl;
 	}
 
 	const auto& PolSTR_3_month_compounded_calendar = PolSTR_3_month_compounded.get_calendar();
@@ -287,15 +289,15 @@ int main()
 
 		if (*_3m_avg != average(PolSTR, rfd, d, _3md).percent)
 			cout
-			<< fixed
-			<< setprecision(PolSTR_3_month_compounded.get_decimal_places())
-			<< "For "
-			<< d
-			<< " PolSTR 3 Month Compounded Average is "
-			<< PolSTR_3_month_compounded[d]->get_value()
-			<< " and the same computed value is "
-			<< average(PolSTR, rfd, d, _3md).percent.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(PolSTR_3_month_compounded.get_decimal_places())
+				<< "For "
+				<< d
+				<< " PolSTR 3 Month Compounded Average is "
+				<< PolSTR_3_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< average(PolSTR, rfd, d, _3md).percent.get_value()
+				<< endl;
 	}
 
 	const auto& PolSTR_6_month_compounded_calendar = PolSTR_6_month_compounded.get_calendar();
@@ -309,15 +311,15 @@ int main()
 
 		if (*_6m_avg != average(PolSTR, rfd, d, _6md).percent)
 			cout
-			<< fixed
-			<< setprecision(PolSTR_6_month_compounded.get_decimal_places())
-			<< "For "
-			<< d
-			<< " PolSTR 6 Month Compounded Average is "
-			<< PolSTR_6_month_compounded[d]->get_value()
-			<< " and the same computed value is "
-			<< average(PolSTR, rfd, d, _6md).percent.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(PolSTR_6_month_compounded.get_decimal_places())
+				<< "For "
+				<< d
+				<< " PolSTR 6 Month Compounded Average is "
+				<< PolSTR_6_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< average(PolSTR, rfd, d, _6md).percent.get_value()
+				<< endl;
 	}
 
 	return 0;
