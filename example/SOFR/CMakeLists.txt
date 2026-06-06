@@ -5,10 +5,10 @@ configure_file("data/SOFR Compounded Index.csv" "SOFR Compounded Index.csv" COPY
 
 add_executable(${PROJECT_NAME}
   example.cpp
-  parser.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
+  reset_example_util
   reset
   calendar_static-data
 )

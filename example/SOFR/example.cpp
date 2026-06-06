@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "parser.h"
+#include <parser.h>
 
 #include <decimal.h>
 #include <scaled_value.h>
@@ -59,11 +59,22 @@ using namespace reset;
 static auto parse_csv_fixings_SOFR() -> RateFixings
 {
 	// from https://www.newyorkfed.org/markets/reference-rates/sofr
-	return parse_csv_fixings<RateFixings>(
-		"SOFR.csv",
-		1u, // skip the "SOFR," column after the date
+
+	const auto d = parser_detail{
+		1u,
 		2018y / April / 2d,
 		2026y / April / 9d,
+		"%m/%d/%Y",
+		',',
+		nullopt,
+		nullopt,
+		6u
+	};
+
+	return parse_csv_fixings<RateFixings>(
+		"SOFR.csv",
+		d,
+		"America/SIFMA",
 		2u
 	);
 }
@@ -71,44 +82,85 @@ static auto parse_csv_fixings_SOFR() -> RateFixings
 static auto parse_csv_fixings_SOFR_compounded_index() -> IndexFixings
 {
 	// from https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index
-	return parse_csv_fixings<IndexFixings>(
-		"SOFR Compounded Index.csv", // also includes averages, so maybe needs a better name
-		15u,
+
+	const auto d = parser_detail{
+		1u,
 		2020y / March / 2d,
 		2026y / April / 10d,
+		"%m/%d/%Y",
+		',',
+		nullopt,
+		nullopt,
+		15u
+	};
+
+	return parse_csv_fixings<IndexFixings>(
+		"SOFR Compounded Index.csv", // also includes averages, so maybe needs a better name
+		d,
+		"America/SIFMA",
 		8u
 	);
 }
 
 static auto parse_csv_fixings_SOFR_30_day_average() -> RateFixings
 {
-	return parse_csv_fixings<RateFixings>(
-		"SOFR Compounded Index.csv",
-		12u,
+	const auto d = parser_detail{
+		1u,
 		2020y / March / 2d,
 		2026y / April / 10d,
+		"%m/%d/%Y",
+		',',
+		nullopt,
+		nullopt,
+		12u
+	};
+
+	return parse_csv_fixings<RateFixings>(
+		"SOFR Compounded Index.csv",
+		d,
+		"America/SIFMA",
 		5u
 	);
 }
 
 static auto parse_csv_fixings_SOFR_90_day_average() -> RateFixings
 {
-	return parse_csv_fixings<RateFixings>(
-		"SOFR Compounded Index.csv",
-		13u,
+	const auto d = parser_detail{
+		1u,
 		2020y / March / 2d,
 		2026y / April / 10d,
+		"%m/%d/%Y",
+		',',
+		nullopt,
+		nullopt,
+		13u
+	};
+
+	return parse_csv_fixings<RateFixings>(
+		"SOFR Compounded Index.csv",
+		d,
+		"America/SIFMA",
 		5u
 	);
 }
 
 static auto parse_csv_fixings_SOFR_180_day_average() -> RateFixings
 {
-	return parse_csv_fixings<RateFixings>(
-		"SOFR Compounded Index.csv",
-		14u,
+	const auto d = parser_detail{
+		1u,
 		2020y / March / 2d,
 		2026y / April / 10d,
+		"%m/%d/%Y",
+		',',
+		nullopt,
+		nullopt,
+		14u
+	};
+
+	return parse_csv_fixings<RateFixings>(
+		"SOFR Compounded Index.csv",
+		d,
+		"America/SIFMA",
 		5u
 	);
 }
