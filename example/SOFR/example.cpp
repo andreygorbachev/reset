@@ -339,14 +339,11 @@ int main()
 	);
 	for (const auto& d : _30_day_dates.get_dates())
 	{
-		if (d == *_30_day_dates.get_dates().crbegin())
-			break;
-		// temporary only
-
 		const auto& _30d_avg = SOFR_30_day_average[d];
 		assert(_30d_avg);
 
-		if (*_30d_avg != average(SOFR, rfd, d, _30dd).percent)
+		const auto computed_avg = average(SOFR, rfd, d, _30dd).percent;
+		if (*_30d_avg != computed_avg)
 			cout
 				<< fixed
 				<< setprecision(SOFR_30_day_average.get_decimal_places())
@@ -355,7 +352,7 @@ int main()
 				<< " SOFR 30 Day Average is "
 				<< SOFR_30_day_average[d]->get_value()
 				<< " and the same computed value is "
-				<< average(SOFR, rfd, d, _30dd).percent.get_value()
+				<< computed_avg.get_value()
 				<< endl;
 	}
 
@@ -365,24 +362,21 @@ int main()
 	);
 	for (const auto& d : _90_day_dates.get_dates())
 	{
-		if (d == *_90_day_dates.get_dates().crbegin())
-			break;
-		// temporary only
-
 		const auto& _90d_avg = SOFR_90_day_average[d];
 		assert(_90d_avg);
 
-		if (*_90d_avg != average(SOFR, rfd, d, _90dd).percent)
+		const auto computed_avg = average(SOFR, rfd, d, _90dd).percent;
+		if (*_90d_avg != computed_avg)
 			cout
-			<< fixed
-			<< setprecision(SOFR_90_day_average.get_decimal_places())
-			<< "For "
-			<< d
-			<< " SOFR 90 Day Average is "
-			<< SOFR_90_day_average[d]->get_value()
-			<< " and the same computed value is "
-			<< average(SOFR, rfd, d, _90dd).percent.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(SOFR_90_day_average.get_decimal_places())
+				<< "For "
+				<< d
+				<< " SOFR 90 Day Average is "
+				<< SOFR_90_day_average[d]->get_value()
+				<< " and the same computed value is "
+				<< computed_avg.get_value()
+				<< endl;
 	}
 
 	const auto& SOFR_180_day_average_calendar = SOFR_180_day_average.get_calendar();
@@ -391,24 +385,21 @@ int main()
 	);
 	for (const auto& d : _180_day_dates.get_dates())
 	{
-		if (d == *_180_day_dates.get_dates().crbegin())
-			break;
-		// temporary only
-
 		const auto& _180d_avg = SOFR_180_day_average[d];
 		assert(_180d_avg);
 
-		if (*_180d_avg != average(SOFR, rfd, d, _180dd).percent)
+		const auto computed_avg = average(SOFR, rfd, d, _180dd).percent;
+		if (*_180d_avg != computed_avg)
 			cout
-			<< fixed
-			<< setprecision(SOFR_180_day_average.get_decimal_places())
-			<< "For "
-			<< d
-			<< " SOFR 180 Day Average is "
-			<< SOFR_180_day_average[d]->get_value()
-			<< " and the same computed value is "
-			<< average(SOFR, rfd, d, _180dd).percent.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(SOFR_180_day_average.get_decimal_places())
+				<< "For "
+				<< d
+				<< " SOFR 180 Day Average is "
+				<< SOFR_180_day_average[d]->get_value()
+				<< " and the same computed value is "
+				<< computed_avg .get_value()
+				<< endl;
 	}
 
 	return 0;
