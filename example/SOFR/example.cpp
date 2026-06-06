@@ -269,10 +269,10 @@ int main()
 	if (calendar{ SOFR_calendar.get_weekend(), schedule{ common_period_1, SOFR_calendar.get_schedule().get_dates() } } ==
 		calendar{ SIFMA_calendar.get_weekend(), schedule{ common_period_1, SIFMA_calendar.get_schedule().get_dates() } }
 	)
-		cout << "SOFR calendar and USA calendar match" << endl;
+		cout << "SOFR calendar and SIFMA calendar match" << endl;
 	else
 	{
-		cout << "SOFR calendar and USA calendar do not match" << endl;
+		cout << "SOFR calendar and SIFMA calendar do not match" << endl;
 
 		auto diffs = schedule::dates{};
 		ranges::set_symmetric_difference(
@@ -291,10 +291,10 @@ int main()
 	if (calendar{ SOFR_compounded_index_calendar.get_weekend(), schedule{ common_period_2, SOFR_compounded_index_calendar.get_schedule().get_dates() } } ==
 		calendar{ SIFMA_calendar.get_weekend(), schedule{ common_period_2, SIFMA_calendar.get_schedule().get_dates() } }
 	)
-		cout << "SOFR Compounded Index calendar and USA calendar match" << endl;
+		cout << "SOFR Compounded Index calendar and SIFMA calendar match" << endl;
 	else
 	{
-		cout << "SOFR Compounded Index calendar and USA calendar do not match" << endl;
+		cout << "SOFR Compounded Index calendar and SIFMA calendar do not match" << endl;
 
 		auto diffs = schedule::dates{};
 		ranges::set_symmetric_difference(
