@@ -70,6 +70,9 @@ namespace reset
 
 		auto operator[](const std::chrono::year_month_day& ymd) const -> const std::optional<observation>&;
 
+		// should fallback operations be standalone functions?
+		// (and the fallback mechanism itself should be a separate class, so handle more than one way to do a fallback)
+
 		auto needs_fallback(const std::chrono::year_month_day& ymd) const -> bool;
 		// what should it do if ymd is not a good business day?
 
