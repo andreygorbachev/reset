@@ -23,7 +23,6 @@
 #pragma once
 
 #include <chrono>
-#include <optional>
 #include <utility>
 
 #include <period.h>
@@ -95,13 +94,12 @@ namespace reset
 
 		const auto year_fraction = fin_calendar::fraction(schedule.get_period(), rfd.day_count);
 
-		const auto one = Decimal{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
-		auto a = Decimal{ (val - one) / year_fraction };
+		auto rate = Decimal{ (val - Decimal{ 1 }) / year_fraction };
 
-		a = round_dp(a, detail.final_round);
+		rate = round_dp(rate, detail.final_round);
 
 		return {
-			std::move(a),
+			std::move(rate),
 			{
 				average_start,
 				average_end,
@@ -113,7 +111,7 @@ namespace reset
 
 
 	inline void average_step_( // should it be the same as index_step_ in index.h?
-		Decimal& a, // should it take and return a value? (no in/out parameter)
+		Decimal& val, // should it take and return a value? (no in/out parameter)
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,
@@ -126,7 +124,7 @@ namespace reset
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
 		const auto one = Decimal{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
-		a *= Decimal{ one + rate * year_fraction }; // should these have some kind of units?
+		val *= one + rate * year_fraction; // should these have some kind of units?
 	}
 
 }

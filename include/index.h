@@ -52,7 +52,7 @@ namespace reset
 		std::optional<unsigned int> step_round = std::nullopt;
 		std::optional<unsigned int> final_trunc = std::nullopt;
 		std::optional<unsigned int> final_round = std::nullopt; // should roundings and truncations be int?
-		std::optional<gregorian::calendar> calendar = std::nullopt; // does it need to be optional? does it need to be a copy?
+		std::optional<gregorian::calendar> calendar = std::nullopt; // does it need to be optional? does it need to be a copy? do we need it at all? (could be lifted from fixings)
 	};
 
 

@@ -28,29 +28,75 @@
 
 #include <day_count.h>
 
+#include <period.h>
+#include <calendar.h>
+
+#include <decimal.h>
+
 #include "rate.h"
 #include "fixings.h"
-#include "rate.h"
-#include "index.h"
+#include "reset_math.h"
 
 
 namespace reset
 {
 
-	// needs to handle lookback etc (also its own day count possibly)
+	struct compound_detail
+	{
+
+		// does it need its own start/end? (at the moment these are lifted from rate_detail, but maybe they need to be separate?)
+
+		// needs to handle lookback etc
+	
+		gregorian::calendar calendar; // does it need to be a copy?
+
+	};
+
+
+	inline void compounded_step_(
+		Decimal& val,
+		const std::chrono::year_month_day& start,
+		const std::chrono::year_month_day& end,
+		const RateFixings& fix,
+		const rate_fixing_detail& rfd
+	);
+
 
 	// maybe this needs a different name? (like compounded_rate)
 	inline auto compounded(
 		const RateFixings& fix,
-		std::chrono::year_month_day start, // should it be a period instead?
-		std::chrono::year_month_day end
+		const rate_fixing_detail& rfd,
+		const compound_detail& cd,
+		rate_detail rd
 	) -> rate
 	{
+		const auto schedule = cd.calendar.make_business_days_schedule(
+			gregorian::util::days_period{ rd.start, rd.end }
+		); // is this a wrong data structure?
+		// assert that it is not empty?
+
+		auto dates = schedule.get_dates(); // we might consider something not making a copy as most use cases would not need to insert
+		if (!dates.contains(rd.start)) // or we can just have a look at cbegin(), which is O(1) operation on most platforms, rather than O(log n)
+			dates.insert(rd.start); // do it with hint?
+
+		auto val = Decimal{ 1 };
+
+		for (const auto& [start, end] : dates | std::views::adjacent<2uz>)
+			compounded_step_(val, start, end, fix, rfd);
+
+		const auto year_fraction = fin_calendar::fraction(
+			rd.start,
+			rd.end,
+			rd.day_count
+		);
+
+		auto rate = Decimal{ (val - Decimal{ 1 }) / year_fraction };
+
+		rate = round_dp(rate, rd.round);
+
 		return {
-			Percent{"0"}, // temp only
-			start,
-			end,
-			fin_calendar::day_count<Decimal>{}
+			std::move(rate),
+			std::move(rd)
 		};
 	}
 
@@ -81,6 +127,23 @@ namespace reset
 			std::move(rate),
 			std::move(detail)
 		};
+	}
+
+
+	inline void compounded_step_( // should it be the same as index_step_ in index.h?
+		Decimal& val, // should it take and return a value? (no in/out parameter)
+		const std::chrono::year_month_day& start,
+		const std::chrono::year_month_day& end,
+		const RateFixings& fix,
+		const rate_fixing_detail& rfd
+	)
+	{
+		const auto& fixing = fix.with_fallback(start); // I guess this is just a "number" and the "details" are provided separately - is it good?
+		const auto rate = static_cast<Decimal>(fixing);
+
+		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
+
+		val *= Decimal{ 1 } + rate * year_fraction; // should these have some kind of units?
 	}
 
 }

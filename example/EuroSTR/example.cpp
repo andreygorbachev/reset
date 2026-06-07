@@ -419,11 +419,16 @@ int main()
 		actual_360<Decimal>{},
 		5u + 2u // as we deal with fractions, rather than rates
 	};
+	const auto cd = compound_detail{
+		EuroSTR.get_calendar()
+	};
 	cout
 		<< fixed
 		<< setprecision(rd.round) // should be 5 rather than 7
 		<< "Compounded EuroSTR average rate between x and y is "
 		<< compounded(EuroSTR_compounded_index, rd).percent.get_value()
+		<< " and the same \"long formula\" rate is "
+		<< compounded(EuroSTR, rfd, cd, rd).percent.get_value()
 		<< endl;
 
 	return 0;
