@@ -38,7 +38,7 @@
 #include "reset_math.h"
 
 
-//namespace reset // maybe should be in a separate lib (as it uses resets, so one level up) // what about other constructs in this project
+namespace reset
 {
 
 	struct compound_detail
