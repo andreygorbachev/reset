@@ -70,6 +70,8 @@ namespace reset
 	{
 		// do we handle the case where detail.term is empty?
 
+		// implement in terms of compounded?
+
 		const auto average_start = fin_calendar::make_business_day(
 			retreat(ymd, detail.term),
 			detail.business_day_convention,
