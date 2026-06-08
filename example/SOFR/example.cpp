@@ -27,6 +27,8 @@
 #include <fixings.h>
 #include <index.h>
 #include <average.h>
+#include <rate.h>
+#include <compounded.h>
 
 #include <actual_360.h>
 
@@ -402,10 +404,26 @@ int main()
 				<< endl;
 	}
 
+	// interesting case around Good Friday
+	const auto rd = rate_detail{
+		2026y / March / 30d,
+		2026y / April / 10d,
+		actual_360<Decimal>{},
+		5u + 2u // as we deal with fractions, rather than rates
+	};
+	const auto cd = compound_detail{
+		gregorian::static_data::locate_calendar("America/SIFMA", rd.start)
+	};
+	cout
+		<< fixed
+		<< setprecision(rd.round) // should be 5 rather than 7
+		<< "Compounded SOFR average rate between x and y is "
+		<< compounded(SOFR_compounded_index, rd).percent.get_value()
+		<< " and the same \"long formula\" rate is "
+		<< compounded(SOFR, rfd, cd, rd).percent.get_value()
+		<< endl;
+
 	return 0;
 }
-
-// what should we expect for 03 April 2026? there was no SOFR published on that day, but would compounding be done on that day?
-// (what is the compounding calendar for the index and averages?)
 
 // do we also need to cosider FedFunds?
