@@ -23,8 +23,12 @@
 #include <compounded.h>
 
 #include <gtest/gtest.h>
-
-using namespace std;
+#include "setup.h"
+#include <actual_360.h>
+#include <period.h>
+#include <weekend.h>
+#include <schedule.h>
+#include <calendar.h>
 
 
 namespace reset
@@ -32,7 +36,39 @@ namespace reset
 
 	TEST(compounded, compounded1)
 	{
-		// "long formula"
+		using namespace std;
+		using namespace std::chrono;
+		using namespace gregorian;
+		using namespace gregorian::util;
+		using namespace fin_calendar;
+		using namespace reset;
+
+		// Create a tiny SOFR-like RateFixings around Good Friday 2026
+		// Period: 2026-04-02 .. 2026-04-06
+		auto ts = RateFixings::storage{ days_period{2026y / April / 2d, 2026y / April / 6d} };
+		// Business days: 2026-04-02 (Thu) and 2026-04-06 (Mon)
+		// Good Friday 2026-04-03 is a holiday (no fixing provided)
+		ts[2026y / April / 2d] = Percent{ "1.80" };
+		// 2026-04-03 left empty to model Good Friday (holiday)
+		// weekend 4/4 and 4/5 also left empty
+		ts[2026y / April / 6d] = Percent{ "1.75" };
+
+		auto cal = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), { 2026y / April / 3d } } };
+
+		auto fix = fixings{ std::move(ts), std::move(cal), 2u };
+
+		auto rfd = rate_fixing_detail{};
+		rfd.day_count = actual_360<Decimal>{};
+
+		// Compound from 2026-04-02 (business) to 2026-04-06 (business) across Good Friday
+		auto rd = rate_detail{ 2026y / April / 2d, 2026y / April / 6d, rfd.day_count, 5u };
+		auto cd = compound_detail{ fix.get_calendar() };
+
+		auto result = compounded(fix, rfd, cd, rd);
+
+		// For this case there is a single step using the 2026-04-02 fixing over 4 days.
+		// The computed compounded annualised rate should equal the underlying daily rate (1.80%)
+		EXPECT_EQ(Percent{ "1.80" }, result.percent);
 	}
 
 	TEST(compounded, compounded2)
