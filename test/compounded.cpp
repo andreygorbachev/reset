@@ -40,6 +40,7 @@ namespace reset
 		// from the compounded index
 
 		// test that we get an exception on a non business day (start/end)
+		// (but maybe that is not correct and there is some fallback kicks in in this case)
 	}
 
 }
