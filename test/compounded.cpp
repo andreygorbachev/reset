@@ -21,14 +21,21 @@
 // SOFTWARE.
 
 #include <compounded.h>
+#include <decimal.h>
+#include <scaled_value.h>
+#include <rate.h>
+#include <fixings.h>
 
 #include <gtest/gtest.h>
-#include "setup.h"
+
 #include <actual_360.h>
 #include <period.h>
 #include <weekend.h>
 #include <schedule.h>
 #include <calendar.h>
+
+#include <chrono>
+#include <utility>
 
 
 namespace reset
@@ -45,7 +52,7 @@ namespace reset
 
 		// Create a tiny SOFR-like RateFixings around Good Friday 2026
 		// Period: 2026-04-02 .. 2026-04-06
-		auto ts = RateFixings::storage{ days_period{2026y / April / 2d, 2026y / April / 6d} };
+		auto ts = RateFixings::storage{ days_period{ 2026y / April / 2d, 2026y / April / 6d } };
 		// Business days: 2026-04-02 (Thu) and 2026-04-06 (Mon)
 		// Good Friday 2026-04-03 is a holiday (no fixing provided)
 		ts[2026y / April / 2d] = Percent{ "1.80" };
