@@ -21,6 +21,10 @@
 // SOFTWARE.
 
 
+// the things we need to think about:
+// 1) these are monthly (rather than daily) - the CSV file uses the first day of the month as the date
+// 2) there is also a publication date (which might need a publication calendar)
+// 3) this index has 1 observation missing
 
 int main()
 {
