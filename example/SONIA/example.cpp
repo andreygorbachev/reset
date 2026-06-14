@@ -83,7 +83,7 @@ int main()
 {
 	const auto SONIA = parse_csv_fixings_SONIA();
 
-	auto rfd = rate_fixing_detail{};
+	auto rfd = rate_fixings_detail{};
 	rfd.day_count = actual_365_fixed<Decimal>{};
 
 	const auto SONIA_compounded_index = parse_csv_fixings_SONIA_compounded_index();

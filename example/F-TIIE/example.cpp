@@ -223,7 +223,7 @@ static auto parse_csv_fixings_FTIIE_compounded_in_advance_182_day() -> RateFixin
 
 static auto non_business_day_index( // is this important enough to move to the main library?
 	const RateFixings& fix,
-	const rate_fixing_detail& rfd,
+	const rate_fixings_detail& rfd,
 	const std::chrono::year_month_day& ymd,
 	const index_detail& id = index_detail{} // does it need a default?
 )
@@ -317,7 +317,7 @@ int main()
 {
 	const auto FTIIE = parse_csv_fixings_FTIIE();
 
-	auto rfd = rate_fixing_detail{};
+	auto rfd = rate_fixings_detail{};
 	rfd.day_count = actual_360<Decimal>{};
 
 	const auto target_rate = parse_csv_fixings_target_rate();

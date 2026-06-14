@@ -149,7 +149,7 @@ int main()
 
 	// how can we "add" these 2 together?
 
-	auto rfd = rate_fixing_detail{};
+	auto rfd = rate_fixings_detail{};
 	rfd.day_count = actual_360<Decimal>{};
 
 	const auto EuroSTR_compounded_index = parse_csv_fixings_EuroSTR_compounded_index();
@@ -419,7 +419,7 @@ int main()
 		actual_360<Decimal>{},
 		5u + 2u // as we deal with fractions, rather than rates
 	};
-	const auto cd = compound_detail{
+	const auto cd = compounded_detail{
 		EuroSTR.get_calendar()
 	};
 	cout

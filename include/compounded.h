@@ -41,7 +41,7 @@
 namespace reset // maybe should be in a separate lib (as it uses resets, so one level up) // what about other constructs in this project
 {
 
-	struct compound_detail
+	struct compounded_detail
 	{
 
 		// does it need its own start/end? (at the moment these are lifted from rate_detail, but maybe they need to be separate?)
@@ -58,15 +58,15 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,
-		const rate_fixing_detail& rfd
+		const rate_fixings_detail& rfd
 	);
 
 
 	// maybe this needs a different name? (like compounded_rate)
 	inline auto compounded(
 		const RateFixings& fix,
-		const rate_fixing_detail& rfd,
-		const compound_detail& cd,
+		const rate_fixings_detail& rfd,
+		const compounded_detail& cd,
 		rate_detail rd
 	) -> rate
 	{
@@ -135,7 +135,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,
-		const rate_fixing_detail& rfd
+		const rate_fixings_detail& rfd
 	)
 	{
 		const auto& fixing = fix.with_fallback(start); // I guess this is just a "number" and the "details" are provided separately - is it good?

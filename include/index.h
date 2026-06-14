@@ -61,7 +61,7 @@ namespace reset
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,
-		const rate_fixing_detail& rfd,
+		const rate_fixings_detail& rfd,
 		const index_detail& id
 	);
 
@@ -69,7 +69,7 @@ namespace reset
 	// maybe this needs a better name? - compute a compounded RFR index from the underlying fixings
 	inline auto index(
 		const RateFixings& fix,
-		const rate_fixing_detail& rfd,
+		const rate_fixings_detail& rfd,
 		const std::chrono::year_month_day& ymd,
 		const index_detail& id = index_detail{} // does it need a default?
 	) -> Value
@@ -111,7 +111,7 @@ namespace reset
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,
-		const rate_fixing_detail& rfd,
+		const rate_fixings_detail& rfd,
 		const index_detail& detail
 	)
 	{
@@ -142,7 +142,7 @@ namespace reset
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,
-		const rate_fixing_detail& rfd,
+		const rate_fixings_detail& rfd,
 		const index_detail& id
 	)
 	{

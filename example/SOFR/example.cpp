@@ -174,7 +174,7 @@ int main()
 {
 	const auto SOFR = parse_csv_fixings_SOFR();
 
-	auto rfd = rate_fixing_detail{};
+	auto rfd = rate_fixings_detail{};
 	rfd.day_count = actual_360<Decimal>{};
 
 	const auto SOFR_compounded_index = parse_csv_fixings_SOFR_compounded_index();
@@ -411,7 +411,7 @@ int main()
 		actual_360<Decimal>{},
 		5u + 2u // as we deal with fractions, rather than rates
 	};
-	const auto cd = compound_detail{
+	const auto cd = compounded_detail{
 		gregorian::static_data::locate_calendar("America/SIFMA", rd.start)
 	};
 	cout

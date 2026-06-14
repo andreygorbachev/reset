@@ -143,7 +143,7 @@ int main()
 	const auto current_index = parse_csv_fixings_current_index();
 	// we can assert consistency between what was read above
 
-	auto rfd = rate_fixing_detail{};
+	auto rfd = rate_fixings_detail{};
 	rfd.day_count = actual_360<Decimal>{};
 
 	// from https://indexdata.six-group.com/download/online/vendor_code/six-calculated-indices.xls

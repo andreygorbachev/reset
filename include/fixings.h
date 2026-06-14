@@ -41,7 +41,7 @@
 namespace reset
 {
 
-	struct rate_fixing_detail // should it be called metadata?
+	struct rate_fixings_detail // should it be called metadata?
 	{
 		fin_calendar::day_count<Decimal> day_count;
 	};

@@ -79,7 +79,7 @@ int main()
 	const auto& cal = fix.get_calendar();
 	const auto [f, u] = cal.get_schedule().get_period().from_until();
 
-	auto rfd = rate_fixing_detail{};
+	auto rfd = rate_fixings_detail{};
 	rfd.day_count = actual_365_fixed<Decimal>{};
 
 	auto id1 = index_detail{};

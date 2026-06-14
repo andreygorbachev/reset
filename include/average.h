@@ -56,14 +56,14 @@ namespace reset
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,
-		const rate_fixing_detail& rfd
+		const rate_fixings_detail& rfd
 	);
 
 
 	// maybe this needs a better name? (like compounded average)
 	inline auto average(
 		const RateFixings& fix,
-		const rate_fixing_detail& rfd,
+		const rate_fixings_detail& rfd,
 		const std::chrono::year_month_day& ymd,
 		const average_detail& detail = average_detail{} // does it need a default?
 	) -> rate
@@ -117,7 +117,7 @@ namespace reset
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,
-		const rate_fixing_detail& rfd
+		const rate_fixings_detail& rfd
 	)
 	{
 		const auto& fixing = fix.with_fallback(start); // or we can create special average_step_ for the first step when average starts on a non business day (and we need to use the previous reset)

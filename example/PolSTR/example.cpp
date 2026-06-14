@@ -141,7 +141,7 @@ int main()
 {
 	const auto PolSTR = parse_csv_fixings_PolSTR();
 
-	auto rfd = rate_fixing_detail{};
+	auto rfd = rate_fixings_detail{};
 	rfd.day_count = actual_365_fixed<Decimal>{};
 
 	const auto PolSTR_compounded_index = parse_csv_fixings_PolSTR_compounded_index();

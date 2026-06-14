@@ -190,7 +190,7 @@ int main()
 {
 	const auto ZARONIA = parse_csv_fixings_ZARONIA();
 
-	auto rfd = rate_fixing_detail{};
+	auto rfd = rate_fixings_detail{};
 	rfd.day_count = actual_365_fixed<Decimal>{};
 
 	const auto ZARONIA_compounded_index = parse_csv_fixings_ZARONIA_compounded_index();
