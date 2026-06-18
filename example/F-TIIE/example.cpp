@@ -61,14 +61,14 @@ using namespace reset;
 static auto make_parser_detail() -> parser_detail
 {
 	return parser_detail{
-		19u,
-		2006y / January / 2d,
-		2026y / May / 5d,
-		"%m/%d/%Y",
-		',',
-		nullopt,
-		"N/E",
-		1u
+		.header_lines = 19u,
+		.from = 2006y / January / 2d,
+		.until = 2026y / May / 5d,
+		.date_format = "%m/%d/%Y",
+		.separator = ',',
+		.padder = nullopt,
+		.not_available = "N/E",
+		.skip_columns = 1u
 	};
 }
 
@@ -317,8 +317,9 @@ int main()
 {
 	const auto FTIIE = parse_csv_fixings_FTIIE();
 
-	auto rfd = rate_fixings_detail{};
-	rfd.day_count = actual_360<Decimal>{};
+	const auto rfd = rate_fixings_detail{
+		.day_count = actual_360<Decimal>{}
+	};
 
 	const auto target_rate = parse_csv_fixings_target_rate();
 	const auto TIIE_fallback_28_day = parse_csv_fixings_TIIE_fallback_28_day();
@@ -336,18 +337,20 @@ int main()
 	// "Determination of the Overnight Funding TIIE Index compounded on business days,
 	// the Overnight Funding TIIE Index compounded on calendar days,
 	// and the Compounded in advance Overnight Funding TIIE."
-	auto bus_id = index_detail{};
-	bus_id.initial_value = Value{ "100000" };
-	bus_id.initial_date = 2006y / January / 2d;
-	bus_id.step_round = 16u;
-	bus_id.final_round = 4u;
+	const auto bus_id = index_detail{
+		.initial_value = Value{ "100000" },
+		.initial_date = 2006y / January / 2d,
+		.step_round = 16u,
+		.final_round = 4u
+	};
 
-	auto cal_id = index_detail{};
-	cal_id.initial_value = Value{ "100000" };
-	cal_id.initial_date = 2006y / January / 2d;
-	cal_id.step_round = 16u;
-	cal_id.final_round = 4u;
-	cal_id.calendar = FTIIE_compounded_on_calendar_days_index.get_calendar();
+	const auto cal_id = index_detail{
+		.initial_value = Value{ "100000" },
+		.initial_date = 2006y / January / 2d,
+		.step_round = 16u,
+		.final_round = 4u,
+		.calendar = FTIIE_compounded_on_calendar_days_index.get_calendar()
+	};
 
 	// However, on November 4, 2024, during the calculation of TIIE-F and the referred Index corresponding to November 5, 2024,
 	// a contingency occurred, requiring a manual calculation process, which is contemplated under Circular 3/2012.

@@ -102,11 +102,11 @@ namespace reset
 
 		return {
 			std::move(rate),
-			{
-				average_start,
-				average_end,
-				rfd.day_count, // or should the average has its own day count? (is there a way to default it to underlying daily rate day count?)
-				detail.final_round
+			rate_detail{
+				.start = average_start,
+				.end = average_end,
+				.day_count = rfd.day_count, // or should the average has its own day count? (is there a way to default it to underlying daily rate day count?)
+				.round = detail.final_round
 			}
 		};
 	}

@@ -59,14 +59,13 @@ using namespace reset;
 static auto make_parser_detail() -> parser_detail
 {
 	return parser_detail{
-		6u,
-		2022y / April / 28d,
-		2026y / May / 27d,
-		"%Y-%m-%d",
-		',',
-		nullopt,
-		nullopt,
-		1u
+		.header_lines = 6u,
+		.from = 2022y / April / 28d,
+		.until = 2026y / May / 27d,
+		.date_format = "%Y-%m-%d",
+		.separator = ',',
+		.not_available = nullopt,
+		.skip_columns = 1u
 	};
 }
 
@@ -190,8 +189,9 @@ int main()
 {
 	const auto ZARONIA = parse_csv_fixings_ZARONIA();
 
-	auto rfd = rate_fixings_detail{};
-	rfd.day_count = actual_365_fixed<Decimal>{};
+	const auto rfd = rate_fixings_detail{
+		.day_count = actual_365_fixed<Decimal>{}
+	};
 
 	const auto ZARONIA_compounded_index = parse_csv_fixings_ZARONIA_compounded_index();
 
@@ -206,40 +206,47 @@ int main()
 	// "Compounded ZARONIA period averages and index
 	// Calculation methodology and publication
 	// October 2023"
-	auto id = index_detail{};
-	id.initial_value = Value{ "100" };
-	id.initial_date = 2022y / November / 1d;
-	id.final_round = 12u;
+	const auto id = index_detail{
+		.initial_value = Value{ "100" },
+		.initial_date = 2022y / November / 1d,
+		.final_round = 12u
+	};
 
-	auto _1wd = average_detail{};
-	_1wd.term = weeks{ 1 };
-	_1wd.business_day_convention = fin_calendar::preceding{};
-	_1wd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _1wd = average_detail{
+		.term = weeks{ 1 },
+		.business_day_convention = fin_calendar::preceding{},
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
-	auto _1md = average_detail{};
-	_1md.term = months{ 1 };
-	_1md.business_day_convention = modified_preceding{};
-	_1md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _1md = average_detail{
+		.term = months{ 1 },
+		.business_day_convention = modified_preceding{},
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
-	auto _3md = average_detail{};
-	_3md.term = months{ 3 };
-	_3md.business_day_convention = modified_preceding{};
-	_3md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _3md = average_detail{
+		.term = months{ 3 },
+		.business_day_convention = modified_preceding{},
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
-	auto _6md = average_detail{};
-	_6md.term = months{ 6 };
-	_6md.business_day_convention = modified_preceding{};
-	_6md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _6md = average_detail{
+		.term = months{ 6 },
+		.business_day_convention = modified_preceding{},
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
-	auto _9md = average_detail{};
-	_9md.term = months{ 9 };
-	_9md.business_day_convention = modified_preceding{};
-	_9md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _9md = average_detail{
+		.term = months{ 9 },
+		.business_day_convention = modified_preceding{},
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
-	auto _12md = average_detail{};
-	_12md.term = months{ 12 };
-	_12md.business_day_convention = modified_preceding{};
-	_12md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _12md = average_detail{
+		.term = months{ 12 },
+		.business_day_convention = modified_preceding{},
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
 	const auto date = 2026y / May / 27d;
 

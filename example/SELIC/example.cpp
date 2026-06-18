@@ -59,15 +59,17 @@ int main()
 {
 	const auto SELIC = parse_csv_fixings_SELIC();
 
-	auto rfd = rate_fixings_detail{};
-	rfd.day_count = calculation_252<Decimal>{ SELIC.get_calendar() }; // think more about copies of calendar
+	const auto rfd = rate_fixings_detail{
+		.day_count = calculation_252<Decimal>{ SELIC.get_calendar() } // think more about copies of calendar
+	};
 
-	auto id = index_detail{};
-	id.initial_value = Value{ "1000" };
-	id.initial_date = 2000y / July / 1d;
-	id.brazil = true;
-	id.factor_round = 8u;
-	id.final_trunc = 6u;
+	const auto id = index_detail{
+		.initial_value = Value{ "1000" },
+		.initial_date = 2000y / July / 1d,
+		.brazil = true,
+		.factor_round = 8u,
+		.final_trunc = 6u
+	};
 
 	// from https://wilsonfreitas.github.io/posts/pricing-brazilian-government-bonds-lft.html
 

@@ -53,14 +53,13 @@ using namespace reset;
 static auto make_parser_detail() -> parser_detail
 {
 	return parser_detail{
-		1u,
-		2021y / January / 4d,
-		2026y / May / 4d,
-		"%Y-%m-%d",
-		',',
-		nullopt,
-		nullopt,
-		0u
+		.header_lines = 1u,
+		.from = 2021y / January / 4d,
+		.until = 2026y / May / 4d,
+		.date_format = "%Y-%m-%d",
+		.separator = ',',
+		.padder = nullopt,
+		.skip_columns = 0u
 	};
 }
 
@@ -141,8 +140,9 @@ int main()
 {
 	const auto PolSTR = parse_csv_fixings_PolSTR();
 
-	auto rfd = rate_fixings_detail{};
-	rfd.day_count = actual_365_fixed<Decimal>{};
+	const auto rfd = rate_fixings_detail{
+		.day_count = actual_365_fixed<Decimal>{}
+	};
 
 	const auto PolSTR_compounded_index = parse_csv_fixings_PolSTR_compounded_index();
 
@@ -151,25 +151,29 @@ int main()
 	const auto PolSTR_6_month_compounded = parse_csv_fixings_PolSTR_6_month_compounded();
 
 	// from https://gpwbenchmark.pl/documentation-transaction-based
-	auto id = index_detail{};
-	id.initial_value = Value{ "100" };
-	id.initial_date = 2021y / January / 4d;
-	id.final_round = 8u;
+	const auto id = index_detail{
+		.initial_value = Value{ "100" },
+		.initial_date = 2021y / January / 4d,
+		.final_round = 8u
+	};
 
-	auto _1md = average_detail{};
-	_1md.term = months{ 1 };
-	_1md.business_day_convention = modified_preceding{};
-	_1md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _1md = average_detail{
+		.term = months{ 1 },
+		.business_day_convention = modified_preceding{},
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
-	auto _3md = average_detail{};
-	_3md.term = months{ 3 };
-	_3md.business_day_convention = modified_preceding{};
-	_3md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _3md = average_detail{
+		.term = months{ 3 },
+		.business_day_convention = modified_preceding{},
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
-	auto _6md = average_detail{};
-	_6md.term = months{ 6 };
-	_6md.business_day_convention = modified_preceding{};
-	_6md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _6md = average_detail{
+		.term = months{ 6 },
+		.business_day_convention = modified_preceding{},
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
 	const auto date = PolSTR_compounded_index.get_time_series().get_period().get_until();
 

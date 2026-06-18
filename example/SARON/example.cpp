@@ -48,14 +48,14 @@ using namespace reset;
 static auto parse_csv_fixings_SARON() -> RateFixings
 {
 	const auto d = parser_detail{
-		4u,
-		1999y / June / 30d,
-		2026y / May / 12d,
-		"%d.%m.%Y",
-		';',
-		' ',
-		nullopt,
-		0u
+		.header_lines = 4u,
+		.from = 1999y / June / 30d,
+		.until = 2026y / May / 12d,
+		.date_format = "%d.%m.%Y",
+		.separator = ';',
+		.padder = ' ',
+		.not_available = nullopt,
+		.skip_columns = 0u
 	};
 
 	return parse_csv_fixings<RateFixings>(
@@ -71,14 +71,14 @@ static auto parse_csv_fixings_SARON() -> RateFixings
 static auto parse_csv_fixings_current_rate() -> RateFixings
 {
 	const auto d = parser_detail{
-		4u,
-		1999y / June / 30d,
-		2026y / May / 12d,
-		"%d.%m.%Y",
-		';',
-		' ',
-		nullopt,
-		3u
+		.header_lines = 4u,
+		.from = 1999y / June / 30d,
+		.until = 2026y / May / 12d,
+		.date_format = "%d.%m.%Y",
+		.separator = ';',
+		.padder = ' ',
+		.not_available = nullopt,
+		.skip_columns = 3u
 	};
 
 	return parse_csv_fixings<RateFixings>(
@@ -92,14 +92,14 @@ static auto parse_csv_fixings_current_rate() -> RateFixings
 static auto parse_csv_fixings_SAION() -> IndexFixings
 {
 	const auto d = parser_detail{
-		4u,
-		1999y / June / 30d,
-		2026y / May / 12d,
-		"%d.%m.%Y",
-		';',
-		' ',
-		nullopt,
-		4u
+		.header_lines = 4u,
+		.from = 1999y / June / 30d,
+		.until = 2026y / May / 12d,
+		.date_format = "%d.%m.%Y",
+		.separator = ';',
+		.padder = ' ',
+		.not_available = nullopt,
+		.skip_columns = 4u
 	};
 
 	return parse_csv_fixings<IndexFixings>(
@@ -113,14 +113,14 @@ static auto parse_csv_fixings_SAION() -> IndexFixings
 static auto parse_csv_fixings_current_index() -> IndexFixings
 {
 	const auto d = parser_detail{
-		4u,
-		1999y / June / 30d,
-		2026y / May / 12d,
-		"%d.%m.%Y",
-		';',
-		' ',
-		nullopt,
-		5u
+		.header_lines = 4u,
+		.from = 1999y / June / 30d,
+		.until = 2026y / May / 12d,
+		.date_format = "%d.%m.%Y",
+		.separator = ';',
+		.padder = ' ',
+		.not_available = nullopt,
+		.skip_columns = 5u
 	};
 
 	return parse_csv_fixings<IndexFixings>(
@@ -143,15 +143,17 @@ int main()
 	const auto current_index = parse_csv_fixings_current_index();
 	// we can assert consistency between what was read above
 
-	auto rfd = rate_fixings_detail{};
-	rfd.day_count = actual_360<Decimal>{};
+	const auto rfd = rate_fixings_detail{
+		.day_count = actual_360<Decimal>{}
+	};
 
 	// from https://indexdata.six-group.com/download/online/vendor_code/six-calculated-indices.xls
 
-	auto id = index_detail{};
-	id.initial_value = Value{ "10000" };
-	id.initial_date = 1999y / June / 30d;
-	id.step_round = 6u;
+	const auto id = index_detail{
+		.initial_value = Value{ "10000" },
+		.initial_date = 1999y / June / 30d,
+		.step_round = 6u
+	};
 
 	const auto& date = SARON.get_time_series().get_period().get_until();
 

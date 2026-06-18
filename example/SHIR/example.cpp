@@ -45,14 +45,14 @@ static auto parse_csv_fixings_SHIR() -> RateFixings
 	// from https://edge.boi.gov.il/FusionDataBrowser/?df=BOI.STATISTICS:BR(1.0)
 
 	const auto d = parser_detail{
-		5u,
-		2022y / May / 2d,
-		2026y / May / 21d,
-		"%d/%m/%Y",
-		',',
-		nullopt,
-		nullopt,
-		2u
+		.header_lines = 5u,
+		.from = 2022y / May / 2d,
+		.until = 2026y / May / 21d,
+		.date_format = "%d/%m/%Y",
+		.separator = ',',
+		.padder = ' ',
+		.not_available = nullopt,
+		.skip_columns = 2u
 	};
 
 	return parse_csv_fixings<RateFixings>(

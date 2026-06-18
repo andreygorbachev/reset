@@ -146,11 +146,11 @@ int main()
 {
 	const auto EuroSTR = parse_csv_fixings_EuroSTR();
 	const auto PreEuroSTR = parse_csv_fixings_PreEuroSTR();
-
 	// how can we "add" these 2 together?
 
-	auto rfd = rate_fixings_detail{};
-	rfd.day_count = actual_360<Decimal>{};
+	const auto rfd = rate_fixings_detail{
+		.day_count = actual_360<Decimal>{}
+	};
 
 	const auto EuroSTR_compounded_index = parse_csv_fixings_EuroSTR_compounded_index();
 
@@ -162,35 +162,41 @@ int main()
 
 	// from
 	// "Compounded €STR average rates and index"
-	auto id = index_detail{};
-	id.initial_value = Value{ "100" };
-	id.initial_date = 2019y / October / 1d;
-	id.final_round = 8u;
+	const auto id = index_detail{
+		.initial_value = Value{ "100" },
+		.initial_date = 2019y / October / 1d,
+		.final_round = 8u
+	};
 
-	auto _1wd = average_detail{};
-	_1wd.term = weeks{ 1 };
-	_1wd.business_day_convention = preceding{};
-	_1wd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _1wd = average_detail{
+		.term = weeks{ 1 },
+		.business_day_convention = preceding{},
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
-	auto _1md = average_detail{};
-	_1md.term = months{ 1 };
-	_1md.business_day_convention = modified_preceding{};
-	_1md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _1md = average_detail{
+		.term = months{ 1 },
+		.business_day_convention = modified_preceding{},
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
-	auto _3md = average_detail{};
-	_3md.term = months{ 3 };
-	_3md.business_day_convention = modified_preceding{};
-	_3md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _3md = average_detail{
+		.term = months{ 3 },
+		.business_day_convention = modified_preceding{},
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
-	auto _6md = average_detail{};
-	_6md.term = months{ 6 };
-	_6md.business_day_convention = modified_preceding{};
-	_6md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _6md = average_detail{
+		.term = months{ 6 },
+		.business_day_convention = modified_preceding{},
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
-	auto _12md = average_detail{};
-	_12md.term = months{ 12 };
-	_12md.business_day_convention = modified_preceding{};
-	_12md.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _12md = average_detail{
+		.term = months{ 12 },
+		.business_day_convention = modified_preceding{},
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
 	const auto date = 2026y / April / 24d;
 
@@ -414,13 +420,13 @@ int main()
 	}
 
 	const auto rd = rate_detail{
-		2020y / February / 11d,
-		2020y / February / 28d,
-		actual_360<Decimal>{},
-		5u + 2u // as we deal with fractions, rather than rates
+		.start = 2020y / February / 11d,
+		.end = 2020y / February / 28d,
+		.day_count = actual_360<Decimal>{},
+		.round = 5u + 2u // as we deal with fractions, rather than rates
 	};
 	const auto cd = compounded_detail{
-		EuroSTR.get_calendar()
+		.calendar = EuroSTR.get_calendar()
 	};
 	cout
 		<< fixed

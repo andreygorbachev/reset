@@ -22,8 +22,9 @@
 
 #include <chrono>
 
-#include <day_count.h>
+#include <actual_365_fixed.h>
 
+#include <scaled_value.h>
 #include <decimal.h>
 #include <rate.h>
 
@@ -40,10 +41,12 @@ namespace reset
 	TEST(rate, rate)
 	{
 		const auto r = rate{
-			Percent{ "6.0" },
-			2025y / January / 1d,
-			2025y / January / 31d,
-			actual_365_fixed<Decimal>{}
+			.percent = Percent{ "6.0" },
+			.detail = rate_detail{
+				.start = 2025y / January / 1d,
+				.end = 2025y / January / 31d,
+				.day_count = actual_365_fixed<Decimal>{}
+			}
 		};
 
 //		EXPECT_EQ(expected, i);

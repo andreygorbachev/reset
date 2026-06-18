@@ -64,14 +64,14 @@ static auto parse_csv_fixings_SOFR() -> RateFixings
 	// from https://www.newyorkfed.org/markets/reference-rates/sofr
 
 	const auto d = parser_detail{
-		1u,
-		2018y / April / 2d,
-		2026y / April / 9d,
-		"%m/%d/%Y",
-		',',
-		nullopt,
-		nullopt,
-		1u
+		.header_lines = 1u,
+		.from = 2018y / April / 2d,
+		.until = 2026y / April / 9d,
+		.date_format = "%m/%d/%Y",
+		.separator = ',',
+		.padder = ' ',
+		.not_available = nullopt,
+		.skip_columns = 1u
 	};
 
 	return parse_csv_fixings<RateFixings>(
@@ -87,14 +87,14 @@ static auto parse_csv_fixings_SOFR_compounded_index() -> IndexFixings
 	// from https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index
 
 	const auto d = parser_detail{
-		1u,
-		2020y / March / 2d, // get even earlier data?
-		2026y / April / 10d,
-		"%m/%d/%Y",
-		',',
-		nullopt,
-		nullopt,
-		15u
+		.header_lines = 1u,
+		.from = 2020y / March / 2d, // get even earlier data?
+		.until = 2026y / April / 10d,
+		.date_format = "%m/%d/%Y",
+		.separator = ',',
+		.padder = ' ',
+		.not_available = nullopt,
+		.skip_columns = 15u
 	};
 
 	return parse_csv_fixings<IndexFixings>(
@@ -108,14 +108,14 @@ static auto parse_csv_fixings_SOFR_compounded_index() -> IndexFixings
 static auto parse_csv_fixings_SOFR_30_day_average() -> RateFixings
 {
 	const auto d = parser_detail{
-		1u,
-		2020y / March / 2d,
-		2026y / April / 10d,
-		"%m/%d/%Y",
-		',',
-		nullopt,
-		nullopt,
-		12u
+		.header_lines = 1u,
+		.from = 2020y / March / 2d,
+		.until = 2026y / April / 10d,
+		.date_format = "%m/%d/%Y",
+		.separator = ',',
+		.padder = ' ',
+		.not_available = nullopt,
+		.skip_columns = 12u
 	};
 
 	return parse_csv_fixings<RateFixings>(
@@ -129,14 +129,14 @@ static auto parse_csv_fixings_SOFR_30_day_average() -> RateFixings
 static auto parse_csv_fixings_SOFR_90_day_average() -> RateFixings
 {
 	const auto d = parser_detail{
-		1u,
-		2020y / March / 2d,
-		2026y / April / 10d,
-		"%m/%d/%Y",
-		',',
-		nullopt,
-		nullopt,
-		13u
+		.header_lines = 1u,
+		.from = 2020y / March / 2d,
+		.until = 2026y / April / 10d,
+		.date_format = "%m/%d/%Y",
+		.separator = ',',
+		.padder = ' ',
+		.not_available = nullopt,
+		.skip_columns = 13u
 	};
 
 	return parse_csv_fixings<RateFixings>(
@@ -150,14 +150,14 @@ static auto parse_csv_fixings_SOFR_90_day_average() -> RateFixings
 static auto parse_csv_fixings_SOFR_180_day_average() -> RateFixings
 {
 	const auto d = parser_detail{
-		1u,
-		2020y / March / 2d,
-		2026y / April / 10d,
-		"%m/%d/%Y",
-		',',
-		nullopt,
-		nullopt,
-		14u
+		.header_lines = 1u,
+		.from = 2020y / March / 2d,
+		.until = 2026y / April / 10d,
+		.date_format = "%m/%d/%Y",
+		.separator = ',',
+		.padder = ' ',
+		.not_available = nullopt,
+		.skip_columns = 14u
 	};
 
 	return parse_csv_fixings<RateFixings>(
@@ -174,8 +174,9 @@ int main()
 {
 	const auto SOFR = parse_csv_fixings_SOFR();
 
-	auto rfd = rate_fixings_detail{};
-	rfd.day_count = actual_360<Decimal>{};
+	const auto rfd = rate_fixings_detail{
+		.day_count = actual_360<Decimal>{}
+	};
 
 	const auto SOFR_compounded_index = parse_csv_fixings_SOFR_compounded_index();
 
@@ -187,22 +188,26 @@ int main()
 	assert(SOFR_180_day_average.get_calendar() == SOFR_compounded_index.get_calendar());
 
 	// from https://www.newyorkfed.org/markets/opolicy/operating_policy_200212
-	auto id = index_detail{};
-	id.initial_value = Value{ "1" };
-	id.initial_date = 2018y / April / 2d;
-	id.final_round = 8u;
+	const auto id = index_detail{
+		.initial_value = Value{ "1" },
+		.initial_date = 2018y / April / 2d,
+		.final_round = 8u
+	};
 
-	auto _30dd = average_detail{};
-	_30dd.term = days{ 30 };
-	_30dd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _30dd = average_detail{
+		.term = days{ 30 },
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
-	auto _90dd = average_detail{};
-	_90dd.term = days{ 90 };
-	_90dd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _90dd = average_detail{
+		.term = days{ 90 },
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
-	auto _180dd = average_detail{};
-	_180dd.term = days{ 180 };
-	_180dd.final_round = 5u + 2u; // as we deal with fractions, rather than rates
+	const auto _180dd = average_detail{
+		.term = days{ 180 },
+		.final_round = 5u + 2u // as we deal with fractions, rather than rates
+	};
 
 	const auto date = 2026y / April / 10d;
 
@@ -406,13 +411,13 @@ int main()
 
 	// interesting case around Good Friday
 	const auto rd = rate_detail{
-		2026y / March / 30d,
-		2026y / April / 10d,
-		actual_360<Decimal>{},
-		5u + 2u // as we deal with fractions, rather than rates
+		.start = 2026y / March / 30d,
+		.end = 2026y / April / 10d,
+		.day_count = actual_360<Decimal>{},
+		.round = 5u + 2u // as we deal with fractions, rather than rates
 	};
 	const auto cd = compounded_detail{
-		gregorian::static_data::locate_calendar("America/SIFMA", rd.start)
+		.calendar = gregorian::static_data::locate_calendar("America/SIFMA", rd.start)
 	};
 	cout
 		<< fixed

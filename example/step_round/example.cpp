@@ -79,17 +79,23 @@ int main()
 	const auto& cal = fix.get_calendar();
 	const auto [f, u] = cal.get_schedule().get_period().from_until();
 
-	auto rfd = rate_fixings_detail{};
-	rfd.day_count = actual_365_fixed<Decimal>{};
+	const auto rfd = rate_fixings_detail{
+		.day_count = actual_365_fixed<Decimal>{}
+	};
 
-	auto id1 = index_detail{};
-	id1.initial_value = Value{ "100" };
-	id1.initial_date = f;
-	id1.step_round = 18u; // we compare the index with daily rounding
-	id1.final_round = 8u;
+	const auto id1 = index_detail{
+		.initial_value = Value{ "100" },
+		.initial_date = f,
+		.step_round = 18u,
+		.final_round = 8u
+	};
 
-	auto id2 = id1;
-	id2.step_round = nullopt; // with the index without daily rounding
+	const auto id2 = index_detail{
+		.initial_value = Value{ "100" },
+		.initial_date = f,
+		.step_round = nullopt,
+		.final_round = 8u
+	};
 
 	cout
 		<< fixed

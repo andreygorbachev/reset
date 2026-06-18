@@ -83,18 +83,20 @@ int main()
 {
 	const auto SONIA = parse_csv_fixings_SONIA();
 
-	auto rfd = rate_fixings_detail{};
-	rfd.day_count = actual_365_fixed<Decimal>{};
+	const auto rfd = rate_fixings_detail{
+		.day_count = actual_365_fixed<Decimal>{}
+	};
 
 	const auto SONIA_compounded_index = parse_csv_fixings_SONIA_compounded_index();
 	// I think BoE website does not fully describe the compounded index
 	// more clarity would be welcome there on how rounding is done daily (*)
 
-	auto id = index_detail{};
-	id.initial_value = Value{ "100" };
-	id.initial_date = 2018y / April / 23d;
-	id.step_round = 18u;
-	id.final_round = 8u;
+	const auto id = index_detail{
+		.initial_value = Value{ "100" },
+		.initial_date = 2018y / April / 23d,
+		.step_round = 18u,
+		.final_round = 8u
+	};
 
 	const auto date = 2025y / May / 13d;
 

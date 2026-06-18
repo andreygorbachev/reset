@@ -55,13 +55,15 @@ namespace reset
 
 		const auto fix = make_SOFR_fixings();
 
-		auto rfd = rate_fixings_detail{};
-		rfd.day_count = actual_360<Decimal>{};
+		const auto rfd = rate_fixings_detail{
+			.day_count = actual_360<Decimal>{}
+		};
 
-		auto id = index_detail{};
-		id.initial_value = Value{ "1" };
-		id.initial_date = 2018y / April / 2d;
-		id.final_round = 8u;
+		const auto id = index_detail{
+			.initial_value = Value{ "1" },
+			.initial_date = 2018y / April / 2d,
+			.final_round = 8u
+		};
 
 //		EXPECT_EQ(Value{ "1.00000000" }, index(fix, rfd, 2018y / April / 2d, id));
 		EXPECT_EQ(Value{ "1.00005000" }, index(fix, rfd, 2018y / April / 3d, id));
@@ -118,14 +120,16 @@ namespace reset
 
 		const auto fix = fixings{ std::move(ts), std::move(c), 2u };
 
-		auto rfd = rate_fixings_detail{};
-		rfd.day_count = actual_360<Decimal>{};
+		const auto rfd = rate_fixings_detail{
+			.day_count = actual_360<Decimal>{}
+		};
 
-		auto id = index_detail{};
-		id.initial_value = Value{ "272254.4115" };
-		id.initial_date = 2023y / April / 5d;
-		id.step_round = 16u;
-		id.final_round = 4u;
+		const auto id = index_detail{
+			.initial_value = Value{ "272254.4115" },
+			.initial_date = 2023y / April / 5d,
+			.step_round = 16u,
+			.final_round = 4u
+		};
 
 		EXPECT_EQ(Value{ "272254.4115" }, index(fix, rfd, 2023y / April / 5d, id));
 //		EXPECT_EQ(Value{ "272339.4910" }, index(fix, rfd, 2023y / April / 6d, id));
