@@ -69,7 +69,7 @@ static auto parse_csv_fixings_SOFR() -> RateFixings
 		.until = 2026y / April / 9d,
 		.date_format = "%m/%d/%Y",
 		.separator = ',',
-		.padder = ' ',
+		.padder = nullopt,
 		.not_available = nullopt,
 		.skip_columns = 1u
 	};
@@ -92,7 +92,7 @@ static auto parse_csv_fixings_SOFR_compounded_index() -> IndexFixings
 		.until = 2026y / April / 10d,
 		.date_format = "%m/%d/%Y",
 		.separator = ',',
-		.padder = ' ',
+		.padder = nullopt,
 		.not_available = nullopt,
 		.skip_columns = 15u
 	};
@@ -113,7 +113,7 @@ static auto parse_csv_fixings_SOFR_30_day_average() -> RateFixings
 		.until = 2026y / April / 10d,
 		.date_format = "%m/%d/%Y",
 		.separator = ',',
-		.padder = ' ',
+		.padder = nullopt,
 		.not_available = nullopt,
 		.skip_columns = 12u
 	};
@@ -134,7 +134,7 @@ static auto parse_csv_fixings_SOFR_90_day_average() -> RateFixings
 		.until = 2026y / April / 10d,
 		.date_format = "%m/%d/%Y",
 		.separator = ',',
-		.padder = ' ',
+		.padder = nullopt,
 		.not_available = nullopt,
 		.skip_columns = 13u
 	};
@@ -155,7 +155,7 @@ static auto parse_csv_fixings_SOFR_180_day_average() -> RateFixings
 		.until = 2026y / April / 10d,
 		.date_format = "%m/%d/%Y",
 		.separator = ',',
-		.padder = ' ',
+		.padder = nullopt,
 		.not_available = nullopt,
 		.skip_columns = 14u
 	};

@@ -50,7 +50,7 @@ static auto parse_csv_fixings_SHIR() -> RateFixings
 		.until = 2026y / May / 21d,
 		.date_format = "%d/%m/%Y",
 		.separator = ',',
-		.padder = ' ',
+		.padder = nullopt,
 		.not_available = nullopt,
 		.skip_columns = 2u
 	};
