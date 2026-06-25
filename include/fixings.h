@@ -36,6 +36,7 @@
 #include <chrono>
 #include <optional>
 #include <stdexcept>
+#include <algorithm>
 
 
 namespace reset
