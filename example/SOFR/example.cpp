@@ -63,7 +63,7 @@ static auto parse_csv_fixings_SOFR() -> RateFixings
 {
 	// from https://www.newyorkfed.org/markets/reference-rates/sofr
 
-	const auto d = parser_detail{
+	constexpr auto d = parser_detail{
 		.header_lines = 1u,
 		.from = 2018y / April / 2d,
 		.until = 2026y / April / 9d,
@@ -86,7 +86,7 @@ static auto parse_csv_fixings_SOFR_compounded_index() -> IndexFixings
 {
 	// from https://www.newyorkfed.org/markets/reference-rates/sofr-averages-and-index
 
-	const auto d = parser_detail{
+	constexpr auto d = parser_detail{
 		.header_lines = 1u,
 		.from = 2020y / March / 2d, // get even earlier data?
 		.until = 2026y / April / 10d,
@@ -107,7 +107,7 @@ static auto parse_csv_fixings_SOFR_compounded_index() -> IndexFixings
 
 static auto parse_csv_fixings_SOFR_30_day_average() -> RateFixings
 {
-	const auto d = parser_detail{
+	constexpr auto d = parser_detail{
 		.header_lines = 1u,
 		.from = 2020y / March / 2d,
 		.until = 2026y / April / 10d,
@@ -128,7 +128,7 @@ static auto parse_csv_fixings_SOFR_30_day_average() -> RateFixings
 
 static auto parse_csv_fixings_SOFR_90_day_average() -> RateFixings
 {
-	const auto d = parser_detail{
+	constexpr auto d = parser_detail{
 		.header_lines = 1u,
 		.from = 2020y / March / 2d,
 		.until = 2026y / April / 10d,
@@ -149,7 +149,7 @@ static auto parse_csv_fixings_SOFR_90_day_average() -> RateFixings
 
 static auto parse_csv_fixings_SOFR_180_day_average() -> RateFixings
 {
-	const auto d = parser_detail{
+	constexpr auto d = parser_detail{
 		.header_lines = 1u,
 		.from = 2020y / March / 2d,
 		.until = 2026y / April / 10d,

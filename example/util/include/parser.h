@@ -47,10 +47,10 @@ struct parser_detail // should it be called metadata?
 	unsigned int header_lines = 1u; // how many lines to skip at the beginning of the file
 	std::chrono::year_month_day from; // this could also be read from the file
 	std::chrono::year_month_day until; // this could also be read from the file
-	std::string date_format = "%Y-%m-%d";
+	std::string_view date_format = "%Y-%m-%d";
 	char separator = ','; // the character that separates columns in the file
 	std::optional<char> padder; // the character that pads observation columns in the file
-	std::optional<std::string> not_available; // the string that indicates that the observation is not available
+	std::optional<std::string_view> not_available; // the string that indicates that the observation is not available
 	unsigned int skip_columns = 0u; // how many columns to skip after the date column to get to the required observation column
 };
 
@@ -72,7 +72,7 @@ inline auto _parse_date(
 	auto ymd = std::chrono::year_month_day{};
 
 #ifdef _MSC_BUILD 
-	std::chrono::from_stream(fs, detail.date_format.c_str(), ymd);
+	std::chrono::from_stream(fs, detail.date_format.data(), ymd);
 #else
 	throw std::domain_error{ "Not implemented" };
 #endif

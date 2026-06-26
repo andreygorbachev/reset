@@ -50,7 +50,7 @@ using namespace reset;
 // from https://gpwbenchmark.pl/delayed_data
 // and https://gpwbenchmark.pl/historical_data
 
-static auto make_parser_detail() -> parser_detail
+static constexpr auto make_parser_detail() -> parser_detail
 {
 	return parser_detail{
 		.header_lines = 1u,
@@ -59,13 +59,14 @@ static auto make_parser_detail() -> parser_detail
 		.date_format = "%Y-%m-%d",
 		.separator = ',',
 		.padder = nullopt,
+		.not_available = nullopt,
 		.skip_columns = 0u
 	};
 }
 
 static auto parse_csv_fixings_PolSTR() -> RateFixings
 {
-	const auto d = make_parser_detail();
+	constexpr auto d = make_parser_detail();
 
 	return parse_csv_fixings<RateFixings>(
 		"PolSTR.csv",

@@ -58,7 +58,7 @@ using namespace reset;
 
 // from https://www.banxico.org.mx/SieInternet/consultarDirectorioInternetAction.do?sector=18&accion=consultarCuadro&idCuadro=CF101&locale=en
 
-static auto make_parser_detail() -> parser_detail
+static constexpr auto make_parser_detail() -> parser_detail
 {
 	return parser_detail{
 		.header_lines = 19u,
@@ -74,7 +74,7 @@ static auto make_parser_detail() -> parser_detail
 
 static auto parse_csv_fixings_FTIIE() -> RateFixings
 {
-	const auto d = make_parser_detail();
+	constexpr auto d = make_parser_detail();
 
 	return parse_csv_fixings<RateFixings>(
 		"CF101.csv",

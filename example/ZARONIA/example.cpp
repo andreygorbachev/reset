@@ -56,7 +56,7 @@ using namespace reset;
 
 
 
-static auto make_parser_detail() -> parser_detail
+static constexpr auto make_parser_detail() -> parser_detail
 {
 	return parser_detail{
 		.header_lines = 6u,
@@ -71,7 +71,7 @@ static auto make_parser_detail() -> parser_detail
 
 static auto parse_csv_fixings_ZARONIA() -> RateFixings
 {
-	const auto d = make_parser_detail();
+	constexpr auto d = make_parser_detail();
 
 	return parse_csv_fixings<RateFixings>(
 		"SARB-benchmark-data.csv",
