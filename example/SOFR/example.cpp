@@ -198,17 +198,17 @@ int main()
 		.final_round = 8u
 	};
 
-	const auto _30dd = average_detail{
+	constexpr auto _30dd = average_detail{
 		.term = days{ 30 },
 		.final_round = 5u + 2u // as we deal with fractions, rather than rates
 	};
 
-	const auto _90dd = average_detail{
+	constexpr auto _90dd = average_detail{
 		.term = days{ 90 },
 		.final_round = 5u + 2u // as we deal with fractions, rather than rates
 	};
 
-	const auto _180dd = average_detail{
+	constexpr auto _180dd = average_detail{
 		.term = days{ 180 },
 		.final_round = 5u + 2u // as we deal with fractions, rather than rates
 	};

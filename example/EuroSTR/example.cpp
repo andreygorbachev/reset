@@ -172,31 +172,31 @@ int main()
 		.final_round = 8u
 	};
 
-	const auto _1wd = average_detail{
+	constexpr auto _1wd = average_detail{
 		.term = weeks{ 1 },
 		.business_day_convention = preceding{},
 		.final_round = 5u + 2u // as we deal with fractions, rather than rates
 	};
 
-	const auto _1md = average_detail{
+	constexpr auto _1md = average_detail{
 		.term = months{ 1 },
 		.business_day_convention = modified_preceding{},
 		.final_round = 5u + 2u // as we deal with fractions, rather than rates
 	};
 
-	const auto _3md = average_detail{
+	constexpr auto _3md = average_detail{
 		.term = months{ 3 },
 		.business_day_convention = modified_preceding{},
 		.final_round = 5u + 2u // as we deal with fractions, rather than rates
 	};
 
-	const auto _6md = average_detail{
+	constexpr auto _6md = average_detail{
 		.term = months{ 6 },
 		.business_day_convention = modified_preceding{},
 		.final_round = 5u + 2u // as we deal with fractions, rather than rates
 	};
 
-	const auto _12md = average_detail{
+	constexpr auto _12md = average_detail{
 		.term = months{ 12 },
 		.business_day_convention = modified_preceding{},
 		.final_round = 5u + 2u // as we deal with fractions, rather than rates
