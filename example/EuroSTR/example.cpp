@@ -22,7 +22,6 @@
 
 #include "parser.h"
 
-#include <decimal.h>
 #include <scaled_value.h>
 #include <fixings.h>
 #include <index.h>
@@ -34,6 +33,8 @@
 #include <modified_preceding.h>
 #include <actual_360.h>
 
+#include <boost/decimal.hpp>
+
 #include <chrono>
 #include <iostream>
 #include <iomanip>
@@ -42,6 +43,8 @@
 
 using namespace std;
 using namespace std::chrono;
+
+using namespace boost::decimal;
 
 using namespace fin_calendar;
 
@@ -149,7 +152,7 @@ int main()
 	// how can we "add" these 2 together?
 
 	const auto rfd = rate_fixings_detail{
-		.day_count = actual_360<Decimal>{}
+		.day_count = actual_360<decimal128_t>{}
 	};
 
 	const auto EuroSTR_compounded_index = parse_csv_fixings_EuroSTR_compounded_index();
@@ -163,7 +166,7 @@ int main()
 	// from
 	// "Compounded €STR average rates and index"
 	const auto id = index_detail{
-		.initial_value = Value{ "100" },
+		.initial_value = decimal128_t{ 100 },
 		.initial_date = 2019y / October / 1d,
 		.final_round = 8u
 	};
@@ -422,7 +425,7 @@ int main()
 	const auto rd = rate_detail{
 		.start = 2020y / February / 11d,
 		.end = 2020y / February / 28d,
-		.day_count = actual_360<Decimal>{},
+		.day_count = actual_360<decimal128_t>{},
 		.round = 5u + 2u // as we deal with fractions, rather than rates
 	};
 	const auto cd = compounded_detail{

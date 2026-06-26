@@ -22,7 +22,6 @@
 
 #include <parser.h>
 
-#include <decimal.h>
 #include <scaled_value.h>
 #include <fixings.h>
 #include <index.h>
@@ -36,6 +35,8 @@
 #include <calendar.h>
 #include <schedule.h>
 
+#include <boost/decimal.hpp>
+
 #include <chrono>
 #include <iostream>
 #include <iomanip>
@@ -45,6 +46,8 @@
 
 using namespace std;
 using namespace std::chrono;
+
+using namespace boost::decimal;
 
 using namespace gregorian;
 using namespace gregorian::util;
@@ -190,7 +193,7 @@ int main()
 	const auto ZARONIA = parse_csv_fixings_ZARONIA();
 
 	const auto rfd = rate_fixings_detail{
-		.day_count = actual_365_fixed<Decimal>{}
+		.day_count = actual_365_fixed<decimal128_t>{}
 	};
 
 	const auto ZARONIA_compounded_index = parse_csv_fixings_ZARONIA_compounded_index();
@@ -207,7 +210,7 @@ int main()
 	// Calculation methodology and publication
 	// October 2023"
 	const auto id = index_detail{
-		.initial_value = Value{ "100" },
+		.initial_value = decimal128_t{ 100 },
 		.initial_date = 2022y / November / 1d,
 		.final_round = 12u
 	};

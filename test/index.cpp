@@ -23,6 +23,8 @@
 #include <chrono>
 #include <utility>
 
+#include <boost/decimal.hpp>
+
 #include <period.h>
 #include <weekend.h>
 #include <schedule.h>
@@ -30,7 +32,6 @@
 
 #include <actual_360.h>
 
-#include <decimal.h>
 #include <scaled_value.h>
 #include <index.h>
 #include <fixings.h>
@@ -41,6 +42,7 @@
 
 using namespace std;
 using namespace std::chrono;
+using namespace boost::decimal;
 using namespace fin_calendar;
 using namespace gregorian;
 using namespace gregorian::util;
@@ -56,11 +58,11 @@ namespace reset
 		const auto fix = make_SOFR_fixings();
 
 		const auto rfd = rate_fixings_detail{
-			.day_count = actual_360<Decimal>{}
+			.day_count = actual_360<decimal128_t>{}
 		};
 
 		const auto id = index_detail{
-			.initial_value = Value{ "1" },
+			.initial_value = decimal128_t{ "1" },
 			.initial_date = 2018y / April / 2d,
 			.final_round = 8u
 		};
@@ -121,11 +123,11 @@ namespace reset
 		const auto fix = fixings{ std::move(ts), std::move(c), 2u };
 
 		const auto rfd = rate_fixings_detail{
-			.day_count = actual_360<Decimal>{}
+			.day_count = actual_360<decimal128_t>{}
 		};
 
 		const auto id = index_detail{
-			.initial_value = Value{ "272254.4115" },
+			.initial_value = decimal128_t{ "272254.4115" },
 			.initial_date = 2023y / April / 5d,
 			.step_round = 16u,
 			.final_round = 4u

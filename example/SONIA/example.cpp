@@ -22,7 +22,6 @@
 
 #include "parser.h"
 
-#include <decimal.h>
 #include <scaled_value.h>
 #include <fixings.h>
 #include <index.h>
@@ -34,6 +33,8 @@
 #include <schedule.h>
 #include <period.h>
 
+#include <boost/decimal.hpp>
+
 #include <chrono>
 #include <iostream>
 #include <iomanip>
@@ -44,6 +45,8 @@
 
 using namespace std;
 using namespace std::chrono;
+
+using namespace boost::decimal;
 
 using namespace gregorian;
 using namespace gregorian::util;
@@ -84,7 +87,7 @@ int main()
 	const auto SONIA = parse_csv_fixings_SONIA();
 
 	const auto rfd = rate_fixings_detail{
-		.day_count = actual_365_fixed<Decimal>{}
+		.day_count = actual_365_fixed<decimal128_t>{}
 	};
 
 	const auto SONIA_compounded_index = parse_csv_fixings_SONIA_compounded_index();
@@ -92,7 +95,7 @@ int main()
 	// more clarity would be welcome there on how rounding is done daily (*)
 
 	const auto id = index_detail{
-		.initial_value = Value{ "100" },
+		.initial_value = decimal128_t{ 100 },
 		.initial_date = 2018y / April / 23d,
 		.step_round = 18u,
 		.final_round = 8u

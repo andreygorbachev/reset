@@ -22,7 +22,6 @@
 
 #pragma once
 
-#include "decimal.h"
 #include "scaled_value.h"
 
 #include <day_count.h>
@@ -31,6 +30,8 @@
 #include <time_series.h>
 
 #include <calendar.h>
+
+#include <boost/decimal.hpp>
 
 #include <utility>
 #include <chrono>
@@ -44,7 +45,7 @@ namespace reset
 
 	struct rate_fixings_detail // should it be called metadata?
 	{
-		fin_calendar::day_count<Decimal> day_count;
+		fin_calendar::day_count<boost::decimal::decimal128_t> day_count;
 	};
 
 

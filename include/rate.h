@@ -22,10 +22,11 @@
 
 #pragma once
 
-#include "decimal.h"
 #include "scaled_value.h"
 
 #include <day_count.h>
+
+#include <boost/decimal.hpp>
 
 #include <chrono>
 
@@ -39,7 +40,7 @@ namespace reset
 		std::chrono::year_month_day start; // usually included
 		std::chrono::year_month_day end; // usually excluded
 
-		fin_calendar::day_count<Decimal> day_count;
+		fin_calendar::day_count<boost::decimal::decimal128_t> day_count;
 
 		unsigned int round; // should this be optional? does it need to be unsigned?
 

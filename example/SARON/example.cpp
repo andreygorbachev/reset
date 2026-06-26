@@ -22,12 +22,13 @@
 
 #include <parser.h>
 
-#include <decimal.h>
 #include <scaled_value.h>
 #include <fixings.h>
 #include <index.h>
 
 #include <actual_360.h>
+
+#include <boost/decimal.hpp>
 
 #include <chrono>
 #include <iostream>
@@ -38,6 +39,8 @@
 
 using namespace std;
 using namespace std::chrono;
+
+using namespace boost::decimal;
 
 using namespace fin_calendar;
 
@@ -144,13 +147,13 @@ int main()
 	// we can assert consistency between what was read above
 
 	const auto rfd = rate_fixings_detail{
-		.day_count = actual_360<Decimal>{}
+		.day_count = actual_360<decimal128_t>{}
 	};
 
 	// from https://indexdata.six-group.com/download/online/vendor_code/six-calculated-indices.xls
 
 	const auto id = index_detail{
-		.initial_value = Value{ "10000" },
+		.initial_value = decimal128_t{ 10000 },
 		.initial_date = 1999y / June / 30d,
 		.step_round = 6u
 	};

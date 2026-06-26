@@ -20,7 +20,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <decimal.h>
 #include <fixings.h>
 #include <index.h>
 #include <scaled_value.h>
@@ -32,6 +31,8 @@
 #include <weekend.h>
 #include <schedule.h>
 #include <time_series.h>
+
+#include <boost/decimal.hpp>
 
 #include <utility>
 #include <optional>
@@ -80,18 +81,18 @@ int main()
 	const auto [f, u] = cal.get_schedule().get_period().from_until();
 
 	const auto rfd = rate_fixings_detail{
-		.day_count = actual_365_fixed<Decimal>{}
+		.day_count = actual_365_fixed<boost::decimal::decimal128_t>{}
 	};
 
 	const auto id1 = index_detail{
-		.initial_value = Value{ "100" },
+		.initial_value = boost::decimal::decimal128_t{ 100 },
 		.initial_date = f,
 		.step_round = 18u,
 		.final_round = 8u
 	};
 
 	const auto id2 = index_detail{
-		.initial_value = Value{ "100" },
+		.initial_value = boost::decimal::decimal128_t{ 100 },
 		.initial_date = f,
 		.step_round = nullopt,
 		.final_round = 8u

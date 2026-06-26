@@ -22,7 +22,6 @@
 
 #include <parser.h>
 
-#include <decimal.h>
 #include <scaled_value.h>
 #include <fixings.h>
 #include <index.h>
@@ -37,6 +36,8 @@
 #include <schedule.h>
 #include <period.h>
 
+#include <boost/decimal.hpp>
+
 #include <chrono>
 #include <iostream>
 #include <iomanip>
@@ -48,6 +49,8 @@
 
 using namespace std;
 using namespace std::chrono;
+
+using namespace boost::decimal;
 
 using namespace gregorian;
 using namespace gregorian::util;
@@ -175,7 +178,7 @@ int main()
 	const auto SOFR = parse_csv_fixings_SOFR();
 
 	const auto rfd = rate_fixings_detail{
-		.day_count = actual_360<Decimal>{}
+		.day_count = actual_360<decimal128_t>{}
 	};
 
 	const auto SOFR_compounded_index = parse_csv_fixings_SOFR_compounded_index();
@@ -189,7 +192,7 @@ int main()
 
 	// from https://www.newyorkfed.org/markets/opolicy/operating_policy_200212
 	const auto id = index_detail{
-		.initial_value = Value{ "1" },
+		.initial_value = decimal128_t{ 1 },
 		.initial_date = 2018y / April / 2d,
 		.final_round = 8u
 	};
@@ -413,7 +416,7 @@ int main()
 	const auto rd = rate_detail{
 		.start = 2026y / March / 30d,
 		.end = 2026y / April / 10d,
-		.day_count = actual_360<Decimal>{},
+		.day_count = actual_360<decimal128_t>{},
 		.round = 5u + 2u // as we deal with fractions, rather than rates
 	};
 	const auto cd = compounded_detail{

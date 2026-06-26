@@ -22,16 +22,18 @@
 
 #include <chrono>
 
+#include <boost/decimal.hpp>
+
 #include <actual_365_fixed.h>
 
 #include <scaled_value.h>
-#include <decimal.h>
 #include <rate.h>
 
 #include <gtest/gtest.h>
 
 using namespace std;
 using namespace std::chrono;
+using namespace boost::decimal;
 using namespace fin_calendar;
 
 
@@ -45,7 +47,7 @@ namespace reset
 			.detail = rate_detail{
 				.start = 2025y / January / 1d,
 				.end = 2025y / January / 31d,
-				.day_count = actual_365_fixed<Decimal>{}
+				.day_count = actual_365_fixed<decimal128_t>{}
 			}
 		};
 

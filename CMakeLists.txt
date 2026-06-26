@@ -30,20 +30,13 @@ FetchContent_MakeAvailable(
 )
 
 FetchContent_Declare(
-  Boost_config
-  GIT_REPOSITORY https://github.com/boostorg/config.git
-  GIT_TAG        boost-1.91.0
-)
-
-FetchContent_Declare(
-  Boost_multiprecision
-  GIT_REPOSITORY https://github.com/boostorg/multiprecision.git
+  Boost_decimal
+  GIT_REPOSITORY https://github.com/boostorg/decimal.git
   GIT_TAG        boost-1.91.0
 )
 
 FetchContent_MakeAvailable(
-  Boost_config
-  Boost_multiprecision
+  Boost_decimal
 )
 
 option(RESET_BUILD_TESTS_AND_EXAMPLES "Build all of reset's own tests and examples." On)

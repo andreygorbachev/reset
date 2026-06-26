@@ -26,12 +26,12 @@
 #include <utility>
 #include <stdexcept>
 
+#include <boost/decimal.hpp>
+
 #include <day_count.h>
 
 #include <period.h>
 #include <calendar.h>
-
-#include <decimal.h>
 
 #include "rate.h"
 #include "fixings.h"
@@ -54,7 +54,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 
 
 	inline void compounded_step_(
-		Decimal& val,
+		boost::decimal::decimal128_t& val,
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,
@@ -79,7 +79,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 		if (!dates.contains(rd.start)) // or we can just have a look at cbegin(), which is O(1) operation on most platforms, rather than O(log n)
 			dates.insert(rd.start); // do it with hint?
 
-		auto val = Decimal{ 1 };
+		auto val = boost::decimal::decimal128_t{ 1 };
 
 		for (const auto& [start, end] : dates | std::views::adjacent<2uz>)
 			compounded_step_(val, start, end, fix, rfd);
@@ -90,7 +90,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 			rd.day_count
 		);
 
-		auto rate = Decimal{ (val - Decimal{ 1 }) / year_fraction };
+		auto rate = boost::decimal::decimal128_t{ (val - boost::decimal::decimal128_t{ 1 }) / year_fraction };
 
 		rate = round_dp(rate, rd.round);
 
@@ -119,7 +119,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 			detail.day_count
 		);
 
-		auto rate = (end_fix->get_value() / start_fix->get_value() - Decimal{ 1 }) / year_fraction;
+		auto rate = (end_fix->get_value() / start_fix->get_value() - boost::decimal::decimal128_t{ 1 }) / year_fraction;
 
 		rate = round_dp(rate, detail.round);
 
@@ -131,7 +131,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 
 
 	inline void compounded_step_( // should it be the same as index_step_ in index.h?
-		Decimal& val, // should it take and return a value? (no in/out parameter)
+		boost::decimal::decimal128_t& val, // should it take and return a value? (no in/out parameter)
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,
@@ -139,11 +139,11 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 	)
 	{
 		const auto& fixing = fix.with_fallback(start); // I guess this is just a "number" and the "details" are provided separately - is it good?
-		const auto rate = static_cast<Decimal>(fixing);
+		const auto rate = static_cast<boost::decimal::decimal128_t>(fixing);
 
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
-		val *= Decimal{ 1 } + rate * year_fraction; // should these have some kind of units?
+		val *= boost::decimal::decimal128_t{ 1 } + rate * year_fraction; // should these have some kind of units?
 	}
 
 }

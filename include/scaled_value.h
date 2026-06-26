@@ -22,7 +22,7 @@
 
 #pragma once
 
-#include "decimal.h"
+#include <boost/decimal.hpp>
 
 #include <ratio>
 #include <string_view>
@@ -37,10 +37,10 @@ namespace reset
 
     public:
 
-        explicit scaled_value(std::string_view value); // noexcept?
+        explicit scaled_value(std::string_view value); // noexcept? // do we still need it? (now we use Boost.Decimal)
 
         // note that we do this implicitly
-        scaled_value(const Decimal& v); // noexcept?
+        scaled_value(const boost::decimal::decimal128_t& v); // noexcept?
 
     public:
 
@@ -48,15 +48,15 @@ namespace reset
         friend auto operator<=>(const scaled_value& x, const scaled_value& y) = default;
 
         // note that we do this implicitly
-        operator Decimal() const; // noexcept?
+        operator boost::decimal::decimal128_t() const; // noexcept?
 
     public:
 
-        auto get_value() const noexcept -> const Decimal&;
+        auto get_value() const noexcept -> const boost::decimal::decimal128_t&;
 
     private:
 
-        Decimal value_;
+        boost::decimal::decimal128_t value_;
 
     };
 
@@ -69,21 +69,21 @@ namespace reset
 
 
     template<typename Ratio>
-    scaled_value<Ratio>::scaled_value(const Decimal& v) :
+    scaled_value<Ratio>::scaled_value(const boost::decimal::decimal128_t& v) :
         value_{ v * Ratio::den / Ratio::num }
     {
     }
 
 
     template<typename Ratio>
-    scaled_value<Ratio>::operator Decimal() const
+    scaled_value<Ratio>::operator boost::decimal::decimal128_t() const
     {
         return value_ * Ratio::num / Ratio::den;
     }
 
 
     template<typename Ratio>
-    auto scaled_value<Ratio>::get_value() const noexcept -> const Decimal&
+    auto scaled_value<Ratio>::get_value() const noexcept -> const boost::decimal::decimal128_t&
     {
         return value_;
     }

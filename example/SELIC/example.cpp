@@ -22,12 +22,13 @@
 
 #include "parser.h"
 
-#include <decimal.h>
 #include <scaled_value.h>
 #include <fixings.h>
 #include <index.h>
 
 #include <calculation_252.h>
+
+#include <boost/decimal.hpp>
 
 #include <chrono>
 #include <iostream>
@@ -36,6 +37,8 @@
 
 using namespace std;
 using namespace std::chrono;
+
+using namespace boost::decimal;
 
 using namespace fin_calendar;
 
@@ -60,11 +63,11 @@ int main()
 	const auto SELIC = parse_csv_fixings_SELIC();
 
 	const auto rfd = rate_fixings_detail{
-		.day_count = calculation_252<Decimal>{ SELIC.get_calendar() } // think more about copies of calendar
+		.day_count = calculation_252<decimal128_t>{ SELIC.get_calendar() } // think more about copies of calendar
 	};
 
 	const auto id = index_detail{
-		.initial_value = Value{ "1000" },
+		.initial_value = decimal128_t{ 1000 },
 		.initial_date = 2000y / July / 1d,
 		.brazil = true,
 		.factor_round = 8u,
@@ -81,7 +84,7 @@ int main()
 		<< "For "
 		<< date1
 		<< " VNA is "
-		<< Decimal{ "6023.149269" }
+		<< decimal128_t{ "6023.149269" }
 		<< " and the same computed value is "
 		<< index(SELIC, rfd, date1, id).get_value()
 		<< endl;
@@ -97,7 +100,7 @@ int main()
 		<< "For "
 		<< date2
 		<< " VNA is "
-		<< Decimal{ "3449.694215" } // for some reason the English version of the same document has different values
+		<< decimal128_t{ "3449.694215" } // for some reason the English version of the same document has different values
 		<< " and the same computed value is "
 		<< index(SELIC, rfd, date2, id).get_value()
 		<< endl;

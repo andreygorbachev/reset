@@ -21,7 +21,6 @@
 // SOFTWARE.
 
 #include <compounded.h>
-#include <decimal.h>
 #include <scaled_value.h>
 #include <rate.h>
 #include <fixings.h>
@@ -34,11 +33,14 @@
 #include <schedule.h>
 #include <calendar.h>
 
+#include <boost/decimal.hpp>
+
 #include <chrono>
 #include <utility>
 
 using namespace std;
 using namespace std::chrono;
+using namespace boost::decimal;
 using namespace gregorian;
 using namespace gregorian::util;
 using namespace fin_calendar;
@@ -64,7 +66,7 @@ namespace reset
 
 		const auto fix = fixings{ std::move(ts), std::move(cal), 2u };
 
-		const auto rfd = rate_fixings_detail{ actual_360<Decimal>{} };
+		const auto rfd = rate_fixings_detail{ actual_360<decimal128_t>{} };
 
 		// Compound from 2026-04-02 (business) to 2026-04-06 (business) across Good Friday
 		const auto rd = rate_detail{ 2026y / April / 2d, 2026y / April / 6d, rfd.day_count, 5u };

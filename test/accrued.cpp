@@ -27,13 +27,15 @@
 
 #include <day_count.h>
 
-#include <decimal.h>
 #include <accrued.h>
+
+#include <boost/decimal.hpp>
 
 #include <gtest/gtest.h>
 
 using namespace std;
 using namespace std::chrono;
+using namespace boost::decimal;
 using namespace fin_calendar;
 using namespace gregorian;
 using namespace gregorian::static_data;
@@ -76,21 +78,21 @@ namespace reset
 	{
 		const auto& c = locate_calendar("America/ANBIMA"s, 2023y / January / 1d);
 
-		const auto a1 = accrued<Decimal>{ simple_annualized<Decimal>{ 5 } };
-		const auto dc1 = actual_365_fixed<Decimal>{};
+		const auto a1 = accrued<decimal128_t>{ simple_annualized{ decimal128_t{ 5 } } };
+		const auto dc1 = actual_365_fixed<decimal128_t>{};
 		const auto i1 = interest(
 			year_month_day{ 2023y / January / 1d },
 			year_month_day{ 2023y / January / 2d },
-			day_count<Decimal>{ dc1 },
+			day_count<decimal128_t>{ dc1 },
 			a1
 		);
 
-		const auto a2 = accrued<Decimal>{ compound_annualized<Decimal>{ 5 } };
-		const auto dc2 = calculation_252<Decimal>{ c };
+		const auto a2 = accrued<decimal128_t>{ compound_annualized{ decimal128_t{ 5 } } };
+		const auto dc2 = calculation_252<decimal128_t>{ c };
 		const auto i2 = interest(
 			year_month_day{ 2023y / January / 1d },
 			year_month_day{ 2023y / January / 2d },
-			day_count<Decimal>{ dc2 },
+			day_count<decimal128_t>{ dc2 },
 			a2
 		);
 	}

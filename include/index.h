@@ -24,7 +24,10 @@
 
 #include <ranges>
 #include <optional>
+#include <chrono>
 //#include <cassert>
+
+#include <boost/decimal.hpp>
 
 #include <period.h>
 
@@ -32,7 +35,6 @@
 
 #include <day_count.h>
 
-#include "decimal.h"
 #include "fixings.h"
 #include "reset_math.h"
 #include "scaled_value.h"
@@ -43,21 +45,21 @@ namespace reset
 
 	struct index_detail // should it be called metadata?
 	{
-		Value initial_value{ 1 };
-		std::chrono::year_month_day initial_date{};
+		Value initial_value = Value{ "1" }; // is this what we want? (should it be left uninitialised like the intial_date?
+		std::chrono::year_month_day initial_date;
 		bool brazil = false; // this needs to be better - maybe "calendar"/"business" compounding enum?
-		std::optional<unsigned int> factor_trunc = std::nullopt;
-		std::optional<unsigned int> factor_round = std::nullopt;
-		std::optional<unsigned int> step_trunc = std::nullopt;
-		std::optional<unsigned int> step_round = std::nullopt;
-		std::optional<unsigned int> final_trunc = std::nullopt;
-		std::optional<unsigned int> final_round = std::nullopt; // should roundings and truncations be int?
-		std::optional<gregorian::calendar> calendar = std::nullopt; // does it need to be optional? does it need to be a copy? do we need it at all? (could be lifted from fixings)
+		std::optional<unsigned int> factor_trunc;
+		std::optional<unsigned int> factor_round;
+		std::optional<unsigned int> step_trunc;
+		std::optional<unsigned int> step_round;
+		std::optional<unsigned int> final_trunc;
+		std::optional<unsigned int> final_round; // should roundings and truncations be int?
+		std::optional<gregorian::calendar> calendar; // does it need to be optional? does it need to be a copy? do we need it at all? (could be lifted from fixings)
 	};
 
 
 	inline void index_step_(
-		Decimal& indx,
+		boost::decimal::decimal128_t& indx,
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,
@@ -87,7 +89,7 @@ namespace reset
 
 		const auto& dates = schedule.get_dates();
 
-		auto indx = static_cast<Decimal>(id.initial_value);
+		auto indx = static_cast<boost::decimal::decimal128_t>(id.initial_value); // or should intial_value not be a Value? (we do not need to convert it to decimal128_t if it is a Value)
 
 		for (const auto& [start, end] : dates | std::views::adjacent<2uz>)
 			index_step_(indx, start, end, fix, rfd, id);
@@ -119,14 +121,14 @@ namespace reset
 //		assert(fixing);
 //		const auto rate = static_cast<Decimal>(*fixing);
 		const auto& fixing = fix.with_fallback(start);
-		const auto rate = static_cast<Decimal>(fixing);
+		const auto rate = static_cast<boost::decimal::decimal128_t>(fixing);
 
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
-		const auto one = Decimal{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
+		const auto one = boost::decimal::decimal128_t{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
 		auto factor = detail.brazil ?
-			Decimal{ pow(one + rate, year_fraction) } : // we are also missing rounding for Brazil year_fraction at the moment
-			Decimal{ one + rate * year_fraction }; // should these have some kind of units?
+			boost::decimal::decimal128_t{ pow(one + rate, year_fraction) } : // we are also missing rounding for Brazil year_fraction at the moment
+			boost::decimal::decimal128_t{ one + rate * year_fraction }; // should these have some kind of units?
 
 		if (detail.factor_trunc)
 			factor = trunc_dp(factor, *detail.factor_trunc);
@@ -138,7 +140,7 @@ namespace reset
 	}
 
 	inline void index_step_(
-		Decimal& indx,
+		boost::decimal::decimal128_t& indx,
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const RateFixings& fix,

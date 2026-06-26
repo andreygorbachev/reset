@@ -22,7 +22,6 @@
 
 #include <parser.h>
 
-#include <decimal.h>
 #include <scaled_value.h>
 #include <fixings.h>
 #include <index.h>
@@ -30,6 +29,8 @@
 
 #include <modified_preceding.h>
 #include <actual_365_fixed.h>
+
+#include <boost/decimal.hpp>
 
 #include <chrono>
 #include <iostream>
@@ -40,6 +41,8 @@
 
 using namespace std;
 using namespace std::chrono;
+
+using namespace boost::decimal;
 
 using namespace fin_calendar;
 
@@ -142,7 +145,7 @@ int main()
 	const auto PolSTR = parse_csv_fixings_PolSTR();
 
 	const auto rfd = rate_fixings_detail{
-		.day_count = actual_365_fixed<Decimal>{}
+		.day_count = actual_365_fixed<decimal128_t>{}
 	};
 
 	const auto PolSTR_compounded_index = parse_csv_fixings_PolSTR_compounded_index();
@@ -153,7 +156,7 @@ int main()
 
 	// from https://gpwbenchmark.pl/documentation-transaction-based
 	const auto id = index_detail{
-		.initial_value = Value{ "100" },
+		.initial_value = decimal128_t{ 100 },
 		.initial_date = 2021y / January / 4d,
 		.final_round = 8u
 	};

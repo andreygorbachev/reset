@@ -20,13 +20,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <decimal.h>
+#include <boost/decimal.hpp>
+
 #include <reset_math.h>
 
 #include <gtest/gtest.h>
 
 using namespace std;
-
+using namespace boost::decimal;
 
 namespace reset
 {
@@ -40,13 +41,13 @@ namespace reset
 	{
 		// from
 		// "Compounded €STR average rates and index"
-		EXPECT_EQ(Decimal{ "-1.00001" }, round_dp(Decimal{ "-1.000005" }, 5u));
-		EXPECT_EQ(Decimal{ "1.00001" }, round_dp(Decimal{ "1.000005" }, 5u));
+		EXPECT_EQ(decimal128_t{ "-1.00001" }, round_dp(decimal128_t{ "-1.000005" }, 5u));
+		EXPECT_EQ(decimal128_t{ "1.00001" }, round_dp(decimal128_t{ "1.000005" }, 5u));
 
 		// to check that we do Rounding Half Up 
-		EXPECT_EQ(Decimal{ 3 }, round_dp(Decimal{ "2.5" }, 0u));
-//		EXPECT_EQ(Decimal{ 2 }, round_dp(Decimal{ "2.5" }, 0u)); // we do not do Banker's Rounding (Half-to-Even)
-		EXPECT_EQ(Decimal{ 4 }, round_dp(Decimal{ "3.5" }, 0u));
+		EXPECT_EQ(decimal128_t{ 3 }, round_dp(decimal128_t{ "2.5" }, 0u));
+//		EXPECT_EQ(decimal128_t{ 2 }, round_dp(decimal128_t{ "2.5" }, 0u)); // we do not do Banker's Rounding (Half-to-Even)
+		EXPECT_EQ(decimal128_t{ 4 }, round_dp(decimal128_t{ "3.5" }, 0u));
 	}
 
 	TEST(resets_math, trunc_dp1)
@@ -56,7 +57,7 @@ namespace reset
 
 	TEST(resets_math, trunc_dp2)
 	{
-		EXPECT_EQ(Decimal{ "1.01" }, trunc_dp(Decimal{ "1.011111" }, 2u));
+		EXPECT_EQ(decimal128_t{ "1.01" }, trunc_dp(decimal128_t{ "1.011111" }, 2u));
 	}
 
 }
