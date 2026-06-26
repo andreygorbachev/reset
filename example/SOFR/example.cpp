@@ -420,7 +420,7 @@ int main()
 		.day_count = actual_360<decimal128_t>{},
 		.round = 5u + 2u // as we deal with fractions, rather than rates
 	};
-	const auto cd = compounded_detail{
+	const/*expr*/ auto cd = compounded_detail{
 		.calendar = gregorian::static_data::locate_calendar("America/SIFMA", rd.start)
 	};
 	cout

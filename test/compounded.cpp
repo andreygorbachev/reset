@@ -70,7 +70,7 @@ namespace reset
 
 		// Compound from 2026-04-02 (business) to 2026-04-06 (business) across Good Friday
 		const auto rd = rate_detail{ 2026y / April / 2d, 2026y / April / 6d, rfd.day_count, 5u };
-		const auto cd = compounded_detail{ fix.get_calendar() };
+		const/*expr*/ auto cd = compounded_detail{fix.get_calendar()};
 
 		const auto result = compounded(fix, rfd, cd, rd);
 
