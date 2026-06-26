@@ -423,7 +423,7 @@ int main()
 				<< endl;
 	}
 
-	const auto rd = rate_detail{
+	constexpr auto rd = rate_detail{
 		.start = 2020y / February / 11d,
 		.end = 2020y / February / 28d,
 		.day_count = actual_360<decimal128_t>{},

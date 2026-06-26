@@ -414,7 +414,7 @@ int main()
 	}
 
 	// interesting case around Good Friday
-	const auto rd = rate_detail{
+	constexpr auto rd = rate_detail{
 		.start = 2026y / March / 30d,
 		.end = 2026y / April / 10d,
 		.day_count = actual_360<decimal128_t>{},
