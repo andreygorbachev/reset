@@ -67,7 +67,7 @@ int main()
 		.day_count = calculation_252<decimal128_t>{ SELIC.get_calendar() } // think more about copies of calendar
 	};
 
-	const auto id = index_detail{
+	constexpr auto id = index_detail{
 		.initial_value = 1000_DL,
 		.initial_date = 2000y / July / 1d,
 		.brazil = true,

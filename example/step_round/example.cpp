@@ -87,14 +87,14 @@ int main()
 		.day_count = actual_365_fixed<boost::decimal::decimal128_t>{}
 	};
 
-	const auto id1 = index_detail{
+	const/*expr*/ auto id1 = index_detail{
 		.initial_value = 100_DL,
 		.initial_date = f,
 		.step_round = 18u,
 		.final_round = 8u
 	};
 
-	const auto id2 = index_detail{
+	const/*expr*/ auto id2 = index_detail{
 		.initial_value = 100_DL,
 		.initial_date = f,
 		.step_round = nullopt,

@@ -338,14 +338,14 @@ int main()
 	// "Determination of the Overnight Funding TIIE Index compounded on business days,
 	// the Overnight Funding TIIE Index compounded on calendar days,
 	// and the Compounded in advance Overnight Funding TIIE."
-	const auto bus_id = index_detail{
+	constexpr auto bus_id = index_detail{
 		.initial_value = 100000_DL,
 		.initial_date = 2006y / January / 2d,
 		.step_round = 16u,
 		.final_round = 4u
 	};
 
-	const auto cal_id = index_detail{
+	const/*expr*/ auto cal_id = index_detail{
 		.initial_value = 100000_DL,
 		.initial_date = 2006y / January / 2d,
 		.step_round = 16u,

@@ -61,7 +61,7 @@ namespace reset
 			.day_count = actual_360<decimal128_t>{}
 		};
 
-		const auto id = index_detail{
+		constexpr auto id = index_detail{
 			.initial_value = decimal128_t{ "1" }, // _DL?
 			.initial_date = 2018y / April / 2d,
 			.final_round = 8u
@@ -126,7 +126,7 @@ namespace reset
 			.day_count = actual_360<decimal128_t>{}
 		};
 
-		const auto id = index_detail{
+		constexpr auto id = index_detail{
 			.initial_value = decimal128_t{ "272254.4115" }, // _DL?
 			.initial_date = 2023y / April / 5d,
 			.step_round = 16u,

@@ -192,7 +192,7 @@ int main()
 	assert(SOFR_180_day_average.get_calendar() == SOFR_compounded_index.get_calendar());
 
 	// from https://www.newyorkfed.org/markets/opolicy/operating_policy_200212
-	const auto id = index_detail{
+	constexpr auto id = index_detail{
 		.initial_value = 1_DL,
 		.initial_date = 2018y / April / 2d,
 		.final_round = 8u

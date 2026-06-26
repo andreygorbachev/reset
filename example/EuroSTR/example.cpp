@@ -45,6 +45,7 @@ using namespace std;
 using namespace std::chrono;
 
 using namespace boost::decimal;
+using namespace boost::decimal::literals;
 
 using namespace fin_calendar;
 
@@ -165,8 +166,8 @@ int main()
 
 	// from
 	// "Compounded €STR average rates and index"
-	const auto id = index_detail{
-		.initial_value = decimal128_t{ 100 },
+	constexpr auto id = index_detail{
+		.initial_value = 100_DL,
 		.initial_date = 2019y / October / 1d,
 		.final_round = 8u
 	};

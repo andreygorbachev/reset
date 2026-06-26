@@ -156,7 +156,7 @@ int main()
 	const auto PolSTR_6_month_compounded = parse_csv_fixings_PolSTR_6_month_compounded();
 
 	// from https://gpwbenchmark.pl/documentation-transaction-based
-	const auto id = index_detail{
+	constexpr auto id = index_detail{
 		.initial_value = 100_DL,
 		.initial_date = 2021y / January / 4d,
 		.final_round = 8u

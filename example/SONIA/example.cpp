@@ -95,7 +95,7 @@ int main()
 	// I think BoE website does not fully describe the compounded index
 	// more clarity would be welcome there on how rounding is done daily (*)
 
-	const auto id = index_detail{
+	constexpr auto id = index_detail{
 		.initial_value = 100_DL,
 		.initial_date = 2018y / April / 23d,
 		.step_round = 18u,

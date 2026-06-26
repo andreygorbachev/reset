@@ -210,7 +210,7 @@ int main()
 	// "Compounded ZARONIA period averages and index
 	// Calculation methodology and publication
 	// October 2023"
-	const auto id = index_detail{
+	constexpr auto id = index_detail{
 		.initial_value = 100_DL,
 		.initial_date = 2022y / November / 1d,
 		.final_round = 12u
