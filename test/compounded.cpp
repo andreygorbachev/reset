@@ -66,7 +66,7 @@ namespace reset
 
 		const auto fix = fixings{ std::move(ts), std::move(cal), 2u };
 
-		const auto rfd = rate_fixings_detail{ actual_360<decimal128_t>{} };
+		constexpr auto rfd = rate_fixings_detail{ actual_360<decimal128_t>{} };
 
 		// Compound from 2026-04-02 (business) to 2026-04-06 (business) across Good Friday
 		const auto rd = rate_detail{ 2026y / April / 2d, 2026y / April / 6d, rfd.day_count, 5u };

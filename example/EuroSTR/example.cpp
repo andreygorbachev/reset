@@ -152,7 +152,7 @@ int main()
 	const auto PreEuroSTR = parse_csv_fixings_PreEuroSTR();
 	// how can we "add" these 2 together?
 
-	const auto rfd = rate_fixings_detail{
+	constexpr auto rfd = rate_fixings_detail{
 		.day_count = actual_360<decimal128_t>{}
 	};
 

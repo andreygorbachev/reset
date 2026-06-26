@@ -318,7 +318,7 @@ int main()
 {
 	const auto FTIIE = parse_csv_fixings_FTIIE();
 
-	const auto rfd = rate_fixings_detail{
+	constexpr auto rfd = rate_fixings_detail{
 		.day_count = actual_360<decimal128_t>{}
 	};
 

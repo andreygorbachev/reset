@@ -178,7 +178,7 @@ int main()
 {
 	const auto SOFR = parse_csv_fixings_SOFR();
 
-	const auto rfd = rate_fixings_detail{
+	constexpr auto rfd = rate_fixings_detail{
 		.day_count = actual_360<decimal128_t>{}
 	};
 

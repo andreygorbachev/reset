@@ -57,7 +57,7 @@ namespace reset
 
 		const auto fix = make_SOFR_fixings();
 
-		const auto rfd = rate_fixings_detail{
+		constexpr auto rfd = rate_fixings_detail{
 			.day_count = actual_360<decimal128_t>{}
 		};
 
@@ -122,7 +122,7 @@ namespace reset
 
 		const auto fix = fixings{ std::move(ts), std::move(c), 2u };
 
-		const auto rfd = rate_fixings_detail{
+		constexpr auto rfd = rate_fixings_detail{
 			.day_count = actual_360<decimal128_t>{}
 		};
 

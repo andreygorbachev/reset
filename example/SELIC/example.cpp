@@ -63,7 +63,7 @@ int main()
 {
 	const auto SELIC = parse_csv_fixings_SELIC();
 
-	const auto rfd = rate_fixings_detail{
+	const/*expr*/ auto rfd = rate_fixings_detail{
 		.day_count = calculation_252<decimal128_t>{ SELIC.get_calendar() } // think more about copies of calendar
 	};
 
