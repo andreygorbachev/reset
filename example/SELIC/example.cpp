@@ -68,7 +68,7 @@ int main()
 	};
 
 	constexpr auto id = index_detail{
-		.initial_value = 1000_DL,
+		.initial_value = 1000_dl,
 		.initial_date = 2000y / July / 1d,
 		.brazil = true,
 		.factor_round = 8u,
@@ -85,7 +85,7 @@ int main()
 		<< "For "
 		<< date1
 		<< " VNA is "
-		<< decimal128_t{ "6023.149269" } // can we use _DL here as well?
+		<< 6023.149269_dl
 		<< " and the same computed value is "
 		<< index(SELIC, rfd, date1, id).get_value()
 		<< endl;
@@ -101,7 +101,7 @@ int main()
 		<< "For "
 		<< date2
 		<< " VNA is "
-		<< decimal128_t{ "3449.694215" } // for some reason the English version of the same document has different values // _DL?
+		<< 3449.694215_dl // for some reason the English version of the same document has different values
 		<< " and the same computed value is "
 		<< index(SELIC, rfd, date2, id).get_value()
 		<< endl;

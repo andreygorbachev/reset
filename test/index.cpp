@@ -43,6 +43,7 @@
 using namespace std;
 using namespace std::chrono;
 using namespace boost::decimal;
+using namespace boost::decimal::literals;
 using namespace fin_calendar;
 using namespace gregorian;
 using namespace gregorian::util;
@@ -62,17 +63,17 @@ namespace reset
 		};
 
 		constexpr auto id = index_detail{
-			.initial_value = decimal128_t{ "1" }, // _DL?
+			.initial_value = 1_dl,
 			.initial_date = 2018y / April / 2d,
 			.final_round = 8u
 		};
 
-//		EXPECT_EQ(Value{ "1.00000000" }, index(fix, rfd, 2018y / April / 2d, id));
-		EXPECT_EQ(Value{ "1.00005000" }, index(fix, rfd, 2018y / April / 3d, id));
-		EXPECT_EQ(Value{ "1.00010084" }, index(fix, rfd, 2018y / April / 4d, id));
-		EXPECT_EQ(Value{ "1.00014917" }, index(fix, rfd, 2018y / April / 5d, id));
-		EXPECT_EQ(Value{ "1.00019779" }, index(fix, rfd, 2018y / April / 6d, id));
-//		EXPECT_EQ(Value{ "1.00034365" }, index(fix, rfd, 2018y / April / 9d, id));
+//		EXPECT_EQ(Value{ 1.00000000_dl }, index(fix, rfd, 2018y / April / 2d, id));
+		EXPECT_EQ(Value{ 1.00005000_dl }, index(fix, rfd, 2018y / April / 3d, id));
+		EXPECT_EQ(Value{ 1.00010084_dl }, index(fix, rfd, 2018y / April / 4d, id));
+		EXPECT_EQ(Value{ 1.00014917_dl }, index(fix, rfd, 2018y / April / 5d, id));
+		EXPECT_EQ(Value{ 1.00019779_dl }, index(fix, rfd, 2018y / April / 6d, id));
+//		EXPECT_EQ(Value{ 1.00034365_dl }, index(fix, rfd, 2018y / April / 9d, id));
 	}
 
 	TEST(index, index2)
@@ -127,17 +128,17 @@ namespace reset
 		};
 
 		constexpr auto id = index_detail{
-			.initial_value = decimal128_t{ "272254.4115" }, // _DL?
+			.initial_value = 272254.4115_dl,
 			.initial_date = 2023y / April / 5d,
 			.step_round = 16u,
 			.final_round = 4u
 		};
 
-		EXPECT_EQ(Value{ "272254.4115" }, index(fix, rfd, 2023y / April / 5d, id));
-//		EXPECT_EQ(Value{ "272339.4910" }, index(fix, rfd, 2023y / April / 6d, id));
-//		EXPECT_EQ(Value{ "272424.5705" }, index(fix, rfd, 2023y / April / 7d, id));
-//		EXPECT_EQ(Value{ "272509.6500" }, index(fix, rfd, 2023y / April / 8d, id));
-//		EXPECT_EQ(Value{ "272594.7295" }, index(fix, rfd, 2023y / April / 9d, id));
+		EXPECT_EQ(Value{ 272254.4115_dl }, index(fix, rfd, 2023y / April / 5d, id));
+//		EXPECT_EQ(Value{ 272339.4910_dl }, index(fix, rfd, 2023y / April / 6d, id));
+//		EXPECT_EQ(Value{ 272424.5705_dl }, index(fix, rfd, 2023y / April / 7d, id));
+//		EXPECT_EQ(Value{ 272509.6500_dl }, index(fix, rfd, 2023y / April / 8d, id));
+//		EXPECT_EQ(Value{ 272594.7295_dl }, index(fix, rfd, 2023y / April / 9d, id));
 	}
 
 }

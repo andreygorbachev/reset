@@ -211,7 +211,7 @@ int main()
 	// Calculation methodology and publication
 	// October 2023"
 	constexpr auto id = index_detail{
-		.initial_value = 100_DL,
+		.initial_value = 100_dl,
 		.initial_date = 2022y / November / 1d,
 		.final_round = 12u
 	};

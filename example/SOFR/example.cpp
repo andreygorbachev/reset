@@ -193,7 +193,7 @@ int main()
 
 	// from https://www.newyorkfed.org/markets/opolicy/operating_policy_200212
 	constexpr auto id = index_detail{
-		.initial_value = 1_DL,
+		.initial_value = 1_dl,
 		.initial_date = 2018y / April / 2d,
 		.final_round = 8u
 	};

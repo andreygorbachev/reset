@@ -28,9 +28,11 @@
 
 using namespace std;
 using namespace boost::decimal;
+using namespace boost::decimal::literals;
+
 
 namespace reset
-{ // _DL?
+{
 
 	TEST(resets_math, round_dp1)
 	{
@@ -41,13 +43,13 @@ namespace reset
 	{
 		// from
 		// "Compounded €STR average rates and index"
-		EXPECT_EQ(decimal128_t{ "-1.00001" }, round_dp(decimal128_t{ "-1.000005" }, 5u));
-		EXPECT_EQ(decimal128_t{ "1.00001" }, round_dp(decimal128_t{ "1.000005" }, 5u));
+		EXPECT_EQ(-1.00001_dl, round_dp(-1.000005_dl, 5u));
+		EXPECT_EQ(1.00001_dl, round_dp(1.000005_dl, 5u));
 
 		// to check that we do Rounding Half Up 
-		EXPECT_EQ(decimal128_t{ 3 }, round_dp(decimal128_t{ "2.5" }, 0u));
-//		EXPECT_EQ(decimal128_t{ 2 }, round_dp(decimal128_t{ "2.5" }, 0u)); // we do not do Banker's Rounding (Half-to-Even)
-		EXPECT_EQ(decimal128_t{ 4 }, round_dp(decimal128_t{ "3.5" }, 0u));
+		EXPECT_EQ(3_dl, round_dp(2.5_dl, 0u));
+//		EXPECT_EQ(2_dl, round_dp(2.5_dl, 0u)); // we do not do Banker's Rounding (Half-to-Even)
+		EXPECT_EQ(4_dl, round_dp(3.5_dl, 0u));
 	}
 
 	TEST(resets_math, trunc_dp1)
@@ -57,7 +59,7 @@ namespace reset
 
 	TEST(resets_math, trunc_dp2)
 	{
-		EXPECT_EQ(decimal128_t{ "1.01" }, trunc_dp(decimal128_t{ "1.011111" }, 2u));
+		EXPECT_EQ(1.01_dl, trunc_dp(1.011111_dl, 2u));
 	}
 
 }

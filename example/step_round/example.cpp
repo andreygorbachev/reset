@@ -88,14 +88,14 @@ int main()
 	};
 
 	const/*expr*/ auto id1 = index_detail{
-		.initial_value = 100_DL,
+		.initial_value = 100_dl,
 		.initial_date = f,
 		.step_round = 18u,
 		.final_round = 8u
 	};
 
 	const/*expr*/ auto id2 = index_detail{
-		.initial_value = 100_DL,
+		.initial_value = 100_dl,
 		.initial_date = f,
 		.step_round = nullopt,
 		.final_round = 8u

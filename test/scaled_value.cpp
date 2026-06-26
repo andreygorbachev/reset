@@ -28,10 +28,11 @@
 
 using namespace std;
 using namespace boost::decimal;
+using namespace boost::decimal::literals;
 
 
 namespace reset
-{ // _DL?
+{ // _dl?
 
 	TEST(scaled_value, constructor1)
 	{
@@ -42,38 +43,38 @@ namespace reset
 
 	TEST(scaled_value, constructor2)
 	{
-		const auto sv = Percent{ decimal128_t{ "0.03" } }; // 3%
+		const auto sv = Percent{ 0.03_dl }; // 3%
 		EXPECT_EQ(Percent{ "3" }, sv);
 	}
 
 	TEST(scaled_value, operator_Decimal)
 	{
 		const auto sv = Percent{ "3" };
-		EXPECT_EQ(decimal128_t{ "0.03" }, static_cast<decimal128_t>(sv));
+		EXPECT_EQ(0.03_dl, static_cast<decimal128_t>(sv));
 	}
 
 	TEST(scaled_value, get_value)
 	{
 		const auto sv = Percent{ "3" };
-		EXPECT_EQ(decimal128_t{ "3" }, sv.get_value());
+		EXPECT_EQ(3_dl, sv.get_value());
 	}
 
 	TEST(scaled_value, Percent)
 	{
 		const auto sv = Percent{ "3" };
-		EXPECT_EQ(decimal128_t{ "0.03" }, static_cast<decimal128_t>(sv));
+		EXPECT_EQ(0.03_dl, static_cast<decimal128_t>(sv));
 	}
 
 	TEST(scaled_value, BasisPoints)
 	{
 		const auto sv = BasisPoints{ "3" };
-		EXPECT_EQ(decimal128_t{ "0.0003" }, static_cast<decimal128_t>(sv));
+		EXPECT_EQ(0.0003_dl, static_cast<decimal128_t>(sv));
 	}
 
 	TEST(scaled_value, Value)
 	{
 		const auto sv = Value{ "3" };
-		EXPECT_EQ(decimal128_t{ "3" }, static_cast<decimal128_t>(sv));
+		EXPECT_EQ(3_dl, static_cast<decimal128_t>(sv));
 	}
 
 	// do we need to test default functions?

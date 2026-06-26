@@ -157,7 +157,7 @@ int main()
 
 	// from https://gpwbenchmark.pl/documentation-transaction-based
 	constexpr auto id = index_detail{
-		.initial_value = 100_DL,
+		.initial_value = 100_dl,
 		.initial_date = 2021y / January / 4d,
 		.final_round = 8u
 	};

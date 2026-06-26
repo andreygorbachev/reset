@@ -92,14 +92,14 @@ namespace reset
 		if (!dates.contains(average_start)) // or we can just have a look at cbegin(), which is O(1) operation on most platforms, rather than O(log n)
 			dates.insert(average_start); // do it with hint?
 
-		auto val = 1_DL;
+		auto val = 1_dl;
 
 		for (const auto& [start, end] : dates | std::views::adjacent<2uz>)
 			average_step_(val, start, end, fix, rfd);
 
 		const auto year_fraction = fin_calendar::fraction(schedule.get_period(), rfd.day_count);
 
-		auto rate = (val - 1_DL) / year_fraction;
+		auto rate = (val - 1_dl) / year_fraction;
 
 		rate = round_dp(rate, detail.final_round);
 
@@ -130,7 +130,7 @@ namespace reset
 
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
-		val *= 1_DL + rate * year_fraction; // should these have some kind of units?
+		val *= 1_dl + rate * year_fraction; // should these have some kind of units?
 	}
 
 }

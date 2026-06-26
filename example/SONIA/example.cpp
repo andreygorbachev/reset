@@ -96,7 +96,7 @@ int main()
 	// more clarity would be welcome there on how rounding is done daily (*)
 
 	constexpr auto id = index_detail{
-		.initial_value = 100_DL,
+		.initial_value = 100_dl,
 		.initial_date = 2018y / April / 23d,
 		.step_round = 18u,
 		.final_round = 8u

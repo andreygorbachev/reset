@@ -154,7 +154,7 @@ int main()
 	// from https://indexdata.six-group.com/download/online/vendor_code/six-calculated-indices.xls
 
 	constexpr auto id = index_detail{
-		.initial_value = 10000_DL,
+		.initial_value = 10000_dl,
 		.initial_date = 1999y / June / 30d,
 		.step_round = 6u
 	};

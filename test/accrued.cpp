@@ -79,7 +79,7 @@ namespace reset
 	{
 		const auto& c = locate_calendar("America/ANBIMA"s, 2023y / January / 1d);
 
-		const auto a1 = accrued<decimal128_t>{ simple_annualized{ 5_DL } };
+		const auto a1 = accrued<decimal128_t>{ simple_annualized{ 5_dl } };
 		const auto dc1 = actual_365_fixed<decimal128_t>{};
 		const auto i1 = interest(
 			year_month_day{ 2023y / January / 1d },
@@ -88,7 +88,7 @@ namespace reset
 			a1
 		);
 
-		const auto a2 = accrued<decimal128_t>{ compound_annualized{ 5_DL } };
+		const auto a2 = accrued<decimal128_t>{ compound_annualized{ 5_dl } };
 		const auto dc2 = calculation_252<decimal128_t>{ c };
 		const auto i2 = interest(
 			year_month_day{ 2023y / January / 1d },

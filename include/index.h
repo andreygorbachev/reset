@@ -128,8 +128,8 @@ namespace reset
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
 		auto factor = detail.brazil ?
-			pow(1_DL + rate, year_fraction) : // we are also missing rounding for Brazil year_fraction at the moment
-			1_DL + rate * year_fraction; // should these have some kind of units?
+			pow(1_dl + rate, year_fraction) : // we are also missing rounding for Brazil year_fraction at the moment
+			1_dl + rate * year_fraction; // should these have some kind of units?
 
 		if (detail.factor_trunc)
 			factor = trunc_dp(factor, *detail.factor_trunc);

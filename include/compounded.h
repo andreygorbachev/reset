@@ -81,7 +81,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 		if (!dates.contains(rd.start)) // or we can just have a look at cbegin(), which is O(1) operation on most platforms, rather than O(log n)
 			dates.insert(rd.start); // do it with hint?
 
-		auto val = 1_DL;
+		auto val = 1_dl;
 
 		for (const auto& [start, end] : dates | std::views::adjacent<2uz>)
 			compounded_step_(val, start, end, fix, rfd);
@@ -92,7 +92,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 			rd.day_count
 		);
 
-		auto rate = (val - 1_DL) / year_fraction;
+		auto rate = (val - 1_dl) / year_fraction;
 
 		rate = round_dp(rate, rd.round);
 
@@ -123,7 +123,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 			detail.day_count
 		);
 
-		auto rate = (end_fix->get_value() / start_fix->get_value() - 1_DL) / year_fraction;
+		auto rate = (end_fix->get_value() / start_fix->get_value() - 1_dl) / year_fraction;
 
 		rate = round_dp(rate, detail.round);
 
@@ -149,7 +149,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
-		val *= 1_DL + rate * year_fraction; // should these have some kind of units?
+		val *= 1_dl + rate * year_fraction; // should these have some kind of units?
 	}
 
 }
