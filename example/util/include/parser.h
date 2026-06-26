@@ -59,7 +59,7 @@ auto parse_csv_fixings(
 	const std::string& fileName,
 	const parser_detail& detail,
 	const std::string& calendar_name, // empty calendar will be created if this string is empty
-	typename const Fixings::decimal_places decimal_places
+	const typename Fixings::decimal_places decimal_places
 ) -> Fixings;
 
 
@@ -163,7 +163,7 @@ auto parse_csv_fixings(
 	const std::string& fileName,
 	const parser_detail& detail,
 	const std::string& calendar_name,
-	typename const Fixings::decimal_places decimal_places
+	const typename Fixings::decimal_places decimal_places
 ) -> Fixings
 {
 	/*const*/ auto fs = std::ifstream{ fileName }; // should we handle a default .csv file extension?
