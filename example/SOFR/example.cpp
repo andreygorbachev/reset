@@ -51,6 +51,7 @@ using namespace std;
 using namespace std::chrono;
 
 using namespace boost::decimal;
+using namespace boost::decimal::literals;
 
 using namespace gregorian;
 using namespace gregorian::util;
@@ -192,7 +193,7 @@ int main()
 
 	// from https://www.newyorkfed.org/markets/opolicy/operating_policy_200212
 	const auto id = index_detail{
-		.initial_value = decimal128_t{ 1 },
+		.initial_value = 1_DL,
 		.initial_date = 2018y / April / 2d,
 		.final_round = 8u
 	};

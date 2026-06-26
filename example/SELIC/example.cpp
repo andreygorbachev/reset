@@ -39,6 +39,7 @@ using namespace std;
 using namespace std::chrono;
 
 using namespace boost::decimal;
+using namespace boost::decimal::literals;
 
 using namespace fin_calendar;
 
@@ -67,7 +68,7 @@ int main()
 	};
 
 	const auto id = index_detail{
-		.initial_value = decimal128_t{ 1000 },
+		.initial_value = 1000_DL,
 		.initial_date = 2000y / July / 1d,
 		.brazil = true,
 		.factor_round = 8u,
@@ -84,7 +85,7 @@ int main()
 		<< "For "
 		<< date1
 		<< " VNA is "
-		<< decimal128_t{ "6023.149269" }
+		<< decimal128_t{ "6023.149269" } // can we use _DL here as well?
 		<< " and the same computed value is "
 		<< index(SELIC, rfd, date1, id).get_value()
 		<< endl;
@@ -100,7 +101,7 @@ int main()
 		<< "For "
 		<< date2
 		<< " VNA is "
-		<< decimal128_t{ "3449.694215" } // for some reason the English version of the same document has different values
+		<< decimal128_t{ "3449.694215" } // for some reason the English version of the same document has different values // _DL?
 		<< " and the same computed value is "
 		<< index(SELIC, rfd, date2, id).get_value()
 		<< endl;

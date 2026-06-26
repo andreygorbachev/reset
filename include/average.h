@@ -69,6 +69,8 @@ namespace reset
 		const average_detail& detail = average_detail{} // does it need a default?
 	) -> rate
 	{
+		using namespace boost::decimal::literals;
+
 		// do we handle the case where detail.term is empty?
 
 		// implement in terms of compounded?
@@ -90,14 +92,14 @@ namespace reset
 		if (!dates.contains(average_start)) // or we can just have a look at cbegin(), which is O(1) operation on most platforms, rather than O(log n)
 			dates.insert(average_start); // do it with hint?
 
-		auto val = boost::decimal::decimal128_t{ 1 };
+		auto val = 1_DL;
 
 		for (const auto& [start, end] : dates | std::views::adjacent<2uz>)
 			average_step_(val, start, end, fix, rfd);
 
 		const auto year_fraction = fin_calendar::fraction(schedule.get_period(), rfd.day_count);
 
-		auto rate = boost::decimal::decimal128_t{ (val - boost::decimal::decimal128_t{ 1 }) / year_fraction };
+		auto rate = (val - 1_DL) / year_fraction;
 
 		rate = round_dp(rate, detail.final_round);
 
@@ -121,13 +123,14 @@ namespace reset
 		const rate_fixings_detail& rfd
 	)
 	{
+		using namespace boost::decimal::literals;
+
 		const auto& fixing = fix.with_fallback(start); // or we can create special average_step_ for the first step when average starts on a non business day (and we need to use the previous reset)
 		const auto rate = static_cast<boost::decimal::decimal128_t>(fixing);
 
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
-		const auto one = boost::decimal::decimal128_t{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
-		val *= one + rate * year_fraction; // should these have some kind of units?
+		val *= 1_DL + rate * year_fraction; // should these have some kind of units?
 	}
 
 }

@@ -44,6 +44,9 @@
 using namespace std;
 using namespace std::chrono;
 
+using namespace boost::decimal;
+using namespace boost::decimal::literals;
+
 using namespace reset;
 
 using namespace fin_calendar;
@@ -85,14 +88,14 @@ int main()
 	};
 
 	const auto id1 = index_detail{
-		.initial_value = boost::decimal::decimal128_t{ 100 },
+		.initial_value = 100_DL,
 		.initial_date = f,
 		.step_round = 18u,
 		.final_round = 8u
 	};
 
 	const auto id2 = index_detail{
-		.initial_value = boost::decimal::decimal128_t{ 100 },
+		.initial_value = 100_DL,
 		.initial_date = f,
 		.step_round = nullopt,
 		.final_round = 8u

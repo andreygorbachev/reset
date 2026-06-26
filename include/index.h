@@ -117,6 +117,8 @@ namespace reset
 		const index_detail& detail
 	)
 	{
+		using namespace boost::decimal::literals;
+
 //		const auto& fixing = fix[start];
 //		assert(fixing);
 //		const auto rate = static_cast<Decimal>(*fixing);
@@ -125,10 +127,9 @@ namespace reset
 
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
-		const auto one = boost::decimal::decimal128_t{ 1 }; // constexpr would be better, but cpp_dec_float_50 does not support it
 		auto factor = detail.brazil ?
-			boost::decimal::decimal128_t{ pow(one + rate, year_fraction) } : // we are also missing rounding for Brazil year_fraction at the moment
-			boost::decimal::decimal128_t{ one + rate * year_fraction }; // should these have some kind of units?
+			pow(1_DL + rate, year_fraction) : // we are also missing rounding for Brazil year_fraction at the moment
+			1_DL + rate * year_fraction; // should these have some kind of units?
 
 		if (detail.factor_trunc)
 			factor = trunc_dp(factor, *detail.factor_trunc);

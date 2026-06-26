@@ -43,6 +43,7 @@ using namespace std;
 using namespace std::chrono;
 
 using namespace boost::decimal;
+using namespace boost::decimal::literals;
 
 using namespace fin_calendar;
 
@@ -156,7 +157,7 @@ int main()
 
 	// from https://gpwbenchmark.pl/documentation-transaction-based
 	const auto id = index_detail{
-		.initial_value = decimal128_t{ 100 },
+		.initial_value = 100_DL,
 		.initial_date = 2021y / January / 4d,
 		.final_round = 8u
 	};

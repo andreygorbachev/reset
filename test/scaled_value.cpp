@@ -31,7 +31,7 @@ using namespace boost::decimal;
 
 
 namespace reset
-{
+{ // _DL?
 
 	TEST(scaled_value, constructor1)
 	{

@@ -70,6 +70,8 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 		rate_detail rd
 	) -> rate
 	{
+		using namespace boost::decimal::literals;
+
 		const auto schedule = cd.calendar.make_business_days_schedule(
 			gregorian::util::days_period{ rd.start, rd.end }
 		); // is this a wrong data structure?
@@ -79,7 +81,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 		if (!dates.contains(rd.start)) // or we can just have a look at cbegin(), which is O(1) operation on most platforms, rather than O(log n)
 			dates.insert(rd.start); // do it with hint?
 
-		auto val = boost::decimal::decimal128_t{ 1 };
+		auto val = 1_DL;
 
 		for (const auto& [start, end] : dates | std::views::adjacent<2uz>)
 			compounded_step_(val, start, end, fix, rfd);
@@ -90,7 +92,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 			rd.day_count
 		);
 
-		auto rate = boost::decimal::decimal128_t{ (val - boost::decimal::decimal128_t{ 1 }) / year_fraction };
+		auto rate = (val - 1_DL) / year_fraction;
 
 		rate = round_dp(rate, rd.round);
 
@@ -106,6 +108,8 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 		rate_detail detail
 	) -> rate
 	{
+		using namespace boost::decimal::literals;
+
 		const auto& start_fix = fix[detail.start];
 		if (!start_fix)
 			throw std::runtime_error{ "No fixing for start date" }; // is this a correct exception type?
@@ -119,7 +123,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 			detail.day_count
 		);
 
-		auto rate = (end_fix->get_value() / start_fix->get_value() - boost::decimal::decimal128_t{ 1 }) / year_fraction;
+		auto rate = (end_fix->get_value() / start_fix->get_value() - 1_DL) / year_fraction;
 
 		rate = round_dp(rate, detail.round);
 
@@ -138,12 +142,14 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 		const rate_fixings_detail& rfd
 	)
 	{
+		using namespace boost::decimal::literals;
+
 		const auto& fixing = fix.with_fallback(start); // I guess this is just a "number" and the "details" are provided separately - is it good?
 		const auto rate = static_cast<boost::decimal::decimal128_t>(fixing);
 
 		const auto year_fraction = fin_calendar::fraction(start, end, rfd.day_count);
 
-		val *= boost::decimal::decimal128_t{ 1 } + rate * year_fraction; // should these have some kind of units?
+		val *= 1_DL + rate * year_fraction; // should these have some kind of units?
 	}
 
 }

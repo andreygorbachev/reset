@@ -36,6 +36,7 @@
 using namespace std;
 using namespace std::chrono;
 using namespace boost::decimal;
+using namespace boost::decimal::literals;
 using namespace fin_calendar;
 using namespace gregorian;
 using namespace gregorian::static_data;
@@ -78,7 +79,7 @@ namespace reset
 	{
 		const auto& c = locate_calendar("America/ANBIMA"s, 2023y / January / 1d);
 
-		const auto a1 = accrued<decimal128_t>{ simple_annualized{ decimal128_t{ 5 } } };
+		const auto a1 = accrued<decimal128_t>{ simple_annualized{ 5_DL } };
 		const auto dc1 = actual_365_fixed<decimal128_t>{};
 		const auto i1 = interest(
 			year_month_day{ 2023y / January / 1d },
@@ -87,7 +88,7 @@ namespace reset
 			a1
 		);
 
-		const auto a2 = accrued<decimal128_t>{ compound_annualized{ decimal128_t{ 5 } } };
+		const auto a2 = accrued<decimal128_t>{ compound_annualized{ 5_DL } };
 		const auto dc2 = calculation_252<decimal128_t>{ c };
 		const auto i2 = interest(
 			year_month_day{ 2023y / January / 1d },

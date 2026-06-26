@@ -62,7 +62,7 @@ namespace reset
 		};
 
 		const auto id = index_detail{
-			.initial_value = decimal128_t{ "1" },
+			.initial_value = decimal128_t{ "1" }, // _DL?
 			.initial_date = 2018y / April / 2d,
 			.final_round = 8u
 		};
@@ -127,7 +127,7 @@ namespace reset
 		};
 
 		const auto id = index_detail{
-			.initial_value = decimal128_t{ "272254.4115" },
+			.initial_value = decimal128_t{ "272254.4115" }, // _DL?
 			.initial_date = 2023y / April / 5d,
 			.step_round = 16u,
 			.final_round = 4u

@@ -47,6 +47,7 @@ using namespace std;
 using namespace std::chrono;
 
 using namespace boost::decimal;
+using namespace boost::decimal::literals;
 
 using namespace gregorian;
 using namespace gregorian::util;
@@ -95,7 +96,7 @@ int main()
 	// more clarity would be welcome there on how rounding is done daily (*)
 
 	const auto id = index_detail{
-		.initial_value = decimal128_t{ 100 },
+		.initial_value = 100_DL,
 		.initial_date = 2018y / April / 23d,
 		.step_round = 18u,
 		.final_round = 8u

@@ -30,7 +30,7 @@ using namespace std;
 using namespace boost::decimal;
 
 namespace reset
-{
+{ // _DL?
 
 	TEST(resets_math, round_dp1)
 	{

@@ -48,6 +48,7 @@ using namespace std;
 using namespace std::chrono;
 
 using namespace boost::decimal;
+using namespace boost::decimal::literals;
 
 using namespace gregorian;
 using namespace gregorian::util;
@@ -257,6 +258,8 @@ static auto compounded_in_advance( // is this important enough to move to the ma
 	const boost::decimal::decimal128_t& tenor
 )
 {
+	using namespace boost::decimal::literals;
+
 	const auto& _index_d = fix[d];
 	assert(_index_d); // we assume that requests are only made for business days, but actually index is given for all calendar days
 	const auto index_d = static_cast<boost::decimal::decimal128_t>(*_index_d);
@@ -266,11 +269,7 @@ static auto compounded_in_advance( // is this important enough to move to the ma
 	assert(_index_d_28n);
 	const auto index_d_28n = static_cast<boost::decimal::decimal128_t>(*_index_d_28n);
 
-	const auto _1 = boost::decimal::decimal128_t{ 1 };
-	const auto _28 = boost::decimal::decimal128_t{ 28 };
-	const auto _360 = boost::decimal::decimal128_t{ 360 };
-
-	auto rate = boost::decimal::decimal128_t{ (pow(index_d / index_d_28n, tenor / _28) - _1) * _360 / tenor }; // should we use day count?
+	auto rate = (pow(index_d / index_d_28n, tenor / 28_DL) - 1_DL) * 360_DL / tenor; // should we use day count?
 	rate = round_dp(rate, 6u); // or should we be able to apply 4dp to the resulting percentage? (that would be closer to the documentation, which deals in percents)
 	// should round_dp accept units for the power? (6dp or something like that)
 
@@ -285,6 +284,8 @@ static auto fallback( // is this important enough to move to the main library?
 	const boost::decimal::decimal128_t& tenor
 )
 {
+	using namespace boost::decimal::literals;
+
 	const auto& calendar = fix.get_calendar();
 	const auto prev = calendar.shift_business_days(d, days{ -1 });
 	const auto prevprev = calendar.shift_business_days(prev, days{ -1 });
@@ -304,10 +305,7 @@ static auto fallback( // is this important enough to move to the main library?
 	const auto _spread = BasisPoints{ "24" }; // constexpr? // is this right that it is the same spread for all tenors?
 	const auto spread = static_cast<boost::decimal::decimal128_t>(_spread);
 
-	const auto _1 = boost::decimal::decimal128_t{ 1 };
-	const auto _360 = boost::decimal::decimal128_t{ 360 };
-
-	auto rate = boost::decimal::decimal128_t{ (pow(_1 + (fixing + Banxico_move) / _360, tenor) - _1) * _360 / tenor }; // should we use day count?
+	auto rate = (pow(1_DL + (fixing + Banxico_move) / 360_DL, tenor) - 1_DL) * 360_DL / tenor; // should we use day count?
 	rate = round_dp(rate, 6u); // or should we be able to apply 4dp to the resulting percentage? (that would be closer to the documentation, which deals in percents)
 	// should round_dp accept units for the power? (6dp or something like that)
 
@@ -341,14 +339,14 @@ int main()
 	// the Overnight Funding TIIE Index compounded on calendar days,
 	// and the Compounded in advance Overnight Funding TIIE."
 	const auto bus_id = index_detail{
-		.initial_value = decimal128_t{ 100000 },
+		.initial_value = 100000_DL,
 		.initial_date = 2006y / January / 2d,
 		.step_round = 16u,
 		.final_round = 4u
 	};
 
 	const auto cal_id = index_detail{
-		.initial_value = decimal128_t{ 100000 },
+		.initial_value = 100000_DL,
 		.initial_date = 2006y / January / 2d,
 		.step_round = 16u,
 		.final_round = 4u,
@@ -409,7 +407,7 @@ int main()
 		<< " F-TIIE Compounded In Advance Index (28 days) is "
 		<< _28d_indx->get_value()
 		<< " and the same computed value is "
-		<< compounded_in_advance(FTIIE_compounded_on_business_days_index, date, decimal128_t{ 28 }).get_value()
+		<< compounded_in_advance(FTIIE_compounded_on_business_days_index, date, 28_DL).get_value()
 		<< endl;
 
 	const auto& _91d_indx = FTIIE_compounded_in_advance_91_day[date];
@@ -423,7 +421,7 @@ int main()
 		<< " F-TIIE Compounded In Advance Index (91 days) is "
 		<< _91d_indx->get_value()
 		<< " and the same computed value is "
-		<< compounded_in_advance(FTIIE_compounded_on_business_days_index, date, decimal128_t{ 91 }).get_value()
+		<< compounded_in_advance(FTIIE_compounded_on_business_days_index, date, 91_DL).get_value()
 		<< endl;
 
 	const auto& _182d_indx = FTIIE_compounded_in_advance_182_day[date];
@@ -437,7 +435,7 @@ int main()
 		<< " F-TIIE Compounded In Advance Index (182 days) is "
 		<< _182d_indx->get_value()
 		<< " and the same computed value is "
-		<< compounded_in_advance(FTIIE_compounded_on_business_days_index, date, decimal128_t{ 182 }).get_value()
+		<< compounded_in_advance(FTIIE_compounded_on_business_days_index, date, 182_DL).get_value()
 		<< endl;
 
 	const auto& _28d_fallback = TIIE_fallback_28_day[date];
@@ -451,7 +449,7 @@ int main()
 		<< " TIIE Fallback (28 days) is "
 		<< _28d_fallback->get_value()
 		<< " and the same computed value is "
-		<< fallback(FTIIE, target_rate, date, decimal128_t{ 28 }).get_value()
+		<< fallback(FTIIE, target_rate, date, 28_DL).get_value()
 		<< endl;
 
 	const auto& _91d_fallback = TIIE_fallback_91_day[date];
@@ -465,7 +463,7 @@ int main()
 		<< " TIIE Fallback (91 days) is "
 		<< _91d_fallback->get_value()
 		<< " and the same computed value is "
-		<< fallback(FTIIE, target_rate, date, decimal128_t{ 91 }).get_value()
+		<< fallback(FTIIE, target_rate, date, 91_DL).get_value()
 		<< endl;
 
 	const auto& _182d_fallback = TIIE_fallback_182_day[date];
@@ -479,7 +477,7 @@ int main()
 		<< " TIIE Fallback (182 days) is "
 		<< _182d_fallback->get_value()
 		<< " and the same computed value is "
-		<< fallback(FTIIE, target_rate, date, decimal128_t{ 182 }).get_value()
+		<< fallback(FTIIE, target_rate, date, 182_DL).get_value()
 		<< endl;
 
 	// look for inconsistencies in the index data
@@ -575,7 +573,7 @@ int main()
 		const auto& fix = FTIIE_compounded_in_advance_28_day[d];
 		assert(fix);
 
-		const auto cia = compounded_in_advance(FTIIE_compounded_on_business_days_index, d, decimal128_t{ 28 });
+		const auto cia = compounded_in_advance(FTIIE_compounded_on_business_days_index, d, 28_DL);
 		if (*fix != cia)
 			cout
 				<< fixed
@@ -598,7 +596,7 @@ int main()
 		const auto& fix = FTIIE_compounded_in_advance_91_day[d];
 		assert(fix);
 
-		const auto cia = compounded_in_advance(FTIIE_compounded_on_business_days_index, d, decimal128_t{ 91 });
+		const auto cia = compounded_in_advance(FTIIE_compounded_on_business_days_index, d, 91_DL);
 		if (*fix != cia)
 			cout
 				<< fixed
@@ -621,7 +619,7 @@ int main()
 		const auto& fix = FTIIE_compounded_in_advance_182_day[d];
 		assert(fix);
 
-		const auto cia = compounded_in_advance(FTIIE_compounded_on_business_days_index, d, decimal128_t{ 182 });
+		const auto cia = compounded_in_advance(FTIIE_compounded_on_business_days_index, d, 182_DL);
 		if (*fix != cia)
 			cout
 				<< fixed
@@ -644,7 +642,7 @@ int main()
 	{
 		const auto& fix = TIIE_fallback_28_day[d];
 		assert(fix);
-		const auto fb = fallback(FTIIE, target_rate, d, decimal128_t{ 28 });
+		const auto fb = fallback(FTIIE, target_rate, d, 28_DL);
 		if (*fix != fb)
 			cout
 				<< fixed
@@ -667,7 +665,7 @@ int main()
 	{
 		const auto& fix = TIIE_fallback_91_day[d];
 		assert(fix);
-		const auto fb = fallback(FTIIE, target_rate, d, decimal128_t{ 91 });
+		const auto fb = fallback(FTIIE, target_rate, d, 91_DL);
 		if (*fix != fb)
 			cout
 			<< fixed
@@ -690,7 +688,7 @@ int main()
 	{
 		const auto& fix = TIIE_fallback_182_day[d];
 		assert(fix);
-		const auto fb = fallback(FTIIE, target_rate, d, decimal128_t{ 182 });
+		const auto fb = fallback(FTIIE, target_rate, d, 182_DL);
 		if (*fix != fb)
 			cout
 			<< fixed

@@ -48,6 +48,7 @@ using namespace std;
 using namespace std::chrono;
 
 using namespace boost::decimal;
+using namespace boost::decimal::literals;
 
 using namespace gregorian;
 using namespace gregorian::util;
@@ -210,7 +211,7 @@ int main()
 	// Calculation methodology and publication
 	// October 2023"
 	const auto id = index_detail{
-		.initial_value = decimal128_t{ 100 },
+		.initial_value = 100_DL,
 		.initial_date = 2022y / November / 1d,
 		.final_round = 12u
 	};
