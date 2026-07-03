@@ -54,7 +54,7 @@ static auto parse_csv_fixings_SARON() -> RateFixings
 	constexpr auto d = parser_detail{
 		.header_lines = 4u,
 		.from = 1999y / June / 30d,
-		.until = 2026y / May / 12d,
+		.until = 2026y / July / 2d,
 		.date_format = "%d.%m.%Y",
 		.separator = ';',
 		.padder = ' ',
@@ -77,7 +77,7 @@ static auto parse_csv_fixings_current_rate() -> RateFixings
 	constexpr auto d = parser_detail{
 		.header_lines = 4u,
 		.from = 1999y / June / 30d,
-		.until = 2026y / May / 12d,
+		.until = 2026y / July / 2d,
 		.date_format = "%d.%m.%Y",
 		.separator = ';',
 		.padder = ' ',
@@ -98,7 +98,7 @@ static auto parse_csv_fixings_SAION() -> IndexFixings
 	constexpr auto d = parser_detail{
 		.header_lines = 4u,
 		.from = 1999y / June / 30d,
-		.until = 2026y / May / 12d,
+		.until = 2026y / July / 2d,
 		.date_format = "%d.%m.%Y",
 		.separator = ';',
 		.padder = ' ',
@@ -119,7 +119,7 @@ static auto parse_csv_fixings_current_index() -> IndexFixings
 	constexpr auto d = parser_detail{
 		.header_lines = 4u,
 		.from = 1999y / June / 30d,
-		.until = 2026y / May / 12d,
+		.until = 2026y / July / 2d,
 		.date_format = "%d.%m.%Y",
 		.separator = ';',
 		.padder = ' ',
@@ -146,6 +146,10 @@ int main()
 	const auto SAION = parse_csv_fixings_SAION();
 	const auto current_index = parse_csv_fixings_current_index();
 	// we can assert consistency between what was read above
+
+	// from https://indexdata.six-group.com/swiss_reference_rates/compound_rates.html
+
+	// const auto _1w
 
 	constexpr auto rfd = rate_fixings_detail{
 		.day_count = actual_360<decimal128_t>{}
