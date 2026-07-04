@@ -25,6 +25,7 @@
 #include <scaled_value.h>
 #include <fixings.h>
 #include <index.h>
+#include <average.h>
 
 #include <actual_360.h>
 
@@ -145,7 +146,7 @@ static auto parse_csv_fixings_SARON_1_week_compounded() -> RateFixings
 		.separator = ';',
 		.padder = nullopt,
 		.not_available = nullopt,
-		.skip_columns = 4u
+		.skip_columns = 3u
 	};
 
 	return parse_csv_fixings<RateFixings>(
@@ -166,7 +167,7 @@ static auto parse_csv_fixings_SARON_1_month_compounded() -> RateFixings
 		.separator = ';',
 		.padder = nullopt,
 		.not_available = nullopt,
-		.skip_columns = 4u
+		.skip_columns = 3u
 	};
 
 	return parse_csv_fixings<RateFixings>(
@@ -187,7 +188,7 @@ static auto parse_csv_fixings_SARON_2_month_compounded() -> RateFixings
 		.separator = ';',
 		.padder = nullopt,
 		.not_available = nullopt,
-		.skip_columns = 4u
+		.skip_columns = 3u
 	};
 
 	return parse_csv_fixings<RateFixings>(
@@ -208,7 +209,7 @@ static auto parse_csv_fixings_SARON_3_month_compounded() -> RateFixings
 		.separator = ';',
 		.padder = nullopt,
 		.not_available = nullopt,
-		.skip_columns = 4u
+		.skip_columns = 3u
 	};
 
 	return parse_csv_fixings<RateFixings>(
@@ -229,7 +230,7 @@ static auto parse_csv_fixings_SARON_6_month_compounded() -> RateFixings
 		.separator = ';',
 		.padder = nullopt,
 		.not_available = nullopt,
-		.skip_columns = 4u
+		.skip_columns = 3u
 	};
 
 	return parse_csv_fixings<RateFixings>(
@@ -250,7 +251,7 @@ static auto parse_csv_fixings_SARON_9_month_compounded() -> RateFixings
 		.separator = ';',
 		.padder = nullopt,
 		.not_available = nullopt,
-		.skip_columns = 4u
+		.skip_columns = 3u
 	};
 
 	return parse_csv_fixings<RateFixings>(
@@ -271,7 +272,7 @@ static auto parse_csv_fixings_SARON_12_month_compounded() -> RateFixings
 		.separator = ';',
 		.padder = nullopt,
 		.not_available = nullopt,
-		.skip_columns = 4u
+		.skip_columns = 3u
 	};
 
 	return parse_csv_fixings<RateFixings>(
@@ -317,6 +318,48 @@ int main()
 		.step_round = 6u
 	};
 
+	constexpr auto _1wd = average_detail{
+		.term = weeks{ 1 },
+		.business_day_convention = preceding{}, // temp only
+		.final_round = 4u + 2u // as we deal with fractions, rather than rates
+	};
+
+	constexpr auto _1md = average_detail{
+		.term = months{ 1 },
+		.business_day_convention = preceding{}, // temp only
+		.final_round = 4u + 2u // as we deal with fractions, rather than rates
+	};
+
+	constexpr auto _2md = average_detail{
+		.term = months{ 2 },
+		.business_day_convention = preceding{}, // temp only
+		.final_round = 4u + 2u // as we deal with fractions, rather than rates
+	};
+
+	constexpr auto _3md = average_detail{
+		.term = months{ 3 },
+		.business_day_convention = preceding{}, // temp only
+		.final_round = 4u + 2u // as we deal with fractions, rather than rates
+	};
+
+	constexpr auto _6md = average_detail{
+		.term = months{ 6 },
+		.business_day_convention = preceding{}, // temp only
+		.final_round = 4u + 2u // as we deal with fractions, rather than rates
+	};
+
+	constexpr auto _9md = average_detail{
+		.term = months{ 9 },
+		.business_day_convention = preceding{}, // temp only
+		.final_round = 4u + 2u // as we deal with fractions, rather than rates
+	};
+
+	constexpr auto _12md = average_detail{
+		.term = months{ 12 },
+		.business_day_convention = preceding{}, // temp only
+		.final_round = 4u + 2u // as we deal with fractions, rather than rates
+	};
+
 	const auto& date = SARON.get_time_series().get_period().get_until();
 
 	const auto& indx = SAION[date];
@@ -345,6 +388,104 @@ int main()
 		<< current_indx->get_value()
 		<< " and the same computed value is "
 		<< index(current_rate, rfd, date, id).get_value()
+		<< endl;
+
+	const auto& _1w_cmp = SARON_1_week_compounded[date];
+	assert(_1w_cmp);
+
+	cout
+		<< fixed
+		<< setprecision(SARON_1_week_compounded.get_decimal_places())
+		<< "For "
+		<< date
+		<< " SARON 1 Week Compounded Average is "
+		<< _1w_cmp->get_value()
+		<< " and the same computed value is "
+		<< average(SARON, rfd, date, _1wd).percent.get_value()
+		<< endl;
+
+	const auto& _1m_cmp = SARON_1_month_compounded[date];
+	assert(_1m_cmp);
+
+	cout
+		<< fixed
+		<< setprecision(SARON_1_month_compounded.get_decimal_places())
+		<< "For "
+		<< date
+		<< " SARON 1 Month Compounded Average is "
+		<< _1m_cmp->get_value()
+		<< " and the same computed value is "
+		<< average(SARON, rfd, date, _1md).percent.get_value()
+		<< endl;
+
+	const auto& _2m_cmp = SARON_2_month_compounded[date];
+	assert(_2m_cmp);
+
+	cout
+		<< fixed
+		<< setprecision(SARON_2_month_compounded.get_decimal_places())
+		<< "For "
+		<< date
+		<< " SARON 2 Month Compounded Average is "
+		<< _2m_cmp->get_value()
+		<< " and the same computed value is "
+		<< average(SARON, rfd, date, _2md).percent.get_value()
+		<< endl;
+
+	const auto& _3m_cmp = SARON_3_month_compounded[date];
+	assert(_3m_cmp);
+
+	cout
+		<< fixed
+		<< setprecision(SARON_3_month_compounded.get_decimal_places())
+		<< "For "
+		<< date
+		<< " SARON 3 Month Compounded Average is "
+		<< _3m_cmp->get_value()
+		<< " and the same computed value is "
+		<< average(SARON, rfd, date, _3md).percent.get_value()
+		<< endl;
+
+	const auto& _6m_cmp = SARON_6_month_compounded[date];
+	assert(_6m_cmp);
+
+	cout
+		<< fixed
+		<< setprecision(SARON_6_month_compounded.get_decimal_places())
+		<< "For "
+		<< date
+		<< " SARON 6 Month Compounded Average is "
+		<< _6m_cmp->get_value()
+		<< " and the same computed value is "
+		<< average(SARON, rfd, date, _6md).percent.get_value()
+		<< endl;
+
+	const auto& _9m_cmp = SARON_9_month_compounded[date];
+	assert(_9m_cmp);
+
+	cout
+		<< fixed
+		<< setprecision(SARON_9_month_compounded.get_decimal_places())
+		<< "For "
+		<< date
+		<< " SARON 9 Month Compounded Average is "
+		<< _9m_cmp->get_value()
+		<< " and the same computed value is "
+		<< average(SARON, rfd, date, _9md).percent.get_value()
+		<< endl;
+
+	const auto& _12m_cmp = SARON_12_month_compounded[date];
+	assert(_12m_cmp);
+
+	cout
+		<< fixed
+		<< setprecision(SARON_12_month_compounded.get_decimal_places())
+		<< "For "
+		<< date
+		<< " SARON 12 Month Compounded Average is "
+		<< _12m_cmp->get_value()
+		<< " and the same computed value is "
+		<< average(SARON, rfd, date, _12md).percent.get_value()
 		<< endl;
 
 	return 0;
