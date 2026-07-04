@@ -323,7 +323,7 @@ static auto _SARON_average_start(
 	auto candidate = date;
 	for (;;) // is there a better way to iterate over business days in a calendar? (we could have a business day iterator)
 	{
-		candidate = cal.shift_business_days(candidate, days{ -1 }); // is it correct to use the fixngs calendar here? (does it need a separate calendar?)
+		candidate = cal.shift_business_days(candidate, days{ -1 }); // is it correct to use the fixings calendar here? (does it need a separate calendar?)
 
 		const auto end_date	= fin_calendar::make_business_day(
 			advance(candidate, detail.term),
@@ -342,7 +342,7 @@ static auto _SARON_average_start(
 	candidate = date;
 	for (;;) // is there a better way to iterate over business days in a calendar? (we could have a business day iterator)
 	{
-		candidate = cal.shift_business_days(candidate, days{ 1 }); // is it correct to use the fixngs calendar here? (does it need a separate calendar?)
+		candidate = cal.shift_business_days(candidate, days{ 1 }); // is it correct to use the fixings calendar here? (does it need a separate calendar?)
 
 		const auto end_date = fin_calendar::make_business_day(
 			advance(candidate, detail.term),
