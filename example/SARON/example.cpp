@@ -309,6 +309,9 @@ static auto _SARON_average_start(
 {
 	const auto& cal = fix.get_calendar();
 
+	// If the end date falls on the last business day of a month, the start date must also be the last business day of a month.
+	// still ToDo?
+
 	const auto date = fin_calendar::make_business_day(
 		retreat(ymd, detail.term),
 		detail.business_day_convention,
