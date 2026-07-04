@@ -369,6 +369,7 @@ static auto _SARON_average_start(
 	return starts[mid_index];
 }
 
+// from "Swiss Index. Rulebook Swiss Reference Rates."
 static auto SARON_average(
 	const RateFixings& fix,
 	const rate_fixings_detail& rfd,
