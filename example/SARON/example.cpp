@@ -50,6 +50,7 @@
 #include <optional>
 #include <deque>
 #include <utility>
+#include <ranges>
 
 using namespace std;
 using namespace std::chrono;
@@ -357,8 +358,11 @@ static auto _SARON_average_start(
 	}
 
 	// we can assert that our starts is sorted and not empty
-//	const auto mid_index = (starts.size() - 1) / 2;
-	const auto mid_index = starts.size() / 2;
+	const auto mid_index = (starts.size() - 1) / 2;
+	// For each end date with several possible start dates according to the CHF money market calendar,
+	// the following applies(unless the end date is the last business day of a month):
+	//	– In case of an uneven number of possible start dates, the middle date will be chosen as the start date
+	//	– In case of an even number of possible start dates, the earlier of the two middle dates will be chosen
 
 	return starts[mid_index];
 }
@@ -378,6 +382,7 @@ static auto SARON_average(
 	// do we handle the case where detail.term is empty?
 
 	// implement in terms of compounded?
+	// factor out more common code between SARON_average and average?
 
 	const auto average_start = _SARON_average_start(fix, ymd, detail);
 	const auto average_end = ymd; // I think we assume that ymd is a good business day - should we check for that?
