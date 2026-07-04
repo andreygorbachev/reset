@@ -633,5 +633,30 @@ int main()
 		<< SARON_average(SARON, rfd, avg_date, _12md).percent.get_value()
 		<< endl;
 
+	// look for inconsistencies in the data
+
+	const auto& SARON_1_month_compounded_calendar = SARON_1_month_compounded.get_calendar();
+	const auto _1_month_dates = SARON_1_month_compounded_calendar.make_business_days_schedule(
+		SARON_1_month_compounded.get_time_series().get_period()
+	);
+	for (const auto& d : _1_month_dates.get_dates())
+	{
+		const auto& _1m_avg = SARON_1_month_compounded[d];
+		assert(_1m_avg);
+
+		const auto avg_date = SARON.get_calendar().shift_business_days(d, days{ 1 });
+
+		if (*_1m_avg != SARON_average(SARON, rfd, avg_date, _1md).percent)
+			cout
+				<< fixed
+				<< setprecision(SARON_1_month_compounded.get_decimal_places())
+				<< "For "
+				<< d
+				<< " SARON 1 Month Compounded Average is "
+				<< SARON_1_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< SARON_average(SARON, rfd, avg_date, _1md).percent.get_value()
+				<< endl;
+	}
 	return 0;
 }
