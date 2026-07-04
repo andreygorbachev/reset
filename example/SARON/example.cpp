@@ -390,6 +390,8 @@ int main()
 		<< index(current_rate, rfd, date, id).get_value()
 		<< endl;
 
+	const auto avg_date = SARON.get_calendar().shift_business_days(date, days{ 1 });
+
 	const auto& _1w_cmp = SARON_1_week_compounded[date];
 	assert(_1w_cmp);
 
@@ -397,11 +399,11 @@ int main()
 		<< fixed
 		<< setprecision(SARON_1_week_compounded.get_decimal_places())
 		<< "For "
-		<< date
+		<< avg_date
 		<< " SARON 1 Week Compounded Average is "
 		<< _1w_cmp->get_value()
 		<< " and the same computed value is "
-		<< average(SARON, rfd, date, _1wd).percent.get_value()
+		<< average(SARON, rfd, avg_date, _1wd).percent.get_value()
 		<< endl;
 
 	const auto& _1m_cmp = SARON_1_month_compounded[date];
@@ -411,11 +413,11 @@ int main()
 		<< fixed
 		<< setprecision(SARON_1_month_compounded.get_decimal_places())
 		<< "For "
-		<< date
+		<< avg_date
 		<< " SARON 1 Month Compounded Average is "
 		<< _1m_cmp->get_value()
 		<< " and the same computed value is "
-		<< average(SARON, rfd, date, _1md).percent.get_value()
+		<< average(SARON, rfd, avg_date, _1md).percent.get_value()
 		<< endl;
 
 	const auto& _2m_cmp = SARON_2_month_compounded[date];
@@ -425,11 +427,11 @@ int main()
 		<< fixed
 		<< setprecision(SARON_2_month_compounded.get_decimal_places())
 		<< "For "
-		<< date
+		<< avg_date
 		<< " SARON 2 Month Compounded Average is "
 		<< _2m_cmp->get_value()
 		<< " and the same computed value is "
-		<< average(SARON, rfd, date, _2md).percent.get_value()
+		<< average(SARON, rfd, avg_date, _2md).percent.get_value()
 		<< endl;
 
 	const auto& _3m_cmp = SARON_3_month_compounded[date];
@@ -439,11 +441,11 @@ int main()
 		<< fixed
 		<< setprecision(SARON_3_month_compounded.get_decimal_places())
 		<< "For "
-		<< date
+		<< avg_date
 		<< " SARON 3 Month Compounded Average is "
 		<< _3m_cmp->get_value()
 		<< " and the same computed value is "
-		<< average(SARON, rfd, date, _3md).percent.get_value()
+		<< average(SARON, rfd, avg_date, _3md).percent.get_value()
 		<< endl;
 
 	const auto& _6m_cmp = SARON_6_month_compounded[date];
@@ -453,11 +455,11 @@ int main()
 		<< fixed
 		<< setprecision(SARON_6_month_compounded.get_decimal_places())
 		<< "For "
-		<< date
+		<< avg_date
 		<< " SARON 6 Month Compounded Average is "
 		<< _6m_cmp->get_value()
 		<< " and the same computed value is "
-		<< average(SARON, rfd, date, _6md).percent.get_value()
+		<< average(SARON, rfd, avg_date, _6md).percent.get_value()
 		<< endl;
 
 	const auto& _9m_cmp = SARON_9_month_compounded[date];
@@ -467,11 +469,11 @@ int main()
 		<< fixed
 		<< setprecision(SARON_9_month_compounded.get_decimal_places())
 		<< "For "
-		<< date
+		<< avg_date
 		<< " SARON 9 Month Compounded Average is "
 		<< _9m_cmp->get_value()
 		<< " and the same computed value is "
-		<< average(SARON, rfd, date, _9md).percent.get_value()
+		<< average(SARON, rfd, avg_date, _9md).percent.get_value()
 		<< endl;
 
 	const auto& _12m_cmp = SARON_12_month_compounded[date];
@@ -481,11 +483,11 @@ int main()
 		<< fixed
 		<< setprecision(SARON_12_month_compounded.get_decimal_places())
 		<< "For "
-		<< date
+		<< avg_date
 		<< " SARON 12 Month Compounded Average is "
 		<< _12m_cmp->get_value()
 		<< " and the same computed value is "
-		<< average(SARON, rfd, date, _12md).percent.get_value()
+		<< average(SARON, rfd, avg_date, _12md).percent.get_value()
 		<< endl;
 
 	return 0;
