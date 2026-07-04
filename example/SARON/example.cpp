@@ -35,7 +35,7 @@
 #include <business_day_convention.h>
 #include <preceding.h>
 #include <modified_preceding.h>
-//#include <following.h>
+#include <modified_following.h>
 
 #include <period.h>
 #include <schedule.h>
@@ -314,6 +314,10 @@ static auto _SARON_average_start(
 		detail.business_day_convention,
 		cal
 	);
+	// If the originally calculated start date falls on a non-business day or non-existent date (e.g. 30th of February),
+	// the business day preceding the calculated start date will be used as the start date,
+	// unless this new start date would fall in a different month.
+	// In this case, the following business day will be used as the start date and not the previous business day.
 
 	auto starts = deque{ { date } };
 	// we choose this data structure for convenience only as we want to do both puh_front and push_back operations
@@ -327,8 +331,7 @@ static auto _SARON_average_start(
 
 		const auto end_date	= fin_calendar::make_business_day(
 			advance(candidate, detail.term),
-//			fin_calendar::following{}, // hard coded for now // should we use Following? // should it be modified following?
-			detail.business_day_convention, // should it be the opposite?
+			fin_calendar::modified_following{}, // hard coded for now // might not be right for 1 week case
 			cal
 		);
 
@@ -346,8 +349,7 @@ static auto _SARON_average_start(
 
 		const auto end_date = fin_calendar::make_business_day(
 			advance(candidate, detail.term),
-//			fin_calendar::following{}, // hard coded for now // should we use Following? // should it be modified following?
-			detail.business_day_convention, // should it be the opposite?
+			fin_calendar::modified_following{}, // hard coded for now // might not be right for 1 week case
 			cal
 		);
 
@@ -469,31 +471,31 @@ int main()
 
 	constexpr auto _2md = average_detail{
 		.term = months{ 2 },
-		.business_day_convention = fin_calendar::preceding{}, // temp only
+		.business_day_convention = fin_calendar::modified_preceding{}, // temp only
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
 	constexpr auto _3md = average_detail{
 		.term = months{ 3 },
-		.business_day_convention = fin_calendar::preceding{}, // temp only
+		.business_day_convention = fin_calendar::modified_preceding{}, // temp only
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
 	constexpr auto _6md = average_detail{
 		.term = months{ 6 },
-		.business_day_convention = fin_calendar::preceding{}, // temp only
+		.business_day_convention = fin_calendar::modified_preceding{}, // temp only
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
 	constexpr auto _9md = average_detail{
 		.term = months{ 9 },
-		.business_day_convention = fin_calendar::preceding{}, // temp only
+		.business_day_convention = fin_calendar::modified_preceding{}, // temp only
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
 	constexpr auto _12md = average_detail{
 		.term = months{ 12 },
-		.business_day_convention = fin_calendar::preceding{}, // temp only
+		.business_day_convention = fin_calendar::modified_preceding{}, // temp only
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
