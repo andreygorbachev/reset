@@ -25,6 +25,7 @@
 #include <scaled_value.h>
 #include <fixings.h>
 #include <index.h>
+#include <rate.h>
 #include <average.h>
 
 #include <actual_360.h>
@@ -285,6 +286,22 @@ static auto parse_csv_fixings_SARON_12_month_compounded() -> RateFixings
 
 
 
+static auto SARON_average(
+	const RateFixings& fix,
+	const rate_fixings_detail& rfd,
+	const std::chrono::year_month_day& ymd,
+	const average_detail& detail = average_detail{} // does it need a default?
+) -> rate
+{
+	// we effectively ignore average_detail.business_day_convention, which is not clean
+	// should SARON's calculation of the start date be implemented as another business day convention?
+
+	return average(fix, rfd, ymd, detail); // temp
+}
+
+
+
+
 int main()
 {
 	// from https://indexdata.six-group.com/swiss_reference_rates/reference_rates.html
@@ -403,7 +420,7 @@ int main()
 		<< " SARON 1 Week Compounded Average is "
 		<< _1w_cmp->get_value()
 		<< " and the same computed value is "
-		<< average(SARON, rfd, avg_date, _1wd).percent.get_value()
+		<< SARON_average(SARON, rfd, avg_date, _1wd).percent.get_value()
 		<< endl;
 
 	const auto& _1m_cmp = SARON_1_month_compounded[date];
@@ -417,7 +434,7 @@ int main()
 		<< " SARON 1 Month Compounded Average is "
 		<< _1m_cmp->get_value()
 		<< " and the same computed value is "
-		<< average(SARON, rfd, avg_date, _1md).percent.get_value()
+		<< SARON_average(SARON, rfd, avg_date, _1md).percent.get_value()
 		<< endl;
 
 	const auto& _2m_cmp = SARON_2_month_compounded[date];
@@ -431,7 +448,7 @@ int main()
 		<< " SARON 2 Month Compounded Average is "
 		<< _2m_cmp->get_value()
 		<< " and the same computed value is "
-		<< average(SARON, rfd, avg_date, _2md).percent.get_value()
+		<< SARON_average(SARON, rfd, avg_date, _2md).percent.get_value()
 		<< endl;
 
 	const auto& _3m_cmp = SARON_3_month_compounded[date];
@@ -445,7 +462,7 @@ int main()
 		<< " SARON 3 Month Compounded Average is "
 		<< _3m_cmp->get_value()
 		<< " and the same computed value is "
-		<< average(SARON, rfd, avg_date, _3md).percent.get_value()
+		<< SARON_average(SARON, rfd, avg_date, _3md).percent.get_value()
 		<< endl;
 
 	const auto& _6m_cmp = SARON_6_month_compounded[date];
@@ -459,7 +476,7 @@ int main()
 		<< " SARON 6 Month Compounded Average is "
 		<< _6m_cmp->get_value()
 		<< " and the same computed value is "
-		<< average(SARON, rfd, avg_date, _6md).percent.get_value()
+		<< SARON_average(SARON, rfd, avg_date, _6md).percent.get_value()
 		<< endl;
 
 	const auto& _9m_cmp = SARON_9_month_compounded[date];
@@ -473,7 +490,7 @@ int main()
 		<< " SARON 9 Month Compounded Average is "
 		<< _9m_cmp->get_value()
 		<< " and the same computed value is "
-		<< average(SARON, rfd, avg_date, _9md).percent.get_value()
+		<< SARON_average(SARON, rfd, avg_date, _9md).percent.get_value()
 		<< endl;
 
 	const auto& _12m_cmp = SARON_12_month_compounded[date];
@@ -487,7 +504,7 @@ int main()
 		<< " SARON 12 Month Compounded Average is "
 		<< _12m_cmp->get_value()
 		<< " and the same computed value is "
-		<< average(SARON, rfd, avg_date, _12md).percent.get_value()
+		<< SARON_average(SARON, rfd, avg_date, _12md).percent.get_value()
 		<< endl;
 
 	return 0;
