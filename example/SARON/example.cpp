@@ -28,6 +28,7 @@
 #include <rate.h>
 #include <average.h>
 #include <term.h>
+#include <reset_math.h>
 
 #include <day_count.h>
 #include <actual_360.h>
@@ -48,6 +49,7 @@
 #include <cassert>
 #include <optional>
 #include <deque>
+#include <utility>
 
 using namespace std;
 using namespace std::chrono;
