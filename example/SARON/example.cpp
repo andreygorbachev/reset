@@ -32,7 +32,9 @@
 #include <day_count.h>
 #include <actual_360.h>
 #include <business_day_convention.h>
-#include <following.h>
+#include <preceding.h>
+#include <modified_preceding.h>
+//#include <following.h>
 
 #include <period.h>
 #include <schedule.h>
@@ -454,7 +456,7 @@ int main()
 
 	constexpr auto _1md = average_detail{
 		.term = months{ 1 },
-		.business_day_convention = fin_calendar::preceding{}, // temp only
+		.business_day_convention = fin_calendar::modified_preceding{}, // temp only
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
