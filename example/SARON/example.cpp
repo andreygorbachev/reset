@@ -27,8 +27,15 @@
 #include <index.h>
 #include <rate.h>
 #include <average.h>
+#include <term.h>
 
+#include <day_count.h>
 #include <actual_360.h>
+#include <business_day_convention.h>
+#include <following.h>
+
+#include <period.h>
+#include <schedule.h>
 
 #include <boost/decimal.hpp>
 
@@ -38,12 +45,15 @@
 #include <ios>
 #include <cassert>
 #include <optional>
+#include <deque>
 
 using namespace std;
 using namespace std::chrono;
 
 using namespace boost::decimal;
 using namespace boost::decimal::literals;
+
+using namespace gregorian;
 
 using namespace fin_calendar;
 
@@ -286,6 +296,69 @@ static auto parse_csv_fixings_SARON_12_month_compounded() -> RateFixings
 
 
 
+static auto _SARON_average_start(
+	const RateFixings& fix,
+	const std::chrono::year_month_day& ymd,
+	const average_detail& detail = average_detail{} // does it need a default?
+)
+{
+	const auto& cal = fix.get_calendar();
+
+	const auto date = fin_calendar::make_business_day(
+		retreat(ymd, detail.term),
+		detail.business_day_convention,
+		cal
+	);
+
+	auto starts = deque{ { date } };
+	// we choose this data structure for convenience only as we want to do both puh_front and push_back operations
+	// (I am sure there is a more efficient data structure for this, but we are not concerned about performance here)
+
+	// find any business dates before date, which would still give us the same end date
+	auto candidate = date;
+	for (;;) // is there a better way to iterate over business days in a calendar? (we could have a business day iterator)
+	{
+		candidate = cal.shift_business_days(candidate, days{ -1 }); // is it correct to use the fixngs calendar here? (does it need a separate calendar?)
+
+		const auto end_date	= fin_calendar::make_business_day(
+			advance(candidate, detail.term),
+//			fin_calendar::following{}, // hard coded for now // should we use Following? // should it be modified following?
+			detail.business_day_convention, // should it be the opposite?
+			cal
+		);
+
+		if (end_date == ymd)
+			starts.push_front(candidate);
+		else
+			break;
+	}
+
+	// find any business dates after date, which would still give us the same end date
+	candidate = date;
+	for (;;) // is there a better way to iterate over business days in a calendar? (we could have a business day iterator)
+	{
+		candidate = cal.shift_business_days(candidate, days{ 1 }); // is it correct to use the fixngs calendar here? (does it need a separate calendar?)
+
+		const auto end_date = fin_calendar::make_business_day(
+			advance(candidate, detail.term),
+//			fin_calendar::following{}, // hard coded for now // should we use Following? // should it be modified following?
+			detail.business_day_convention, // should it be the opposite?
+			cal
+		);
+
+		if (end_date == ymd)
+			starts.push_back(candidate);
+		else
+			break;
+	}
+
+	// we can assert that our starts is sorted and not empty
+//	const auto mid_index = (starts.size() - 1) / 2;
+	const auto mid_index = starts.size() / 2;
+
+	return starts[mid_index];
+}
+
 static auto SARON_average(
 	const RateFixings& fix,
 	const rate_fixings_detail& rfd,
@@ -296,7 +369,45 @@ static auto SARON_average(
 	// we effectively ignore average_detail.business_day_convention, which is not clean
 	// should SARON's calculation of the start date be implemented as another business day convention?
 
-	return average(fix, rfd, ymd, detail); // temp
+	using namespace boost::decimal::literals;
+
+	// do we handle the case where detail.term is empty?
+
+	// implement in terms of compounded?
+
+	const auto average_start = _SARON_average_start(fix, ymd, detail);
+	const auto average_end = ymd; // I think we assume that ymd is a good business day - should we check for that?
+
+	const auto& c = fix.get_calendar();
+	const auto schedule = c.make_business_days_schedule(
+		gregorian::util::days_period{ average_start, average_end }
+	); // is this a wrong data structure?
+	// assert that it is not empty?
+
+	auto dates = schedule.get_dates(); // we might consider something not making a copy as most use cases would not need to insert
+	if (!dates.contains(average_start)) // or we can just have a look at cbegin(), which is O(1) operation on most platforms, rather than O(log n)
+		dates.insert(average_start); // do it with hint?
+
+	auto val = 1_dl;
+
+	for (const auto& [start, end] : dates | std::views::adjacent<2uz>)
+		average_step_(val, start, end, fix, rfd);
+
+	const auto year_fraction = fin_calendar::fraction(schedule.get_period(), rfd.day_count);
+
+	auto rate = (val - 1_dl) / year_fraction;
+
+	rate = round_dp(rate, detail.final_round);
+
+	return {
+		std::move(rate),
+		rate_detail{
+			.start = average_start,
+			.end = average_end,
+			.day_count = rfd.day_count, // or should the average has its own day count? (is there a way to default it to underlying daily rate day count?)
+			.round = detail.final_round
+		}
+	};
 }
 
 
@@ -337,43 +448,43 @@ int main()
 
 	constexpr auto _1wd = average_detail{
 		.term = weeks{ 1 },
-		.business_day_convention = preceding{}, // temp only
+		.business_day_convention = fin_calendar::preceding{}, // temp only
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
 	constexpr auto _1md = average_detail{
 		.term = months{ 1 },
-		.business_day_convention = preceding{}, // temp only
+		.business_day_convention = fin_calendar::preceding{}, // temp only
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
 	constexpr auto _2md = average_detail{
 		.term = months{ 2 },
-		.business_day_convention = preceding{}, // temp only
+		.business_day_convention = fin_calendar::preceding{}, // temp only
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
 	constexpr auto _3md = average_detail{
 		.term = months{ 3 },
-		.business_day_convention = preceding{}, // temp only
+		.business_day_convention = fin_calendar::preceding{}, // temp only
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
 	constexpr auto _6md = average_detail{
 		.term = months{ 6 },
-		.business_day_convention = preceding{}, // temp only
+		.business_day_convention = fin_calendar::preceding{}, // temp only
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
 	constexpr auto _9md = average_detail{
 		.term = months{ 9 },
-		.business_day_convention = preceding{}, // temp only
+		.business_day_convention = fin_calendar::preceding{}, // temp only
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
 	constexpr auto _12md = average_detail{
 		.term = months{ 12 },
-		.business_day_convention = preceding{}, // temp only
+		.business_day_convention = fin_calendar::preceding{}, // temp only
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
