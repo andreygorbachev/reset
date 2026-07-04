@@ -135,6 +135,153 @@ static auto parse_csv_fixings_current_index() -> IndexFixings
 	);
 }
 
+static auto parse_csv_fixings_SARON_1_week_compounded() -> RateFixings
+{
+	constexpr auto d = parser_detail{
+		.header_lines = 1u,
+		.from = 2000y / June / 29d,
+		.until = 2026y / July / 2d,
+		.date_format = "%d.%m.%Y",
+		.separator = ';',
+		.padder = nullopt,
+		.not_available = nullopt,
+		.skip_columns = 4u
+	};
+
+	return parse_csv_fixings<RateFixings>(
+		"h_sar1wc_delayed.csv",
+		d,
+		"Europe/Zurich",
+		4u
+	);
+}
+
+static auto parse_csv_fixings_SARON_1_month_compounded() -> RateFixings
+{
+	constexpr auto d = parser_detail{
+		.header_lines = 1u,
+		.from = 2000y / June / 29d,
+		.until = 2026y / July / 2d,
+		.date_format = "%d.%m.%Y",
+		.separator = ';',
+		.padder = nullopt,
+		.not_available = nullopt,
+		.skip_columns = 4u
+	};
+
+	return parse_csv_fixings<RateFixings>(
+		"h_sar1mc_delayed.csv",
+		d,
+		"Europe/Zurich",
+		4u
+	);
+}
+
+static auto parse_csv_fixings_SARON_2_month_compounded() -> RateFixings
+{
+	constexpr auto d = parser_detail{
+		.header_lines = 1u,
+		.from = 2000y / June / 29d,
+		.until = 2026y / July / 2d,
+		.date_format = "%d.%m.%Y",
+		.separator = ';',
+		.padder = nullopt,
+		.not_available = nullopt,
+		.skip_columns = 4u
+	};
+
+	return parse_csv_fixings<RateFixings>(
+		"h_sar2mc_delayed.csv",
+		d,
+		"Europe/Zurich",
+		4u
+	);
+}
+
+static auto parse_csv_fixings_SARON_3_month_compounded() -> RateFixings
+{
+	constexpr auto d = parser_detail{
+		.header_lines = 1u,
+		.from = 2000y / June / 29d,
+		.until = 2026y / July / 2d,
+		.date_format = "%d.%m.%Y",
+		.separator = ';',
+		.padder = nullopt,
+		.not_available = nullopt,
+		.skip_columns = 4u
+	};
+
+	return parse_csv_fixings<RateFixings>(
+		"h_sar3mc_delayed.csv",
+		d,
+		"Europe/Zurich",
+		4u
+	);
+}
+
+static auto parse_csv_fixings_SARON_6_month_compounded() -> RateFixings
+{
+	constexpr auto d = parser_detail{
+		.header_lines = 1u,
+		.from = 2000y / June / 29d,
+		.until = 2026y / July / 2d,
+		.date_format = "%d.%m.%Y",
+		.separator = ';',
+		.padder = nullopt,
+		.not_available = nullopt,
+		.skip_columns = 4u
+	};
+
+	return parse_csv_fixings<RateFixings>(
+		"h_sar6mc_delayed.csv",
+		d,
+		"Europe/Zurich",
+		4u
+	);
+}
+
+static auto parse_csv_fixings_SARON_9_month_compounded() -> RateFixings
+{
+	constexpr auto d = parser_detail{
+		.header_lines = 1u,
+		.from = 2000y / June / 29d,
+		.until = 2026y / July / 2d,
+		.date_format = "%d.%m.%Y",
+		.separator = ';',
+		.padder = nullopt,
+		.not_available = nullopt,
+		.skip_columns = 4u
+	};
+
+	return parse_csv_fixings<RateFixings>(
+		"h_sar9mc_delayed.csv",
+		d,
+		"Europe/Zurich",
+		4u
+	);
+}
+
+static auto parse_csv_fixings_SARON_12_month_compounded() -> RateFixings
+{
+	constexpr auto d = parser_detail{
+		.header_lines = 1u,
+		.from = 2000y / June / 29d,
+		.until = 2026y / July / 2d,
+		.date_format = "%d.%m.%Y",
+		.separator = ';',
+		.padder = nullopt,
+		.not_available = nullopt,
+		.skip_columns = 4u
+	};
+
+	return parse_csv_fixings<RateFixings>(
+		"h_sar12mc_delayed.csv",
+		d,
+		"Europe/Zurich",
+		4u
+	);
+}
+
 
 
 int main()
@@ -149,7 +296,14 @@ int main()
 
 	// from https://indexdata.six-group.com/swiss_reference_rates/compound_rates.html
 
-	// const auto _1w
+	const auto SARON_1_week_compounded = parse_csv_fixings_SARON_1_week_compounded();
+	const auto SARON_1_month_compounded = parse_csv_fixings_SARON_1_month_compounded();
+	const auto SARON_2_month_compounded = parse_csv_fixings_SARON_2_month_compounded();
+	const auto SARON_3_month_compounded = parse_csv_fixings_SARON_3_month_compounded();
+	const auto SARON_6_month_compounded = parse_csv_fixings_SARON_6_month_compounded();
+	const auto SARON_9_month_compounded = parse_csv_fixings_SARON_9_month_compounded();
+	const auto SARON_12_month_compounded = parse_csv_fixings_SARON_12_month_compounded();
+	// we can assert consistency between what was read above
 
 	constexpr auto rfd = rate_fixings_detail{
 		.day_count = actual_360<decimal128_t>{}
