@@ -689,5 +689,6 @@ int main()
 				<< SARON_average(SARON, rfd, avg_date, _1md).percent.get_value()
 				<< endl;
 	}
+
 	return 0;
 }
