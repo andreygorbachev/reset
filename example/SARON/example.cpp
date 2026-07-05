@@ -39,6 +39,7 @@
 
 #include <period.h>
 #include <schedule.h>
+#include <calendar.h>
 
 #include <boost/decimal.hpp>
 
@@ -301,16 +302,42 @@ static auto parse_csv_fixings_SARON_12_month_compounded() -> RateFixings
 
 
 
+// should these 2 functions be in calendar? (or if they are more finance specific in fin-calendar/util?)
+static auto _get_last_business_day_of_month(
+	const std::chrono::year_month& ym,
+	const gregorian::calendar& cal
+) -> std::chrono::year_month_day
+{
+	constexpr auto preceding = fin_calendar::preceding{};
+	const auto candidate = std::chrono::year_month_day{ ym / last };
+	return preceding.adjust(candidate, cal);
+}
+
+static auto _is_last_business_day_of_month(
+	const std::chrono::year_month_day& ymd,
+	const gregorian::calendar& cal
+) -> bool
+{
+	return ymd == _get_last_business_day_of_month(ymd.year() / ymd.month(), cal);
+}
+
 static auto _SARON_average_start(
 	const RateFixings& fix,
 	const std::chrono::year_month_day& ymd,
 	const average_detail& detail = average_detail{} // does it need a default?
-)
+) // please note multiple return points
 {
 	const auto& cal = fix.get_calendar();
 
+	if (_is_last_business_day_of_month(ymd, cal))
+	{
+		const auto start_date = retreat(ymd, detail.term);
+		return _get_last_business_day_of_month(start_date.year() / start_date.month(), cal);
+	}
 	// If the end date falls on the last business day of a month, the start date must also be the last business day of a month.
-	// still ToDo?
+
+	// Above is part of EoM convention, which we should factor out
+	// (not sure if it should sit with business_day_convention or with term, as it is a combination of both)
 
 	const auto date = fin_calendar::make_business_day(
 		retreat(ymd, detail.term),
