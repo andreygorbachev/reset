@@ -527,7 +527,7 @@ int main()
 
 	constexpr auto _1wd = average_detail{
 		.term = weeks{ 1 },
-		.business_day_convention = {},
+		.business_day_convention = {}, // hardcoded in SARON_average_start
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
