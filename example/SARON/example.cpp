@@ -437,7 +437,6 @@ static auto SARON_average(
 
 
 
-
 int main()
 {
 	// from https://indexdata.six-group.com/swiss_reference_rates/reference_rates.html
