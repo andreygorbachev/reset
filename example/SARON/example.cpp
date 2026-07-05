@@ -49,7 +49,7 @@
 #include <ios>
 #include <cassert>
 #include <optional>
-#include <deque>
+#include <vector>
 #include <utility>
 #include <ranges>
 
@@ -341,60 +341,39 @@ static auto _SARON_average_start(
 
 	const auto date = fin_calendar::make_business_day(
 		retreat(ymd, detail.term),
-		detail.business_day_convention,
+		detail.business_day_convention, // hard code this one as well? (and ignore detail.business_day_convention)
 		cal
 	);
+
+	const auto candidates = cal.make_business_days_schedule(
+		util::days_period
+		{
+			cal.shift_business_days(date, days{ -2 }),
+			date
+		}
+	); // -2/0 were chosen empirically
+
+	auto starts = vector<std::chrono::year_month_day>{};
+	for (const auto& can : candidates.get_dates())
+	{
+		const auto end_date_unadjusted = advance(can, detail.term);
+		const auto end_date = _is_last_business_day_of_month(can, cal) ?
+			_get_last_business_day_of_month(end_date_unadjusted.year() / end_date_unadjusted.month(), cal) :
+			fin_calendar::make_business_day(end_date_unadjusted, fin_calendar::modified_following{}, cal); // hard coded for now // might not be right for 1 week case
+
+		if (end_date == ymd)
+			starts.push_back(can);
+	}
+
+	if (starts.empty())
+		return date;
 	// If the originally calculated start date falls on a non-business day or non-existent date (e.g. 30th of February),
 	// the business day preceding the calculated start date will be used as the start date,
 	// unless this new start date would fall in a different month.
 	// In this case, the following business day will be used as the start date and not the previous business day.
 
-	auto starts = deque{ { date } };
-	// we choose this data structure for convenience only as we want to do both puh_front and push_back operations
-	// (I am sure there is a more efficient data structure for this, but we are not concerned about performance here)
-
-	// find any business dates before date, which would still give us the same end date
-	auto candidate = date;
-	for (;;) // is there a better way to iterate over business days in a calendar? (we could have a business day iterator)
-	{
-		candidate = cal.shift_business_days(candidate, days{ -1 }); // is it correct to use the fixings calendar here? (does it need a separate calendar?)
-
-		const auto end_date	= fin_calendar::make_business_day(
-			advance(candidate, detail.term),
-			fin_calendar::modified_following{}, // hard coded for now // might not be right for 1 week case
-			cal
-		);
-
-		if (end_date == ymd)
-			starts.push_front(candidate);
-		else
-			break;
-	}
-
-	// find any business dates after date, which would still give us the same end date
-	candidate = date;
-	for (;;) // is there a better way to iterate over business days in a calendar? (we could have a business day iterator)
-	{
-		candidate = cal.shift_business_days(candidate, days{ 1 }); // is it correct to use the fixings calendar here? (does it need a separate calendar?)
-
-		const auto end_date = fin_calendar::make_business_day(
-			advance(candidate, detail.term),
-			fin_calendar::modified_following{}, // hard coded for now // might not be right for 1 week case
-			cal
-		);
-
-		if (end_date == ymd)
-			starts.push_back(candidate);
-		else
-			break;
-	}
-
-	if (starts.size() == 1uz)
-		return starts.front();
-	// If the date is unique according to the CHF money market calendar, it will be used as the start date.
-
-	// we can assert that our starts is sorted and not empty
 	const auto mid_index = (starts.size() - 1) / 2;
+	// If the date is unique according to the CHF money market calendar, it will be used as the start date.
 	// For each end date with several possible start dates according to the CHF money market calendar,
 	// the following applies(unless the end date is the last business day of a month):
 	//	In case of an uneven number of possible start dates, the middle date will be chosen as the start date
@@ -534,6 +513,13 @@ int main()
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
+	// test _SARON_average_start
+	assert(_SARON_average_start(SARON, 2018y / April / 30d, _1md) == 2018y / March / 29d);
+	assert(_SARON_average_start(SARON, 2018y / June / 15d, _1md) == 2018y / May / 15d);
+	assert(_SARON_average_start(SARON, 2018y / October / 8d, _1md) == 2018y / September / 6d);
+	assert(_SARON_average_start(SARON, 2018y / April / 23d, _1md) == 2018y / March / 22d);
+	assert(_SARON_average_start(SARON, 2019y / December / 10d, _1md) == 2019y / November / 8d);
+
 	const auto& date = SARON.get_time_series().get_period().get_until();
 
 	const auto& indx = SAION[date];
@@ -564,7 +550,7 @@ int main()
 		<< index(current_rate, rfd, date, id).get_value()
 		<< endl;
 
-	const auto avg_date = SARON.get_calendar().shift_business_days(date, days{ 1 });
+	const auto avg_date = SARON.get_calendar().shift_business_days(date, days{ 1 }); // need to think about what date is used in the files - should we use end_date?
 
 	const auto& _1w_cmp = SARON_1_week_compounded[date];
 	assert(_1w_cmp);
@@ -682,7 +668,7 @@ int main()
 				<< fixed
 				<< setprecision(SARON_1_month_compounded.get_decimal_places())
 				<< "For "
-				<< d
+				<< avg_date
 				<< " SARON 1 Month Compounded Average is "
 				<< SARON_1_month_compounded[d]->get_value()
 				<< " and the same computed value is "
