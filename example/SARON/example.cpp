@@ -389,12 +389,16 @@ static auto _SARON_average_start(
 			break;
 	}
 
+	if (starts.size() == 1uz)
+		return starts.front();
+	// If the date is unique according to the CHF money market calendar, it will be used as the start date.
+
 	// we can assert that our starts is sorted and not empty
 	const auto mid_index = (starts.size() - 1) / 2;
 	// For each end date with several possible start dates according to the CHF money market calendar,
 	// the following applies(unless the end date is the last business day of a month):
-	//	– In case of an uneven number of possible start dates, the middle date will be chosen as the start date
-	//	– In case of an even number of possible start dates, the earlier of the two middle dates will be chosen
+	//	In case of an uneven number of possible start dates, the middle date will be chosen as the start date
+	//	In case of an even number of possible start dates, the earlier of the two middle dates will be chosen
 
 	return starts[mid_index];
 }
