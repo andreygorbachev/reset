@@ -347,8 +347,7 @@ static auto _SARON_average_start(
 	);
 
 	const auto candidates = cal.make_business_days_schedule(
-		gregorian::util::days_period
-		{
+		gregorian::util::days_period{
 			cal.shift_business_days(date, days{ -3 }),
 			date
 		}
@@ -398,8 +397,7 @@ static auto _SARON_1_week_average_start(
 	);
 
 	const auto candidates = cal.make_business_days_schedule(
-		gregorian::util::days_period
-		{
+		gregorian::util::days_period{
 			cal.shift_business_days(date, days{ -3 }),
 			date
 		}
