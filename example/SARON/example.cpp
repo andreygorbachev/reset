@@ -323,16 +323,14 @@ static auto _is_last_business_day_of_month(
 }
 
 static auto _SARON_average_start(
-	const RateFixings& fix,
+	const gregorian::calendar& cal,
 	const std::chrono::year_month_day& ymd,
-	const average_detail& detail = average_detail{} // does it need a default?
-) // please note multiple return points
+	const term& term
+) -> std::chrono::year_month_day // please note multiple return points
 {
-	const auto& cal = fix.get_calendar();
-
 	if (_is_last_business_day_of_month(ymd, cal))
 	{
-		const auto start_date = retreat(ymd, detail.term);
+		const auto start_date = retreat(ymd, term);
 		return _get_last_business_day_of_month(start_date.year() / start_date.month(), cal);
 	}
 	// If the end date falls on the last business day of a month, the start date must also be the last business day of a month.
@@ -341,7 +339,7 @@ static auto _SARON_average_start(
 	// (not sure if it should sit with business_day_convention or with term, as it is a combination of both)
 
 	const auto date = fin_calendar::make_business_day(
-		retreat(ymd, detail.term),
+		retreat(ymd, term),
 		fin_calendar::modified_preceding{},
 		cal
 	);
@@ -356,7 +354,7 @@ static auto _SARON_average_start(
 	auto starts = std::vector<std::chrono::year_month_day>{};
 	for (const auto& can : candidates.get_dates())
 	{
-		const auto end_date_unadjusted = advance(can, detail.term);
+		const auto end_date_unadjusted = advance(can, term);
 		const auto end_date = _is_last_business_day_of_month(can, cal) ?
 			_get_last_business_day_of_month(end_date_unadjusted.year() / end_date_unadjusted.month(), cal) :
 			fin_calendar::make_business_day(end_date_unadjusted, fin_calendar::modified_following{}, cal);
@@ -383,15 +381,13 @@ static auto _SARON_average_start(
 }
 
 static auto _SARON_1_week_average_start(
-	const RateFixings& fix,
+	const gregorian::calendar& cal,
 	const std::chrono::year_month_day& ymd,
-	const average_detail& detail = average_detail{} // does it need a default?
-) // please note multiple return points
+	const term& term
+) -> std::chrono::year_month_day // please note multiple return points
 {
-	const auto& cal = fix.get_calendar();
-
 	const auto date = fin_calendar::make_business_day(
-		retreat(ymd, detail.term),
+		retreat(ymd, term),
 		fin_calendar::preceding{},
 		cal
 	);
@@ -406,7 +402,7 @@ static auto _SARON_1_week_average_start(
 	auto starts = std::vector<std::chrono::year_month_day>{};
 	for (const auto& can : candidates.get_dates())
 	{
-		const auto end_date_unadjusted = advance(can, detail.term);
+		const auto end_date_unadjusted = advance(can, term);
 		const auto end_date = fin_calendar::make_business_day(end_date_unadjusted, fin_calendar::following{}, cal);
 
 		if (end_date == ymd)
@@ -446,9 +442,11 @@ static auto SARON_average(
 	// implement in terms of compounded?
 	// factor out more common code between SARON_average and average?
 
+	const auto& cal = fix.get_calendar();
+
 	const auto average_start = detail.term == term{ std::chrono::weeks{ 1 } } ?
-		_SARON_1_week_average_start(fix, ymd, detail) :
-		_SARON_average_start(fix, ymd, detail);
+		_SARON_1_week_average_start(cal, ymd, detail.term) :
+		_SARON_average_start(cal, ymd, detail.term);
 	// In general, SARON Compound Rates with a tenor of less than one month (e.g. weekly) simplify the determination of the start- and end dates,
 	// since the month-end restrictions are omitted. However, the other conventions of the money market calendar must be maintained.
 	//
@@ -456,7 +454,6 @@ static auto SARON_average(
 
 	const auto average_end = ymd; // I think we assume that ymd is a good business day - should we check for that?
 
-	const auto& cal = fix.get_calendar();
 	const auto schedule = cal.make_business_days_schedule(
 		gregorian::util::days_period{ average_start, average_end }
 	); // is this a wrong data structure?
@@ -566,11 +563,11 @@ int main()
 	};
 
 	// test _SARON_average_start
-	assert(_SARON_average_start(SARON, 2018y / April / 30d, _1md) == 2018y / March / 29d);
-	assert(_SARON_average_start(SARON, 2018y / June / 15d, _1md) == 2018y / May / 15d);
-	assert(_SARON_average_start(SARON, 2018y / October / 8d, _1md) == 2018y / September / 6d);
-	assert(_SARON_average_start(SARON, 2018y / April / 23d, _1md) == 2018y / March / 22d);
-	assert(_SARON_average_start(SARON, 2019y / December / 10d, _1md) == 2019y / November / 8d);
+	assert(_SARON_average_start(SARON.get_calendar(), 2018y / April / 30d, months{ 1 }) == 2018y / March / 29d);
+	assert(_SARON_average_start(SARON.get_calendar(), 2018y / June / 15d, months{ 1 }) == 2018y / May / 15d);
+	assert(_SARON_average_start(SARON.get_calendar(), 2018y / October / 8d, months{ 1 }) == 2018y / September / 6d);
+	assert(_SARON_average_start(SARON.get_calendar(), 2018y / April / 23d, months{ 1 }) == 2018y / March / 22d);
+	assert(_SARON_average_start(SARON.get_calendar(), 2019y / December / 10d, months{ 1 }) == 2019y / November / 8d);
 
 	const auto& date = SARON.get_time_series().get_period().get_until();
 
