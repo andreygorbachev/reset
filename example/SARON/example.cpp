@@ -35,6 +35,7 @@
 #include <business_day_convention.h>
 #include <preceding.h>
 #include <modified_preceding.h>
+#include <following.h>
 #include <modified_following.h>
 
 #include <period.h>
@@ -341,25 +342,25 @@ static auto _SARON_average_start(
 
 	const auto date = fin_calendar::make_business_day(
 		retreat(ymd, detail.term),
-		detail.business_day_convention, // hard code this one as well? (and ignore detail.business_day_convention)
+		fin_calendar::modified_preceding{},
 		cal
 	);
 
 	const auto candidates = cal.make_business_days_schedule(
-		util::days_period
+		gregorian::util::days_period
 		{
 			cal.shift_business_days(date, days{ -3 }),
 			date
 		}
 	); // -3/0 were chosen empirically
 
-	auto starts = vector<std::chrono::year_month_day>{};
+	auto starts = std::vector<std::chrono::year_month_day>{};
 	for (const auto& can : candidates.get_dates())
 	{
 		const auto end_date_unadjusted = advance(can, detail.term);
 		const auto end_date = _is_last_business_day_of_month(can, cal) ?
 			_get_last_business_day_of_month(end_date_unadjusted.year() / end_date_unadjusted.month(), cal) :
-			fin_calendar::make_business_day(end_date_unadjusted, fin_calendar::modified_following{}, cal); // hard coded for now // might not be right for 1 week case
+			fin_calendar::make_business_day(end_date_unadjusted, fin_calendar::modified_following{}, cal);
 
 		if (end_date == ymd)
 			starts.push_back(can);
@@ -371,6 +372,53 @@ static auto _SARON_average_start(
 	// the business day preceding the calculated start date will be used as the start date,
 	// unless this new start date would fall in a different month.
 	// In this case, the following business day will be used as the start date and not the previous business day.
+
+	const auto mid_index = (starts.size() - 1) / 2;
+	// If the date is unique according to the CHF money market calendar, it will be used as the start date.
+	// For each end date with several possible start dates according to the CHF money market calendar,
+	// the following applies(unless the end date is the last business day of a month):
+	//	In case of an uneven number of possible start dates, the middle date will be chosen as the start date
+	//	In case of an even number of possible start dates, the earlier of the two middle dates will be chosen
+
+	return starts[mid_index];
+}
+
+static auto _SARON_1_week_average_start(
+	const RateFixings& fix,
+	const std::chrono::year_month_day& ymd,
+	const average_detail& detail = average_detail{} // does it need a default?
+) // please note multiple return points
+{
+	const auto& cal = fix.get_calendar();
+
+	const auto date = fin_calendar::make_business_day(
+		retreat(ymd, detail.term),
+		fin_calendar::preceding{},
+		cal
+	);
+
+	const auto candidates = cal.make_business_days_schedule(
+		gregorian::util::days_period
+		{
+			cal.shift_business_days(date, days{ -3 }),
+			date
+		}
+	); // -3/0 were chosen empirically
+
+	auto starts = std::vector<std::chrono::year_month_day>{};
+	for (const auto& can : candidates.get_dates())
+	{
+		const auto end_date_unadjusted = advance(can, detail.term);
+		const auto end_date = fin_calendar::make_business_day(end_date_unadjusted, fin_calendar::following{}, cal);
+
+		if (end_date == ymd)
+			starts.push_back(can);
+	}
+
+	if (starts.empty())
+		return date;
+	// If the originally calculated start date falls on a non-business day or non-existent date (e.g. 30th of February),
+	// the business day preceding the calculated start date will be used as the start date
 
 	const auto mid_index = (starts.size() - 1) / 2;
 	// If the date is unique according to the CHF money market calendar, it will be used as the start date.
@@ -400,11 +448,18 @@ static auto SARON_average(
 	// implement in terms of compounded?
 	// factor out more common code between SARON_average and average?
 
-	const auto average_start = _SARON_average_start(fix, ymd, detail);
+	const auto average_start = detail.term == term{ std::chrono::weeks{ 1 } } ?
+		_SARON_1_week_average_start(fix, ymd, detail) :
+		_SARON_average_start(fix, ymd, detail);
+	// In general, SARON Compound Rates with a tenor of less than one month (e.g. weekly) simplify the determination of the start- and end dates,
+	// since the month-end restrictions are omitted. However, the other conventions of the money market calendar must be maintained.
+	//
+	// (at the moment we only assume 1w)
+
 	const auto average_end = ymd; // I think we assume that ymd is a good business day - should we check for that?
 
-	const auto& c = fix.get_calendar();
-	const auto schedule = c.make_business_days_schedule(
+	const auto& cal = fix.get_calendar();
+	const auto schedule = cal.make_business_days_schedule(
 		gregorian::util::days_period{ average_start, average_end }
 	); // is this a wrong data structure?
 	// assert that it is not empty?
@@ -472,43 +527,43 @@ int main()
 
 	constexpr auto _1wd = average_detail{
 		.term = weeks{ 1 },
-		.business_day_convention = fin_calendar::preceding{}, // temp only
+		.business_day_convention = {},
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
 	constexpr auto _1md = average_detail{
 		.term = months{ 1 },
-		.business_day_convention = fin_calendar::modified_preceding{}, // temp only
+		.business_day_convention = {},
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
 	constexpr auto _2md = average_detail{
 		.term = months{ 2 },
-		.business_day_convention = fin_calendar::modified_preceding{}, // temp only
+		.business_day_convention = {},
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
 	constexpr auto _3md = average_detail{
 		.term = months{ 3 },
-		.business_day_convention = fin_calendar::modified_preceding{}, // temp only
+		.business_day_convention = {},
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
 	constexpr auto _6md = average_detail{
 		.term = months{ 6 },
-		.business_day_convention = fin_calendar::modified_preceding{}, // temp only
+		.business_day_convention = {},
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
 	constexpr auto _9md = average_detail{
 		.term = months{ 9 },
-		.business_day_convention = fin_calendar::modified_preceding{}, // temp only
+		.business_day_convention = {},
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
 	constexpr auto _12md = average_detail{
 		.term = months{ 12 },
-		.business_day_convention = fin_calendar::modified_preceding{}, // temp only
+		.business_day_convention = {},
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
@@ -651,6 +706,30 @@ int main()
 
 	// look for inconsistencies in the data
 
+	const auto& SARON_1_week_compounded_calendar = SARON_1_week_compounded.get_calendar();
+	const auto _1_week_dates = SARON_1_week_compounded_calendar.make_business_days_schedule(
+		SARON_1_week_compounded.get_time_series().get_period()
+	);
+	for (const auto& d : _1_week_dates.get_dates())
+	{
+		const auto& _1w_avg = SARON_1_week_compounded[d];
+		assert(_1w_avg);
+
+		const auto avg_date = SARON.get_calendar().shift_business_days(d, days{ 1 });
+
+		if (*_1w_avg != SARON_average(SARON, rfd, avg_date, _1wd).percent)
+			cout
+				<< fixed
+				<< setprecision(SARON_1_week_compounded.get_decimal_places())
+				<< "For "
+				<< avg_date
+				<< " SARON 1 Week Compounded Average is "
+				<< SARON_1_week_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< SARON_average(SARON, rfd, avg_date, _1wd).percent.get_value()
+				<< endl;
+	}
+
 	const auto& SARON_1_month_compounded_calendar = SARON_1_month_compounded.get_calendar();
 	const auto _1_month_dates = SARON_1_month_compounded_calendar.make_business_days_schedule(
 		SARON_1_month_compounded.get_time_series().get_period()
@@ -688,15 +767,15 @@ int main()
 
 		if (*_2m_avg != SARON_average(SARON, rfd, avg_date, _2md).percent)
 			cout
-			<< fixed
-			<< setprecision(SARON_2_month_compounded.get_decimal_places())
-			<< "For "
-			<< avg_date
-			<< " SARON 2 Month Compounded Average is "
-			<< SARON_2_month_compounded[d]->get_value()
-			<< " and the same computed value is "
-			<< SARON_average(SARON, rfd, avg_date, _2md).percent.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(SARON_2_month_compounded.get_decimal_places())
+				<< "For "
+				<< avg_date
+				<< " SARON 2 Month Compounded Average is "
+				<< SARON_2_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< SARON_average(SARON, rfd, avg_date, _2md).percent.get_value()
+				<< endl;
 	}
 
 	const auto& SARON_3_month_compounded_calendar = SARON_3_month_compounded.get_calendar();
@@ -712,15 +791,15 @@ int main()
 
 		if (*_3m_avg != SARON_average(SARON, rfd, avg_date, _3md).percent)
 			cout
-			<< fixed
-			<< setprecision(SARON_3_month_compounded.get_decimal_places())
-			<< "For "
-			<< avg_date
-			<< " SARON 3 Month Compounded Average is "
-			<< SARON_3_month_compounded[d]->get_value()
-			<< " and the same computed value is "
-			<< SARON_average(SARON, rfd, avg_date, _3md).percent.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(SARON_3_month_compounded.get_decimal_places())
+				<< "For "
+				<< avg_date
+				<< " SARON 3 Month Compounded Average is "
+				<< SARON_3_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< SARON_average(SARON, rfd, avg_date, _3md).percent.get_value()
+				<< endl;
 	}
 
 	const auto& SARON_6_month_compounded_calendar = SARON_6_month_compounded.get_calendar();
@@ -736,15 +815,15 @@ int main()
 
 		if (*_6m_avg != SARON_average(SARON, rfd, avg_date, _6md).percent)
 			cout
-			<< fixed
-			<< setprecision(SARON_6_month_compounded.get_decimal_places())
-			<< "For "
-			<< avg_date
-			<< " SARON 6 Month Compounded Average is "
-			<< SARON_6_month_compounded[d]->get_value()
-			<< " and the same computed value is "
-			<< SARON_average(SARON, rfd, avg_date, _6md).percent.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(SARON_6_month_compounded.get_decimal_places())
+				<< "For "
+				<< avg_date
+				<< " SARON 6 Month Compounded Average is "
+				<< SARON_6_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< SARON_average(SARON, rfd, avg_date, _6md).percent.get_value()
+				<< endl;
 	}
 
 	const auto& SARON_9_month_compounded_calendar = SARON_9_month_compounded.get_calendar();
@@ -760,15 +839,15 @@ int main()
 
 		if (*_9m_avg != SARON_average(SARON, rfd, avg_date, _9md).percent)
 			cout
-			<< fixed
-			<< setprecision(SARON_9_month_compounded.get_decimal_places())
-			<< "For "
-			<< avg_date
-			<< " SARON 9 Month Compounded Average is "
-			<< SARON_9_month_compounded[d]->get_value()
-			<< " and the same computed value is "
-			<< SARON_average(SARON, rfd, avg_date, _9md).percent.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(SARON_9_month_compounded.get_decimal_places())
+				<< "For "
+				<< avg_date
+				<< " SARON 9 Month Compounded Average is "
+				<< SARON_9_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< SARON_average(SARON, rfd, avg_date, _9md).percent.get_value()
+				<< endl;
 	}
 
 	const auto& SARON_12_month_compounded_calendar = SARON_12_month_compounded.get_calendar();
@@ -784,15 +863,15 @@ int main()
 
 		if (*_12m_avg != SARON_average(SARON, rfd, avg_date, _12md).percent)
 			cout
-			<< fixed
-			<< setprecision(SARON_12_month_compounded.get_decimal_places())
-			<< "For "
-			<< avg_date
-			<< " SARON 12 Month Compounded Average is "
-			<< SARON_12_month_compounded[d]->get_value()
-			<< " and the same computed value is "
-			<< SARON_average(SARON, rfd, avg_date, _12md).percent.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(SARON_12_month_compounded.get_decimal_places())
+				<< "For "
+				<< avg_date
+				<< " SARON 12 Month Compounded Average is "
+				<< SARON_12_month_compounded[d]->get_value()
+				<< " and the same computed value is "
+				<< SARON_average(SARON, rfd, avg_date, _12md).percent.get_value()
+				<< endl;
 	}
 
 	return 0;
