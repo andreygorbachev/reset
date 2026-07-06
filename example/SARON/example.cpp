@@ -322,7 +322,7 @@ static auto _is_last_business_day_of_month(
 	return ymd == _get_last_business_day_of_month(ymd.year() / ymd.month(), cal);
 }
 
-static auto _SARON_average_start(
+static auto _SARON_average_start( // make order of aguments consistent with *_last_business_day_of_month maybe?
 	const gregorian::calendar& cal,
 	const std::chrono::year_month_day& ymd,
 	const term& term
