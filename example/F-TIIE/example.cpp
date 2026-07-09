@@ -33,6 +33,7 @@
 #include <period.h>
 #include <schedule.h>
 #include <calendar.h>
+#include <calendar_algorithms.h>
 #include <static_data.h>
 
 #include <boost/decimal.hpp>

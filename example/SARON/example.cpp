@@ -29,6 +29,7 @@
 #include <average.h>
 #include <term.h>
 #include <reset_math.h>
+#include <calendar_algorithms.h>
 
 #include <day_count.h>
 #include <actual_360.h>
@@ -346,7 +347,7 @@ static auto _SARON_average_start(
 
 	const auto candidates = cal.make_business_days_schedule(
 		gregorian::util::days_period{
-			shift_business_days(date, days{ -3 }, cal),
+			gregorian::shift_business_days(date, days{ -3 }, cal),
 			date
 		}
 	); // -3/0 were chosen empirically
@@ -401,7 +402,7 @@ static auto _SARON_1_week_average_start(
 
 	const auto candidates = cal.make_business_days_schedule(
 		gregorian::util::days_period{
-			shift_business_days(date, days{ -3 }, cal),
+			gregorian::shift_business_days(date, days{ -3 }, cal),
 			date
 		}
 	); // -3/0 were chosen empirically
