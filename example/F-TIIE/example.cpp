@@ -287,8 +287,8 @@ static auto fallback( // is this important enough to move to the main library?
 	using namespace boost::decimal::literals;
 
 	const auto& calendar = fix.get_calendar();
-	const auto prev = calendar.shift_business_days(d, days{ -1 });
-	const auto prevprev = calendar.shift_business_days(prev, days{ -1 });
+	const auto prev = shift_business_days(d, days{ -1 }, calendar);
+	const auto prevprev = shift_business_days(prev, days{ -1 }, calendar);
 
 	const auto& _fixing = fix[prevprev];
 	assert(_fixing);
