@@ -570,12 +570,14 @@ int main()
 		.final_round = 4u + 2u // as we deal with fractions, rather than rates
 	};
 
+	const auto& SARON_calendar = SARON.get_calendar();
+
 	// test _SARON_average_start
-	assert(_SARON_average_start(2018y / April / 30d, months{ 1 }, SARON.get_calendar()) == 2018y / March / 29d);
-	assert(_SARON_average_start(2018y / June / 15d, months{ 1 }, SARON.get_calendar()) == 2018y / May / 15d);
-	assert(_SARON_average_start(2018y / October / 8d, months{ 1 }, SARON.get_calendar()) == 2018y / September / 6d);
-	assert(_SARON_average_start(2018y / April / 23d, months{ 1 }, SARON.get_calendar()) == 2018y / March / 22d);
-	assert(_SARON_average_start(2019y / December / 10d, months{ 1 }, SARON.get_calendar()) == 2019y / November / 8d);
+	assert(_SARON_average_start(2018y / April / 30d, months{ 1 }, SARON_calendar) == 2018y / March / 29d);
+	assert(_SARON_average_start(2018y / June / 15d, months{ 1 }, SARON_calendar) == 2018y / May / 15d);
+	assert(_SARON_average_start(2018y / October / 8d, months{ 1 }, SARON_calendar) == 2018y / September / 6d);
+	assert(_SARON_average_start(2018y / April / 23d, months{ 1 }, SARON_calendar) == 2018y / March / 22d);
+	assert(_SARON_average_start(2019y / December / 10d, months{ 1 }, SARON_calendar) == 2019y / November / 8d);
 
 	const auto& date = SARON.get_time_series().get_period().get_until();
 
@@ -607,7 +609,7 @@ int main()
 		<< index(current_rate, rfd, date, id).get_value()
 		<< endl;
 
-	const auto avg_date = shift_business_days(date, days{ 1 }, SARON.get_calendar()); // need to think about what date is used in the files - should we use end_date?
+	const auto avg_date = shift_business_days(date, days{ 1 }, SARON_calendar); // need to think about what date is used in the files - should we use end_date?
 
 	const auto& _1w_cmp = SARON_1_week_compounded[date];
 	assert(_1w_cmp);
@@ -718,7 +720,7 @@ int main()
 		const auto& _1w_avg = SARON_1_week_compounded[d];
 		assert(_1w_avg);
 
-		const auto avg_date = shift_business_days(d, days{ 1 }, SARON.get_calendar());
+		const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
 
 		if (*_1w_avg != SARON_average(SARON, rfd, avg_date, _1wd).percent)
 			cout
@@ -742,7 +744,7 @@ int main()
 		const auto& _1m_avg = SARON_1_month_compounded[d];
 		assert(_1m_avg);
 
-		const auto avg_date = shift_business_days(d, days{ 1 }, SARON.get_calendar());
+		const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
 
 		if (*_1m_avg != SARON_average(SARON, rfd, avg_date, _1md).percent)
 			cout
@@ -766,7 +768,7 @@ int main()
 		const auto& _2m_avg = SARON_2_month_compounded[d];
 		assert(_2m_avg);
 
-		const auto avg_date = shift_business_days(d, days{ 1 }, SARON.get_calendar());
+		const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
 
 		if (*_2m_avg != SARON_average(SARON, rfd, avg_date, _2md).percent)
 			cout
@@ -790,7 +792,7 @@ int main()
 		const auto& _3m_avg = SARON_3_month_compounded[d];
 		assert(_3m_avg);
 
-		const auto avg_date = shift_business_days(d, days{ 1 }, SARON.get_calendar());
+		const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
 
 		if (*_3m_avg != SARON_average(SARON, rfd, avg_date, _3md).percent)
 			cout
@@ -814,7 +816,7 @@ int main()
 		const auto& _6m_avg = SARON_6_month_compounded[d];
 		assert(_6m_avg);
 
-		const auto avg_date = shift_business_days(d, days{ 1 }, SARON.get_calendar());
+		const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
 
 		if (*_6m_avg != SARON_average(SARON, rfd, avg_date, _6md).percent)
 			cout
@@ -838,7 +840,7 @@ int main()
 		const auto& _9m_avg = SARON_9_month_compounded[d];
 		assert(_9m_avg);
 
-		const auto avg_date = shift_business_days(d, days{ 1 }, SARON.get_calendar());
+		const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
 
 		if (*_9m_avg != SARON_average(SARON, rfd, avg_date, _9md).percent)
 			cout
@@ -862,7 +864,7 @@ int main()
 		const auto& _12m_avg = SARON_12_month_compounded[d];
 		assert(_12m_avg);
 
-		const auto avg_date = shift_business_days(d, days{ 1 }, SARON.get_calendar());
+		const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
 
 		if (*_12m_avg != SARON_average(SARON, rfd, avg_date, _12md).percent)
 			cout
