@@ -42,7 +42,7 @@ namespace reset
     struct overloaded : Ts... { using Ts::operator()...; };
 
 
-    inline auto advance(std::chrono::year_month_day ymd, const term& trm) -> std::chrono::year_month_day
+    [[nodiscard]] inline auto advance(std::chrono::year_month_day ymd, const term& trm) -> std::chrono::year_month_day
     {
         std::visit(overloaded{
             [&ymd](const std::chrono::days& ds) { ymd = std::chrono::sys_days{ ymd } + ds; },
@@ -58,7 +58,7 @@ namespace reset
         return ymd;
     }
 
-    inline auto retreat(std::chrono::year_month_day ymd, const term& trm) -> std::chrono::year_month_day
+    [[nodiscard]] inline auto retreat(std::chrono::year_month_day ymd, const term& trm) -> std::chrono::year_month_day
     {
         std::visit(overloaded{
             [&ymd](const std::chrono::days& ds) { ymd = std::chrono::sys_days{ ymd } - ds; },
