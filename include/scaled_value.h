@@ -44,15 +44,15 @@ namespace reset
 
     public:
 
-        constexpr friend bool operator==(const scaled_value& x, const scaled_value& y) = default;
-        constexpr friend auto operator<=>(const scaled_value& x, const scaled_value& y) = default;
+        [[nodiscard]] constexpr friend bool operator==(const scaled_value& x, const scaled_value& y) = default;
+        [[nodiscard]] constexpr friend auto operator<=>(const scaled_value& x, const scaled_value& y) = default;
 
         // note that we do this implicitly
         constexpr operator boost::decimal::decimal128_t() const; // noexcept?
 
     public:
 
-        constexpr auto get_value() const noexcept -> const boost::decimal::decimal128_t&;
+        [[nodiscard]] constexpr auto get_value() const noexcept -> const boost::decimal::decimal128_t&;
 
     private:
 

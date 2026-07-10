@@ -62,7 +62,7 @@ namespace reset
 
 
 	// maybe this needs a better name? (like compounded average)
-	inline auto average(
+	[[nodiscard]] inline auto average(
 		const RateFixings& fix,
 		const rate_fixings_detail& rfd,
 		const std::chrono::year_month_day& ymd,

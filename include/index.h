@@ -69,7 +69,7 @@ namespace reset
 
 
 	// maybe this needs a better name? - compute a compounded RFR index from the underlying fixings
-	inline auto index(
+	[[nodiscard]]inline auto index(
 		const RateFixings& fix,
 		const rate_fixings_detail& rfd,
 		const std::chrono::year_month_day& ymd,

@@ -95,7 +95,7 @@ namespace reset
 
 
 	template<typename T = double>
-	auto interest(
+	[[nodiscard]] auto interest(
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
 		const fin_calendar::day_count<T>& dc,

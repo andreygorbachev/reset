@@ -70,22 +70,22 @@ namespace reset
 
 	public:
 
-		auto operator[](const std::chrono::year_month_day& ymd) const -> const std::optional<observation>&;
+		[[nodiscard]] auto operator[](const std::chrono::year_month_day& ymd) const -> const std::optional<observation>&;
 
 		// should fallback operations be standalone functions?
 		// (and the fallback mechanism itself should be a separate class, so handle more than one way to do a fallback)
 
-		auto needs_fallback(const std::chrono::year_month_day& ymd) const -> bool;
+		[[nodiscard]] auto needs_fallback(const std::chrono::year_month_day& ymd) const -> bool;
 		// what should it do if ymd is not a good business day?
 
-		auto with_fallback(const std::chrono::year_month_day& ymd) const -> const observation&;
+		[[nodiscard]] auto with_fallback(const std::chrono::year_month_day& ymd) const -> const observation&;
 		// throws an exception when we are pushed before the start of fixings
 
 	public:
 
-		auto get_time_series() const noexcept -> const storage&;
-		auto get_calendar() const noexcept -> const calendar&;
-		auto get_decimal_places() const noexcept -> decimal_places;
+		[[nodiscard]] auto get_time_series() const noexcept -> const storage&;
+		[[nodiscard]] auto get_calendar() const noexcept -> const calendar&;
+		[[nodiscard]] auto get_decimal_places() const noexcept -> decimal_places;
 
 	public:
 

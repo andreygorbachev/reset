@@ -92,8 +92,8 @@ namespace reset
 		EXPECT_TRUE(fix[2023y / January / 3d]);
 		EXPECT_EQ(Percent{ "3.4269" }, *fix[2023y / January / 3d]);
 
-		EXPECT_THROW(fix[2022y / December / 31d], out_of_range);
-		EXPECT_THROW(fix[2023y / January / 4d], out_of_range);
+		EXPECT_THROW(static_cast<void>(fix[2022y / December / 31d]), out_of_range);
+		EXPECT_THROW(static_cast<void>(fix[2023y / January / 4d]), out_of_range);
 	}
 
 	TEST(fixings, needs_fallback)
