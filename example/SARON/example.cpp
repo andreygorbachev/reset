@@ -54,6 +54,7 @@
 #include <vector>
 #include <utility>
 #include <ranges>
+#include <future>
 
 using namespace std;
 using namespace std::chrono;
@@ -711,173 +712,195 @@ int main()
 
 	// look for inconsistencies in the data
 
-	const auto& SARON_1_week_compounded_calendar = SARON_1_week_compounded.get_calendar();
-	const auto _1_week_dates = SARON_1_week_compounded_calendar.make_business_days_schedule(
-		SARON_1_week_compounded.get_time_series().get_period()
-	);
-	for (const auto& d : _1_week_dates.get_dates())
-	{
-		const auto& _1w_avg = SARON_1_week_compounded[d];
-		assert(_1w_avg);
+	auto SARON_1_week_compounded_task = async(launch::async, [&]() {
+		const auto& SARON_1_week_compounded_calendar = SARON_1_week_compounded.get_calendar();
+		const auto _1_week_dates = SARON_1_week_compounded_calendar.make_business_days_schedule(
+			SARON_1_week_compounded.get_time_series().get_period()
+		);
+		for (const auto& d : _1_week_dates.get_dates())
+		{
+			const auto& _1w_avg = SARON_1_week_compounded[d];
+			assert(_1w_avg);
 
-		const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
 
-		if (*_1w_avg != SARON_average(SARON, rfd, avg_date, _1wd).percent)
-			cout
-				<< fixed
-				<< setprecision(SARON_1_week_compounded.get_decimal_places())
-				<< "For "
-				<< avg_date
-				<< " SARON 1 Week Compounded Average is "
-				<< SARON_1_week_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< SARON_average(SARON, rfd, avg_date, _1wd).percent.get_value()
-				<< endl;
-	}
+			if (*_1w_avg != SARON_average(SARON, rfd, avg_date, _1wd).percent)
+				cout
+					<< fixed
+					<< setprecision(SARON_1_week_compounded.get_decimal_places())
+					<< "For "
+					<< avg_date
+					<< " SARON 1 Week Compounded Average is "
+					<< SARON_1_week_compounded[d]->get_value()
+					<< " and the same computed value is "
+					<< SARON_average(SARON, rfd, avg_date, _1wd).percent.get_value()
+					<< endl;
+		}
+	});
 
-	const auto& SARON_1_month_compounded_calendar = SARON_1_month_compounded.get_calendar();
-	const auto _1_month_dates = SARON_1_month_compounded_calendar.make_business_days_schedule(
-		SARON_1_month_compounded.get_time_series().get_period()
-	);
-	for (const auto& d : _1_month_dates.get_dates())
-	{
-		const auto& _1m_avg = SARON_1_month_compounded[d];
-		assert(_1m_avg);
+	auto SARON_1_month_compounded_task = async(launch::async, [&]() {
+		const auto& SARON_1_month_compounded_calendar = SARON_1_month_compounded.get_calendar();
+		const auto _1_month_dates = SARON_1_month_compounded_calendar.make_business_days_schedule(
+			SARON_1_month_compounded.get_time_series().get_period()
+		);
+		for (const auto& d : _1_month_dates.get_dates())
+		{
+			const auto& _1m_avg = SARON_1_month_compounded[d];
+			assert(_1m_avg);
 
-		const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
 
-		if (*_1m_avg != SARON_average(SARON, rfd, avg_date, _1md).percent)
-			cout
-				<< fixed
-				<< setprecision(SARON_1_month_compounded.get_decimal_places())
-				<< "For "
-				<< avg_date
-				<< " SARON 1 Month Compounded Average is "
-				<< SARON_1_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< SARON_average(SARON, rfd, avg_date, _1md).percent.get_value()
-				<< endl;
-	}
+			if (*_1m_avg != SARON_average(SARON, rfd, avg_date, _1md).percent)
+				cout
+					<< fixed
+					<< setprecision(SARON_1_month_compounded.get_decimal_places())
+					<< "For "
+					<< avg_date
+					<< " SARON 1 Month Compounded Average is "
+					<< SARON_1_month_compounded[d]->get_value()
+					<< " and the same computed value is "
+					<< SARON_average(SARON, rfd, avg_date, _1md).percent.get_value()
+					<< endl;
+		}
+	});
 
-	const auto& SARON_2_month_compounded_calendar = SARON_2_month_compounded.get_calendar();
-	const auto _2_month_dates = SARON_2_month_compounded_calendar.make_business_days_schedule(
-		SARON_2_month_compounded.get_time_series().get_period()
-	);
-	for (const auto& d : _2_month_dates.get_dates())
-	{
-		const auto& _2m_avg = SARON_2_month_compounded[d];
-		assert(_2m_avg);
+	auto SARON_2_month_compounded_task = async(launch::async, [&]() {
+		const auto& SARON_2_month_compounded_calendar = SARON_2_month_compounded.get_calendar();
+		const auto _2_month_dates = SARON_2_month_compounded_calendar.make_business_days_schedule(
+			SARON_2_month_compounded.get_time_series().get_period()
+		);
+		for (const auto& d : _2_month_dates.get_dates())
+		{
+			const auto& _2m_avg = SARON_2_month_compounded[d];
+			assert(_2m_avg);
 
-		const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
 
-		if (*_2m_avg != SARON_average(SARON, rfd, avg_date, _2md).percent)
-			cout
-				<< fixed
-				<< setprecision(SARON_2_month_compounded.get_decimal_places())
-				<< "For "
-				<< avg_date
-				<< " SARON 2 Month Compounded Average is "
-				<< SARON_2_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< SARON_average(SARON, rfd, avg_date, _2md).percent.get_value()
-				<< endl;
-	}
+			if (*_2m_avg != SARON_average(SARON, rfd, avg_date, _2md).percent)
+				cout
+					<< fixed
+					<< setprecision(SARON_2_month_compounded.get_decimal_places())
+					<< "For "
+					<< avg_date
+					<< " SARON 2 Month Compounded Average is "
+					<< SARON_2_month_compounded[d]->get_value()
+					<< " and the same computed value is "
+					<< SARON_average(SARON, rfd, avg_date, _2md).percent.get_value()
+					<< endl;
+		}
+	});
 
-	const auto& SARON_3_month_compounded_calendar = SARON_3_month_compounded.get_calendar();
-	const auto _3_month_dates = SARON_3_month_compounded_calendar.make_business_days_schedule(
-		SARON_3_month_compounded.get_time_series().get_period()
-	);
-	for (const auto& d : _3_month_dates.get_dates())
-	{
-		const auto& _3m_avg = SARON_3_month_compounded[d];
-		assert(_3m_avg);
+	auto SARON_3_month_compounded_task = async(launch::async, [&]() {
+		const auto& SARON_3_month_compounded_calendar = SARON_3_month_compounded.get_calendar();
+		const auto _3_month_dates = SARON_3_month_compounded_calendar.make_business_days_schedule(
+			SARON_3_month_compounded.get_time_series().get_period()
+		);
+		for (const auto& d : _3_month_dates.get_dates())
+		{
+			const auto& _3m_avg = SARON_3_month_compounded[d];
+			assert(_3m_avg);
 
-		const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
 
-		if (*_3m_avg != SARON_average(SARON, rfd, avg_date, _3md).percent)
-			cout
-				<< fixed
-				<< setprecision(SARON_3_month_compounded.get_decimal_places())
-				<< "For "
-				<< avg_date
-				<< " SARON 3 Month Compounded Average is "
-				<< SARON_3_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< SARON_average(SARON, rfd, avg_date, _3md).percent.get_value()
-				<< endl;
-	}
+			if (*_3m_avg != SARON_average(SARON, rfd, avg_date, _3md).percent)
+				cout
+					<< fixed
+					<< setprecision(SARON_3_month_compounded.get_decimal_places())
+					<< "For "
+					<< avg_date
+					<< " SARON 3 Month Compounded Average is "
+					<< SARON_3_month_compounded[d]->get_value()
+					<< " and the same computed value is "
+					<< SARON_average(SARON, rfd, avg_date, _3md).percent.get_value()
+					<< endl;
+		}
+	});
 
-	const auto& SARON_6_month_compounded_calendar = SARON_6_month_compounded.get_calendar();
-	const auto _6_month_dates = SARON_6_month_compounded_calendar.make_business_days_schedule(
-		SARON_6_month_compounded.get_time_series().get_period()
-	);
-	for (const auto& d : _6_month_dates.get_dates())
-	{
-		const auto& _6m_avg = SARON_6_month_compounded[d];
-		assert(_6m_avg);
+	auto SARON_6_month_compounded_task = async(launch::async, [&]() {
+		const auto& SARON_6_month_compounded_calendar = SARON_6_month_compounded.get_calendar();
+		const auto _6_month_dates = SARON_6_month_compounded_calendar.make_business_days_schedule(
+			SARON_6_month_compounded.get_time_series().get_period()
+		);
+		for (const auto& d : _6_month_dates.get_dates())
+		{
+			const auto& _6m_avg = SARON_6_month_compounded[d];
+			assert(_6m_avg);
 
-		const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
 
-		if (*_6m_avg != SARON_average(SARON, rfd, avg_date, _6md).percent)
-			cout
-				<< fixed
-				<< setprecision(SARON_6_month_compounded.get_decimal_places())
-				<< "For "
-				<< avg_date
-				<< " SARON 6 Month Compounded Average is "
-				<< SARON_6_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< SARON_average(SARON, rfd, avg_date, _6md).percent.get_value()
-				<< endl;
-	}
+			if (*_6m_avg != SARON_average(SARON, rfd, avg_date, _6md).percent)
+				cout
+					<< fixed
+					<< setprecision(SARON_6_month_compounded.get_decimal_places())
+					<< "For "
+					<< avg_date
+					<< " SARON 6 Month Compounded Average is "
+					<< SARON_6_month_compounded[d]->get_value()
+					<< " and the same computed value is "
+					<< SARON_average(SARON, rfd, avg_date, _6md).percent.get_value()
+					<< endl;
+		}
+	});
 
-	const auto& SARON_9_month_compounded_calendar = SARON_9_month_compounded.get_calendar();
-	const auto _9_month_dates = SARON_9_month_compounded_calendar.make_business_days_schedule(
-		SARON_9_month_compounded.get_time_series().get_period()
-	);
-	for (const auto& d : _9_month_dates.get_dates())
-	{
-		const auto& _9m_avg = SARON_9_month_compounded[d];
-		assert(_9m_avg);
+	auto SARON_9_month_compounded_task = async(launch::async, [&]() {
+		const auto& SARON_9_month_compounded_calendar = SARON_9_month_compounded.get_calendar();
+		const auto _9_month_dates = SARON_9_month_compounded_calendar.make_business_days_schedule(
+			SARON_9_month_compounded.get_time_series().get_period()
+		);
+		for (const auto& d : _9_month_dates.get_dates())
+		{
+			const auto& _9m_avg = SARON_9_month_compounded[d];
+			assert(_9m_avg);
 
-		const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
 
-		if (*_9m_avg != SARON_average(SARON, rfd, avg_date, _9md).percent)
-			cout
-				<< fixed
-				<< setprecision(SARON_9_month_compounded.get_decimal_places())
-				<< "For "
-				<< avg_date
-				<< " SARON 9 Month Compounded Average is "
-				<< SARON_9_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< SARON_average(SARON, rfd, avg_date, _9md).percent.get_value()
-				<< endl;
-	}
+			if (*_9m_avg != SARON_average(SARON, rfd, avg_date, _9md).percent)
+				cout
+					<< fixed
+					<< setprecision(SARON_9_month_compounded.get_decimal_places())
+					<< "For "
+					<< avg_date
+					<< " SARON 9 Month Compounded Average is "
+					<< SARON_9_month_compounded[d]->get_value()
+					<< " and the same computed value is "
+					<< SARON_average(SARON, rfd, avg_date, _9md).percent.get_value()
+					<< endl;
+		}
+	});
 
-	const auto& SARON_12_month_compounded_calendar = SARON_12_month_compounded.get_calendar();
-	const auto _12_month_dates = SARON_12_month_compounded_calendar.make_business_days_schedule(
-		SARON_12_month_compounded.get_time_series().get_period()
-	);
-	for (const auto& d : _12_month_dates.get_dates())
-	{
-		const auto& _12m_avg = SARON_12_month_compounded[d];
-		assert(_12m_avg);
+	auto SARON_12_month_compounded_task = async(launch::async, [&]() {
+		const auto& SARON_12_month_compounded_calendar = SARON_12_month_compounded.get_calendar();
+		const auto _12_month_dates = SARON_12_month_compounded_calendar.make_business_days_schedule(
+			SARON_12_month_compounded.get_time_series().get_period()
+		);
+		for (const auto& d : _12_month_dates.get_dates())
+		{
+			const auto& _12m_avg = SARON_12_month_compounded[d];
+			assert(_12m_avg);
 
-		const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
 
-		if (*_12m_avg != SARON_average(SARON, rfd, avg_date, _12md).percent)
-			cout
-				<< fixed
-				<< setprecision(SARON_12_month_compounded.get_decimal_places())
-				<< "For "
-				<< avg_date
-				<< " SARON 12 Month Compounded Average is "
-				<< SARON_12_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< SARON_average(SARON, rfd, avg_date, _12md).percent.get_value()
-				<< endl;
-	}
+			if (*_12m_avg != SARON_average(SARON, rfd, avg_date, _12md).percent)
+				cout
+					<< fixed
+					<< setprecision(SARON_12_month_compounded.get_decimal_places())
+					<< "For "
+					<< avg_date
+					<< " SARON 12 Month Compounded Average is "
+					<< SARON_12_month_compounded[d]->get_value()
+					<< " and the same computed value is "
+					<< SARON_average(SARON, rfd, avg_date, _12md).percent.get_value()
+					<< endl;
+		}
+	});
+
+	SARON_1_week_compounded_task.get();
+	SARON_1_month_compounded_task.get();
+	SARON_2_month_compounded_task.get();
+	SARON_3_month_compounded_task.get();
+	SARON_6_month_compounded_task.get();
+	SARON_9_month_compounded_task.get();
+	SARON_12_month_compounded_task.get();
 
 	return 0;
 }
