@@ -735,7 +735,7 @@ int main()
 					<< "For "
 					<< date_avg
 					<< " SARON 1 Week Compounded Average is "
-					<< SARON_1_week_compounded[d]->get_value()
+					<< _1w_avg->get_value()
 					<< " and the same computed value is "
 					<< SARON_avg.get_value()
 					<< endl;
@@ -765,7 +765,7 @@ int main()
 					<< "For "
 					<< date_avg
 					<< " SARON 1 Month Compounded Average is "
-					<< SARON_1_month_compounded[d]->get_value()
+					<< _1m_avg->get_value()
 					<< " and the same computed value is "
 					<< SARON_avg.get_value()
 					<< endl;
@@ -795,7 +795,7 @@ int main()
 					<< "For "
 					<< date_avg
 					<< " SARON 2 Month Compounded Average is "
-					<< SARON_2_month_compounded[d]->get_value()
+					<< _2m_avg->get_value()
 					<< " and the same computed value is "
 					<< SARON_avg.get_value()
 					<< endl;
@@ -825,7 +825,7 @@ int main()
 					<< "For "
 					<< date_avg
 					<< " SARON 3 Month Compounded Average is "
-					<< SARON_3_month_compounded[d]->get_value()
+					<< _3m_avg->get_value()
 					<< " and the same computed value is "
 					<< SARON_avg.get_value()
 					<< endl;
@@ -855,7 +855,7 @@ int main()
 					<< "For "
 					<< date_avg
 					<< " SARON 6 Month Compounded Average is "
-					<< SARON_6_month_compounded[d]->get_value()
+					<< _6m_avg->get_value()
 					<< " and the same computed value is "
 					<< SARON_avg.get_value()
 					<< endl;
@@ -885,7 +885,7 @@ int main()
 					<< "For "
 					<< date_avg
 					<< " SARON 9 Month Compounded Average is "
-					<< SARON_9_month_compounded[d]->get_value()
+					<< _9m_avg->get_value()
 					<< " and the same computed value is "
 					<< SARON_avg.get_value()
 					<< endl;
@@ -915,7 +915,7 @@ int main()
 					<< "For "
 					<< date_avg
 					<< " SARON 12 Month Compounded Average is "
-					<< SARON_12_month_compounded[d]->get_value()
+					<< _12m_avg->get_value()
 					<< " and the same computed value is "
 					<< SARON_avg.get_value()
 					<< endl;
