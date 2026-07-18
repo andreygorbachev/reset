@@ -723,20 +723,21 @@ int main()
 			const auto& _1w_avg = SARON_1_week_compounded[d];
 			assert(_1w_avg);
 
-			const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto date_avg = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto SARON_avg = SARON_average(SARON, rfd, date_avg, _1wd).percent;
 
-			if (*_1w_avg != SARON_average(SARON, rfd, avg_date, _1wd).percent)
+			if (*_1w_avg != SARON_avg)
 			{
 				auto scout = osyncstream{ cout };
 				scout
 					<< fixed
 					<< setprecision(SARON_1_week_compounded.get_decimal_places())
 					<< "For "
-					<< avg_date
+					<< date_avg
 					<< " SARON 1 Week Compounded Average is "
 					<< SARON_1_week_compounded[d]->get_value()
 					<< " and the same computed value is "
-					<< SARON_average(SARON, rfd, avg_date, _1wd).percent.get_value()
+					<< SARON_avg.get_value()
 					<< endl;
 			}
 		}
@@ -752,20 +753,21 @@ int main()
 			const auto& _1m_avg = SARON_1_month_compounded[d];
 			assert(_1m_avg);
 
-			const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto date_avg = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto SARON_avg = SARON_average(SARON, rfd, date_avg, _1md).percent;
 
-			if (*_1m_avg != SARON_average(SARON, rfd, avg_date, _1md).percent)
+			if (*_1m_avg != SARON_avg)
 			{
 				auto scout = osyncstream{ cout };
 				scout
 					<< fixed
 					<< setprecision(SARON_1_month_compounded.get_decimal_places())
 					<< "For "
-					<< avg_date
+					<< date_avg
 					<< " SARON 1 Month Compounded Average is "
 					<< SARON_1_month_compounded[d]->get_value()
 					<< " and the same computed value is "
-					<< SARON_average(SARON, rfd, avg_date, _1md).percent.get_value()
+					<< SARON_avg.get_value()
 					<< endl;
 			}
 		}
@@ -781,20 +783,21 @@ int main()
 			const auto& _2m_avg = SARON_2_month_compounded[d];
 			assert(_2m_avg);
 
-			const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto date_avg = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto SARON_avg = SARON_average(SARON, rfd, date_avg, _2md).percent;
 
-			if (*_2m_avg != SARON_average(SARON, rfd, avg_date, _2md).percent)
+			if (*_2m_avg != SARON_avg)
 			{
 				auto scout = osyncstream{ cout };
 				scout
 					<< fixed
 					<< setprecision(SARON_2_month_compounded.get_decimal_places())
 					<< "For "
-					<< avg_date
+					<< date_avg
 					<< " SARON 2 Month Compounded Average is "
 					<< SARON_2_month_compounded[d]->get_value()
 					<< " and the same computed value is "
-					<< SARON_average(SARON, rfd, avg_date, _2md).percent.get_value()
+					<< SARON_avg.get_value()
 					<< endl;
 			}
 		}
@@ -810,20 +813,21 @@ int main()
 			const auto& _3m_avg = SARON_3_month_compounded[d];
 			assert(_3m_avg);
 
-			const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto date_avg = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto SARON_avg = SARON_average(SARON, rfd, date_avg, _3md).percent;
 
-			if (*_3m_avg != SARON_average(SARON, rfd, avg_date, _3md).percent)
+			if (*_3m_avg != SARON_avg)
 			{
 				auto scout = osyncstream{ cout };
 				scout
 					<< fixed
 					<< setprecision(SARON_3_month_compounded.get_decimal_places())
 					<< "For "
-					<< avg_date
+					<< date_avg
 					<< " SARON 3 Month Compounded Average is "
 					<< SARON_3_month_compounded[d]->get_value()
 					<< " and the same computed value is "
-					<< SARON_average(SARON, rfd, avg_date, _3md).percent.get_value()
+					<< SARON_avg.get_value()
 					<< endl;
 			}
 		}
@@ -839,20 +843,21 @@ int main()
 			const auto& _6m_avg = SARON_6_month_compounded[d];
 			assert(_6m_avg);
 
-			const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto date_avg = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto SARON_avg = SARON_average(SARON, rfd, date_avg, _6md).percent;
 
-			if (*_6m_avg != SARON_average(SARON, rfd, avg_date, _6md).percent)
+			if (*_6m_avg != SARON_avg)
 			{
 				auto scout = osyncstream{ cout };
 				scout
 					<< fixed
 					<< setprecision(SARON_6_month_compounded.get_decimal_places())
 					<< "For "
-					<< avg_date
+					<< date_avg
 					<< " SARON 6 Month Compounded Average is "
 					<< SARON_6_month_compounded[d]->get_value()
 					<< " and the same computed value is "
-					<< SARON_average(SARON, rfd, avg_date, _6md).percent.get_value()
+					<< SARON_avg.get_value()
 					<< endl;
 			}
 		}
@@ -868,20 +873,21 @@ int main()
 			const auto& _9m_avg = SARON_9_month_compounded[d];
 			assert(_9m_avg);
 
-			const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto date_avg = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto SARON_avg = SARON_average(SARON, rfd, date_avg, _9md).percent;
 
-			if (*_9m_avg != SARON_average(SARON, rfd, avg_date, _9md).percent)
+			if (*_9m_avg != SARON_avg)
 			{
 				auto scout = osyncstream{ cout };
 				scout
 					<< fixed
 					<< setprecision(SARON_9_month_compounded.get_decimal_places())
 					<< "For "
-					<< avg_date
+					<< date_avg
 					<< " SARON 9 Month Compounded Average is "
 					<< SARON_9_month_compounded[d]->get_value()
 					<< " and the same computed value is "
-					<< SARON_average(SARON, rfd, avg_date, _9md).percent.get_value()
+					<< SARON_avg.get_value()
 					<< endl;
 			}
 		}
@@ -897,20 +903,21 @@ int main()
 			const auto& _12m_avg = SARON_12_month_compounded[d];
 			assert(_12m_avg);
 
-			const auto avg_date = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto date_avg = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto SARON_avg = SARON_average(SARON, rfd, date_avg, _12md).percent;
 
-			if (*_12m_avg != SARON_average(SARON, rfd, avg_date, _12md).percent)
+			if (*_12m_avg != SARON_avg)
 			{
 				auto scout = osyncstream{ cout };
 				scout
 					<< fixed
 					<< setprecision(SARON_12_month_compounded.get_decimal_places())
 					<< "For "
-					<< avg_date
+					<< date_avg
 					<< " SARON 12 Month Compounded Average is "
 					<< SARON_12_month_compounded[d]->get_value()
 					<< " and the same computed value is "
-					<< SARON_average(SARON, rfd, avg_date, _12md).percent.get_value()
+					<< SARON_avg.get_value()
 					<< endl;
 			}
 		}
