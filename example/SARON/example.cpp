@@ -903,7 +903,7 @@ int main()
 			const auto& _12m_avg = SARON_12_month_compounded[d];
 			assert(_12m_avg);
 
-			const auto date_avg = shift_business_days(d, days{ 1 }, SARON_calendar);
+			const auto date_avg = shift_business_days(d, days{ 1 }, SARON_calendar); // or should it be SARON_12_month_compounded_calendar?
 			const auto SARON_avg = SARON_average(SARON, rfd, date_avg, _12md).percent;
 
 			if (*_12m_avg != SARON_avg)
