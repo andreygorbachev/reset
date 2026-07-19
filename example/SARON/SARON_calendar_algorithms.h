@@ -50,3 +50,7 @@ inline auto is_last_business_day_of_month(
 {
 	return ymd == get_last_business_day_of_month(ymd.year() / ymd.month(), cal);
 }
+
+// the same for the first business day of the month (even if that is not needed for SARON)
+
+// do we want these to be functions? or should these be some kind of objects like in chrono
