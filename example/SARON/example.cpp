@@ -22,7 +22,7 @@
 
 #include <parser.h>
 
-#include "SARON_average.h"
+#include "SARON_checker.h"
 
 #include <scaled_value.h>
 #include <fixings.h>
@@ -37,8 +37,6 @@
 #include <ios>
 #include <cassert>
 #include <optional>
-#include <future>
-#include <syncstream>
 #include <string>
 
 using namespace std;
@@ -286,47 +284,6 @@ static auto parse_csv_fixings_SARON_12_month_compounded() -> RateFixings
 		"Europe/Zurich",
 		4u
 	);
-}
-
-
-
-static auto make_check_task( // might need a more generic name, as the concept is not only for SARON average
-	const reset::RateFixings& rfr,
-	const reset::rate_fixings_detail& rfr_detail,
-	const reset::RateFixings& avg, // might need a better name, as it is compounded average fixings, not a simple average
-	const reset::average_detail& avg_detail,
-	const std::string& avg_label
-)
-{
-	return std::async(std::launch::async, [&rfr, &rfr_detail, &avg, &avg_detail, &avg_label]() {
-		const auto& cal = rfr.get_calendar(); // we can assert that avg and rfr have the same calendar
-		const auto dates = cal.make_business_days_schedule(avg.get_time_series().get_period());
-		for (const auto& dt : dates.get_dates())
-		{
-			const auto& observed = avg[dt];
-			assert(observed);
-
-			const auto dt_shifted = gregorian::shift_business_days(dt, std::chrono::days{ 1 }, cal); // other indices might have a different convention for RRF date vs avg date
-			const auto calculated = SARON_average(rfr, rfr_detail, dt_shifted, avg_detail).percent; // if we template on this we can make the function work (with an appropriate default) for all indices not just SARON
-
-			if (*observed != calculated)
-			{
-				auto scout = std::osyncstream{ std::cout };
-				scout
-					<< std::fixed
-					<< std::setprecision(avg.get_decimal_places())
-					<< "For "
-					<< dt_shifted
-					<< " "
-					<< avg_label
-					<< " is "
-					<< observed->get_value()
-					<< " and the same computed value is "
-					<< calculated.get_value()
-					<< std::endl;
-			 }
-		}
-	});
 }
 
 
