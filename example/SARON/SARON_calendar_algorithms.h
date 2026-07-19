@@ -29,6 +29,9 @@
 
 
 
+// should these 2 functions be in calendar? (or if they are more finance specific in fin-calendar/util?)
+// an appropriate namespace should be also used
+
 inline auto get_last_business_day_of_month(
 	const std::chrono::year_month& ym,
 	const gregorian::calendar& cal
