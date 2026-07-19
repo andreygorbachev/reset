@@ -366,7 +366,7 @@ int main()
 	const auto& SARON_calendar = SARON.get_calendar();
 
 	// test _SARON_average_start
-	assert(_SARON_average_start(2018y / April / 30d, months{ 1 }, SARON_calendar) == 2018y / March / 29d);
+	assert(_SARON_average_start(2018y / April / 30d, months{ 1 }, SARON_calendar) == 2018y / March / 29d); // can these be static_asserts?
 	assert(_SARON_average_start(2018y / June / 15d, months{ 1 }, SARON_calendar) == 2018y / May / 15d);
 	assert(_SARON_average_start(2018y / October / 8d, months{ 1 }, SARON_calendar) == 2018y / September / 6d);
 	assert(_SARON_average_start(2018y / April / 23d, months{ 1 }, SARON_calendar) == 2018y / March / 22d);
