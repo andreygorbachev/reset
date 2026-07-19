@@ -54,5 +54,6 @@ namespace reset
 		rate_detail detail;
 
 	};
+	// here we bring together the rate and its details, but we do not do that for fixings and their details, which approach is correct?
 
 }
