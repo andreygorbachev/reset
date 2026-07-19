@@ -58,7 +58,7 @@ namespace reset
 	};
 
 
-	inline void index_step_(
+	void index_step_(
 		boost::decimal::decimal128_t& indx,
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,

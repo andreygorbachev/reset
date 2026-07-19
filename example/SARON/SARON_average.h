@@ -47,6 +47,79 @@
 
 
 
+auto _SARON_average_start(
+	const std::chrono::year_month_day& ymd,
+	const reset::term& term,
+	const gregorian::calendar& cal
+) -> std::chrono::year_month_day;
+
+auto _SARON_1_week_average_start(
+	const std::chrono::year_month_day& ymd,
+	const reset::term& term,
+	const gregorian::calendar& cal
+) -> std::chrono::year_month_day;
+
+// from "Swiss Index. Rulebook Swiss Reference Rates."
+inline auto SARON_average(
+	const reset::RateFixings& fix,
+	const reset::rate_fixings_detail& rfd,
+	const std::chrono::year_month_day& ymd,
+	const reset::average_detail& detail = reset::average_detail{} // does it need a default?
+) -> reset::rate
+{
+	// we effectively ignore average_detail.business_day_convention, which is not clean
+	// should SARON's calculation of the start date be implemented as another business day convention?
+
+	using namespace boost::decimal::literals;
+
+	// do we handle the case where detail.term is empty?
+
+	// implement in terms of compounded?
+	// factor out more common code between SARON_average and average?
+
+	const auto& cal = fix.get_calendar();
+
+	const auto average_start = detail.term == reset::term{ std::chrono::weeks{ 1 } } ?
+		_SARON_1_week_average_start(ymd, detail.term, cal) :
+		_SARON_average_start(ymd, detail.term, cal);
+	// In general, SARON Compound Rates with a tenor of less than one month (e.g. weekly) simplify the determination of the start- and end dates,
+	// since the month-end restrictions are omitted. However, the other conventions of the money market calendar must be maintained.
+	//
+	// (at the moment we only assume 1w)
+
+	const auto average_end = ymd; // I think we assume that ymd is a good business day - should we check for that?
+
+	const auto schedule = cal.make_business_days_schedule(
+		gregorian::util::days_period{ average_start, average_end }
+	); // is this a wrong data structure?
+	// assert that it is not empty?
+
+	auto dates = schedule.get_dates(); // we might consider something not making a copy as most use cases would not need to insert
+	if (!dates.contains(average_start)) // or we can just have a look at cbegin(), which is O(1) operation on most platforms, rather than O(log n)
+		dates.insert(average_start); // do it with hint?
+
+	auto val = 1_dl;
+
+	for (const auto& [start, end] : dates | std::views::adjacent<2uz>)
+		average_step_(val, start, end, fix, rfd);
+
+	const auto year_fraction = fin_calendar::fraction(schedule.get_period(), rfd.day_count);
+
+	auto rate = (val - 1_dl) / year_fraction;
+
+	rate = reset::round_dp(rate, detail.final_round);
+
+	return {
+		std::move(rate),
+		reset::rate_detail{
+			.start = average_start,
+			.end = average_end,
+			.day_count = rfd.day_count, // or should the average has its own day count? (is there a way to default it to underlying daily rate day count?)
+			.round = detail.final_round
+		}
+	};
+}
+
 inline auto _SARON_average_start(
 	const std::chrono::year_month_day& ymd,
 	const reset::term& term,
@@ -154,65 +227,4 @@ inline auto _SARON_1_week_average_start(
 	//	In case of an even number of possible start dates, the earlier of the two middle dates will be chosen
 
 	return starts[mid_index];
-}
-
-// from "Swiss Index. Rulebook Swiss Reference Rates."
-inline auto SARON_average(
-	const reset::RateFixings& fix,
-	const reset::rate_fixings_detail& rfd,
-	const std::chrono::year_month_day& ymd,
-	const reset::average_detail& detail = reset::average_detail{} // does it need a default?
-) -> reset::rate
-{
-	// we effectively ignore average_detail.business_day_convention, which is not clean
-	// should SARON's calculation of the start date be implemented as another business day convention?
-
-	using namespace boost::decimal::literals;
-
-	// do we handle the case where detail.term is empty?
-
-	// implement in terms of compounded?
-	// factor out more common code between SARON_average and average?
-
-	const auto& cal = fix.get_calendar();
-
-	const auto average_start = detail.term == reset::term{ std::chrono::weeks{ 1 } } ?
-		_SARON_1_week_average_start(ymd, detail.term, cal) :
-		_SARON_average_start(ymd, detail.term, cal);
-	// In general, SARON Compound Rates with a tenor of less than one month (e.g. weekly) simplify the determination of the start- and end dates,
-	// since the month-end restrictions are omitted. However, the other conventions of the money market calendar must be maintained.
-	//
-	// (at the moment we only assume 1w)
-
-	const auto average_end = ymd; // I think we assume that ymd is a good business day - should we check for that?
-
-	const auto schedule = cal.make_business_days_schedule(
-		gregorian::util::days_period{ average_start, average_end }
-	); // is this a wrong data structure?
-	// assert that it is not empty?
-
-	auto dates = schedule.get_dates(); // we might consider something not making a copy as most use cases would not need to insert
-	if (!dates.contains(average_start)) // or we can just have a look at cbegin(), which is O(1) operation on most platforms, rather than O(log n)
-		dates.insert(average_start); // do it with hint?
-
-	auto val = 1_dl;
-
-	for (const auto& [start, end] : dates | std::views::adjacent<2uz>)
-		average_step_(val, start, end, fix, rfd);
-
-	const auto year_fraction = fin_calendar::fraction(schedule.get_period(), rfd.day_count);
-
-	auto rate = (val - 1_dl) / year_fraction;
-
-	rate = reset::round_dp(rate, detail.final_round);
-
-	return {
-		std::move(rate),
-		reset::rate_detail{
-			.start = average_start,
-			.end = average_end,
-			.day_count = rfd.day_count, // or should the average has its own day count? (is there a way to default it to underlying daily rate day count?)
-			.round = detail.final_round
-		}
-	};
 }

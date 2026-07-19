@@ -29,6 +29,8 @@
 #include <index.h>
 #include <average.h>
 
+#include <actual_360.h>
+
 #include <boost/decimal.hpp>
 
 #include <chrono>

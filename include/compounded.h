@@ -53,7 +53,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 	};
 
 
-	inline void compounded_step_(
+	void compounded_step_(
 		boost::decimal::decimal128_t& val,
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,

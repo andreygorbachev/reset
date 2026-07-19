@@ -52,7 +52,7 @@ namespace reset
 	};
 
 
-	inline void average_step_(
+	void average_step_(
 		boost::decimal::decimal128_t &a,
 		const std::chrono::year_month_day& start,
 		const std::chrono::year_month_day& end,
