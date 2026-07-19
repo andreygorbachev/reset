@@ -29,7 +29,6 @@
 #include <average.h>
 #include <term.h>
 #include <reset_math.h>
-#include <calendar_algorithms.h>
 
 #include <day_count.h>
 #include <actual_360.h>
@@ -38,10 +37,13 @@
 #include <modified_preceding.h>
 #include <following.h>
 #include <modified_following.h>
+#include <calendar_algorithms.h>
 
 #include <period.h>
 #include <schedule.h>
 #include <calendar.h>
+
+#include "SARON_calendar_algorithms.h"
 
 #include <boost/decimal.hpp>
 
@@ -307,35 +309,16 @@ static auto parse_csv_fixings_SARON_12_month_compounded() -> RateFixings
 
 
 
-// should these 2 functions be in calendar? (or if they are more finance specific in fin-calendar/util?)
-static auto _get_last_business_day_of_month(
-	const std::chrono::year_month& ym,
-	const gregorian::calendar& cal
-) -> std::chrono::year_month_day
-{
-	constexpr auto preceding = fin_calendar::preceding{};
-	const auto candidate = std::chrono::year_month_day{ ym / last };
-	return preceding.adjust(candidate, cal);
-}
-
-static auto _is_last_business_day_of_month(
-	const std::chrono::year_month_day& ymd,
-	const gregorian::calendar& cal
-) -> bool
-{
-	return ymd == _get_last_business_day_of_month(ymd.year() / ymd.month(), cal);
-}
-
 static auto _SARON_average_start(
 	const std::chrono::year_month_day& ymd,
 	const term& term,
 	const gregorian::calendar& cal
 ) -> std::chrono::year_month_day // please note multiple return points
 {
-	if (_is_last_business_day_of_month(ymd, cal))
+	if (is_last_business_day_of_month(ymd, cal))
 	{
 		const auto start_date = retreat(ymd, term);
-		return _get_last_business_day_of_month(start_date.year() / start_date.month(), cal);
+		return get_last_business_day_of_month(start_date.year() / start_date.month(), cal);
 	}
 	// If the end date falls on the last business day of a month, the start date must also be the last business day of a month.
 
@@ -359,8 +342,8 @@ static auto _SARON_average_start(
 	for (const auto& can : candidates.get_dates())
 	{
 		const auto end_date_unadjusted = advance(can, term);
-		const auto end_date = _is_last_business_day_of_month(can, cal) ?
-			_get_last_business_day_of_month(
+		const auto end_date = is_last_business_day_of_month(can, cal) ?
+			get_last_business_day_of_month(
 				end_date_unadjusted.year() / end_date_unadjusted.month(),
 				cal
 			) :
