@@ -53,7 +53,7 @@ using namespace reset;
 
 
 
-static auto parse_csv_fixings_SARON() -> RateFixings
+static auto parse_csv_fixings_SARON() -> RateFixings // parsers should probably go into SARON_parser.h
 {
 	constexpr auto d = parser_detail{
 		.header_lines = 4u,
