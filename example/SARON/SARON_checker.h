@@ -39,7 +39,7 @@
 #include "SARON_average.h"
 
 
-static auto make_check_task( // might need a more generic name, as the concept is not only for SARON average
+inline auto make_check_task( // might need a more generic name, as the concept is not only for SARON average
 	const reset::RateFixings& rfr,
 	const reset::rate_fixings_detail& rfr_detail,
 	const reset::RateFixings& avg, // might need a better name, as it is compounded average fixings, not a simple average
