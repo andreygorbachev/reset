@@ -31,6 +31,8 @@
 
 #include <actual_360.h>
 
+#include <calendar_algorithms.h>
+
 #include <boost/decimal.hpp>
 
 #include <chrono>
