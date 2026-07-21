@@ -22,20 +22,19 @@
 
 #include "F-TIIE_index.h"
 #include "F-TIIE_compounded.h"
+#include "TIIE_fallback.h"
 
 #include <parsers.h>
 
 #include <scaled_value.h>
 #include <index.h>
 #include <fixings.h>
-#include <reset_math.h>
 
 #include <actual_360.h>
 
 #include <period.h>
 #include <schedule.h>
 #include <calendar.h>
-#include <calendar_algorithms.h>
 
 #include <boost/decimal.hpp>
 
@@ -223,44 +222,6 @@ static auto parse_csv_fixings_FTIIE_compounded_in_advance_182_day() -> RateFixin
 		"America/CNBV",
 		4u
 	);
-}
-
-
-
-// or should we call it synthetic?
-static auto fallback( // is this important enough to move to the main library?
-	const RateFixings& fix,
-	const RateFixings& target_rate_fix,
-	const std::chrono::year_month_day& d, // do we assume it is always a good business day?
-	const boost::decimal::decimal128_t& tenor
-)
-{
-	using namespace boost::decimal::literals;
-
-	const auto& calendar = fix.get_calendar();
-	const auto prev = shift_business_days(d, days{ -1 }, calendar);
-	const auto prevprev = shift_business_days(prev, days{ -1 }, calendar);
-
-	const auto& _fixing = fix[prevprev];
-	assert(_fixing);
-	const auto fixing = static_cast<boost::decimal::decimal128_t>(*_fixing);
-
-	const auto& _target_rate_prev_fixing = target_rate_fix[prev];
-	assert(_target_rate_prev_fixing);
-	const auto& _target_rate_prevprev_fixing = target_rate_fix[prevprev];
-	assert(_target_rate_prevprev_fixing);
-	const auto Banxico_move =
-		static_cast<boost::decimal::decimal128_t>(*_target_rate_prev_fixing) -
-		static_cast<boost::decimal::decimal128_t>(*_target_rate_prevprev_fixing);
-
-	const auto _spread = BasisPoints{ "24" }; // constexpr? // is this right that it is the same spread for all tenors?
-	const auto spread = static_cast<boost::decimal::decimal128_t>(_spread);
-
-	auto rate = (pow(1_dl + (fixing + Banxico_move) / 360_dl, tenor) - 1_dl) * 360_dl / tenor; // should we use day count?
-	rate = round_dp(rate, 6u); // or should we be able to apply 4dp to the resulting percentage? (that would be closer to the documentation, which deals in percents)
-	// should round_dp accept units for the power? (6dp or something like that)
-
-	return Percent{ rate + spread }; // or do we need to apply the spread before rounding?
 }
 
 
