@@ -56,6 +56,6 @@
 		if (id.final_round)
 			indx = reset::round_dp(indx, *id.final_round);
 
-		return reset::Value{ indx };
+		return indx;
 	}
 }

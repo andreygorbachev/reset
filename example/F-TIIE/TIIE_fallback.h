@@ -68,5 +68,5 @@
 	rate = reset::round_dp(rate, 6u); // or should we be able to apply 4dp to the resulting percentage? (that would be closer to the documentation, which deals in percents)
 	// should round_dp accept units for the power? (6dp or something like that)
 
-	return reset::Percent{ rate + spread }; // or do we need to apply the spread before rounding?
+	return rate + spread; // or do we need to apply the spread before rounding?
 }
