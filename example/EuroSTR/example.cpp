@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 #include "parser.h"
+#include "checker.h"
 
 #include <scaled_value.h>
 #include <fixings.h>
@@ -40,6 +41,7 @@
 #include <iomanip>
 #include <ios>
 #include <cassert>
+#include <string>
 
 using namespace std;
 using namespace std::chrono;
@@ -313,115 +315,56 @@ int main()
 		}
 	}
 
-	const auto& EuroSTR_1_week_compounded_calendar = EuroSTR_1_week_compounded.get_calendar();
-	const auto _1_week_dates = EuroSTR_1_week_compounded_calendar.make_business_days_schedule(
-		EuroSTR_1_week_compounded.get_time_series().get_period()
+	const auto EuroSTR_1_week_compounded_label = "EuroSTR 1 Week Compounded Average"s;
+	auto EuroSTR_1_week_compounded_task = make_compounded_average_check_task(
+		EuroSTR,
+		rfd,
+		EuroSTR_1_week_compounded,
+		_1wd,
+		EuroSTR_1_week_compounded_label
 	);
-	for (const auto& d : _1_week_dates.get_dates())
-	{
-		const auto& _1w_avg = EuroSTR_1_week_compounded[d];
-		assert(_1w_avg);
 
-		if (*_1w_avg != average(EuroSTR, rfd, d, _1wd).percent)
-			cout
-				<< fixed
-				<< setprecision(EuroSTR_1_week_compounded.get_decimal_places())
-				<< "For "
-				<< d
-				<< " EuroSTR 1 Week Compounded Average is "
-				<< EuroSTR_1_week_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< average(EuroSTR, rfd, d, _1wd).percent.get_value()
-				<< endl;
-	}
-
-	const auto& EuroSTR_1_month_compounded_calendar = EuroSTR_1_month_compounded.get_calendar();
-	const auto _1_month_dates = EuroSTR_1_month_compounded_calendar.make_business_days_schedule(
-		EuroSTR_1_month_compounded.get_time_series().get_period()
+	const auto EuroSTR_1_month_compounded_label = "EuroSTR 1 Month Compounded Average"s;
+	auto EuroSTR_1_month_compounded_task = make_compounded_average_check_task(
+		EuroSTR,
+		rfd,
+		EuroSTR_1_month_compounded,
+		_1md,
+		EuroSTR_1_month_compounded_label
 	);
-	for (const auto& d : _1_month_dates.get_dates())
-	{
-		const auto& _1m_avg = EuroSTR_1_month_compounded[d];
-		assert(_1m_avg);
 
-		if (*_1m_avg != average(EuroSTR, rfd, d, _1md).percent)
-			cout
-				<< fixed
-				<< setprecision(EuroSTR_1_month_compounded.get_decimal_places())
-				<< "For "
-				<< d
-				<< " EuroSTR 1 Month Compounded Average is "
-				<< EuroSTR_1_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< average(EuroSTR, rfd, d, _1md).percent.get_value()
-				<< endl;
-	}
-
-	const auto& EuroSTR_3_month_compounded_calendar = EuroSTR_3_month_compounded.get_calendar();
-	const auto _3_month_dates = EuroSTR_3_month_compounded_calendar.make_business_days_schedule(
-		EuroSTR_3_month_compounded.get_time_series().get_period()
+	const auto EuroSTR_3_month_compounded_label = "EuroSTR 3 Month Compounded Average"s;
+	auto EuroSTR_3_month_compounded_task = make_compounded_average_check_task(
+		EuroSTR,
+		rfd,
+		EuroSTR_3_month_compounded,
+		_3md,
+		EuroSTR_3_month_compounded_label
 	);
-	for (const auto& d : _3_month_dates.get_dates())
-	{
-		const auto& _3m_avg = EuroSTR_3_month_compounded[d];
-		assert(_3m_avg);
 
-		if (*_3m_avg != average(EuroSTR, rfd, d, _3md).percent)
-			cout
-				<< fixed
-				<< setprecision(EuroSTR_3_month_compounded.get_decimal_places())
-				<< "For "
-				<< d
-				<< " EuroSTR 3 Month Compounded Average is "
-				<< EuroSTR_3_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< average(EuroSTR, rfd, d, _3md).percent.get_value()
-				<< endl;
-	}
-
-	const auto& EuroSTR_6_month_compounded_calendar = EuroSTR_6_month_compounded.get_calendar();
-	const auto _6_month_dates = EuroSTR_6_month_compounded_calendar.make_business_days_schedule(
-		EuroSTR_6_month_compounded.get_time_series().get_period()
+	const auto EuroSTR_6_month_compounded_label = "EuroSTR 6 Month Compounded Average"s;
+	auto EuroSTR_6_month_compounded_task = make_compounded_average_check_task(
+		EuroSTR,
+		rfd,
+		EuroSTR_6_month_compounded,
+		_6md,
+		EuroSTR_6_month_compounded_label
 	);
-	for (const auto& d : _6_month_dates.get_dates())
-	{
-		const auto& _6m_avg = EuroSTR_6_month_compounded[d];
-		assert(_6m_avg);
 
-		if (*_6m_avg != average(EuroSTR, rfd, d, _6md).percent)
-			cout
-				<< fixed
-				<< setprecision(EuroSTR_6_month_compounded.get_decimal_places())
-				<< "For "
-				<< d
-				<< " EuroSTR 6 Month Compounded Average is "
-				<< EuroSTR_6_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< average(EuroSTR, rfd, d, _6md).percent.get_value()
-				<< endl;
-	}
-
-	const auto& EuroSTR_12_month_compounded_calendar = EuroSTR_12_month_compounded.get_calendar();
-	const auto _12_month_dates = EuroSTR_12_month_compounded_calendar.make_business_days_schedule(
-		EuroSTR_12_month_compounded.get_time_series().get_period()
+	const auto EuroSTR_12_month_compounded_label = "EuroSTR 12 Month Compounded Average"s;
+	auto EuroSTR_12_month_compounded_task = make_compounded_average_check_task(
+		EuroSTR,
+		rfd,
+		EuroSTR_12_month_compounded,
+		_12md,
+		EuroSTR_12_month_compounded_label
 	);
-	for (const auto& d : _12_month_dates.get_dates())
-	{
-		const auto& _12m_avg = EuroSTR_12_month_compounded[d];
-		assert(_12m_avg);
 
-		if (*_12m_avg != average(EuroSTR, rfd, d, _12md).percent)
-			cout
-				<< fixed
-				<< setprecision(EuroSTR_12_month_compounded.get_decimal_places())
-				<< "For "
-				<< d
-				<< " EuroSTR 12 Month Compounded Average is "
-				<< EuroSTR_12_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< average(EuroSTR, rfd, d, _12md).percent.get_value()
-				<< endl;
-	}
+	EuroSTR_1_week_compounded_task.get();
+	EuroSTR_1_month_compounded_task.get();
+	EuroSTR_3_month_compounded_task.get();
+	EuroSTR_6_month_compounded_task.get();
+	EuroSTR_12_month_compounded_task.get();
 
 	constexpr auto rd = rate_detail{
 		.start = 2020y / February / 11d,
