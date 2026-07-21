@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 #include <parser.h>
+#include <checker.h>
 
 #include <scaled_value.h>
 #include <fixings.h>
@@ -38,6 +39,7 @@
 #include <ios>
 #include <cassert>
 #include <optional>
+#include <string>
 
 using namespace std;
 using namespace std::chrono;
@@ -265,71 +267,36 @@ int main()
 		}
 	}
 
-	const auto& PolSTR_1_month_compounded_calendar = PolSTR_1_month_compounded.get_calendar();
-	const auto _1_month_dates = PolSTR_1_month_compounded_calendar.make_business_days_schedule(
-		PolSTR_1_month_compounded.get_time_series().get_period()
+	const auto PolSTR_1_month_compounded_label = "PolSTR 1 Month Compounded Average"s;
+	auto PolSTR_1_month_compounded_task = make_compounded_average_check_task(
+		PolSTR,
+		rfd,
+		PolSTR_1_month_compounded,
+		_1md,
+		PolSTR_1_month_compounded_label
 	);
-	for (const auto& d : _1_month_dates.get_dates())
-	{
-		const auto& _1m_avg = PolSTR_1_month_compounded[d];
-		assert(_1m_avg);
 
-		if (*_1m_avg != average(PolSTR, rfd, d, _1md).percent)
-			cout
-				<< fixed
-				<< setprecision(PolSTR_1_month_compounded.get_decimal_places())
-				<< "For "
-				<< d
-				<< " PolSTR 1 Month Compounded Average is "
-				<< PolSTR_1_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< average(PolSTR, rfd, d, _1md).percent.get_value()
-				<< endl;
-	}
-
-	const auto& PolSTR_3_month_compounded_calendar = PolSTR_3_month_compounded.get_calendar();
-	const auto _3_month_dates = PolSTR_3_month_compounded_calendar.make_business_days_schedule(
-		PolSTR_3_month_compounded.get_time_series().get_period()
+	const auto PolSTR_3_month_compounded_label = "PolSTR 3 Month Compounded Average"s;
+	auto PolSTR_3_month_compounded_task = make_compounded_average_check_task(
+		PolSTR,
+		rfd,
+		PolSTR_3_month_compounded,
+		_3md,
+		PolSTR_3_month_compounded_label
 	);
-	for (const auto& d : _3_month_dates.get_dates())
-	{
-		const auto& _3m_avg = PolSTR_3_month_compounded[d];
-		assert(_3m_avg);
 
-		if (*_3m_avg != average(PolSTR, rfd, d, _3md).percent)
-			cout
-				<< fixed
-				<< setprecision(PolSTR_3_month_compounded.get_decimal_places())
-				<< "For "
-				<< d
-				<< " PolSTR 3 Month Compounded Average is "
-				<< PolSTR_3_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< average(PolSTR, rfd, d, _3md).percent.get_value()
-				<< endl;
-	}
-
-	const auto& PolSTR_6_month_compounded_calendar = PolSTR_6_month_compounded.get_calendar();
-	const auto _6_month_dates = PolSTR_6_month_compounded_calendar.make_business_days_schedule(
-		PolSTR_6_month_compounded.get_time_series().get_period()
+	const auto PolSTR_6_month_compounded_label = "PolSTR 6 Month Compounded Average"s;
+	auto PolSTR_6_month_compounded_task = make_compounded_average_check_task(
+		PolSTR,
+		rfd,
+		PolSTR_6_month_compounded,
+		_6md,
+		PolSTR_6_month_compounded_label
 	);
-	for (const auto& d : _6_month_dates.get_dates())
-	{
-		const auto& _6m_avg = PolSTR_6_month_compounded[d];
-		assert(_6m_avg);
 
-		if (*_6m_avg != average(PolSTR, rfd, d, _6md).percent)
-			cout
-				<< fixed
-				<< setprecision(PolSTR_6_month_compounded.get_decimal_places())
-				<< "For "
-				<< d
-				<< " PolSTR 6 Month Compounded Average is "
-				<< PolSTR_6_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< average(PolSTR, rfd, d, _6md).percent.get_value()
-				<< endl;
-	}
+	PolSTR_1_month_compounded_task.get();
+	PolSTR_3_month_compounded_task.get();
+	PolSTR_6_month_compounded_task.get();
 
 	return 0;
 }
