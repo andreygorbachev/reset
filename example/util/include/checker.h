@@ -37,7 +37,7 @@
 #include <calendar_algorithms.h>
 
 
-template<auto Average = reset::average> // Average is a callable used to compute the compounded average rate
+template<auto Average = reset::average, int ShiftDays = 0> // Average is a callable used to compute the compounded average rate; ShiftDays is days to shift business days
 auto make_compounded_average_check_task(
 	const reset::RateFixings& rfr,
 	const reset::rate_fixings_detail& rfr_detail,
@@ -54,7 +54,7 @@ auto make_compounded_average_check_task(
 			const auto& observed = avg[dt];
 			assert(observed);
 
-			const auto dt_shifted = gregorian::shift_business_days(dt, std::chrono::days{ 1 }, cal); // other indices might have a different convention for RRF date vs avg date
+			const auto dt_shifted = gregorian::shift_business_days(dt, std::chrono::days{ ShiftDays }, cal); // other indices might have a different convention for RRF date vs avg date
 			const auto calculated = Average(rfr, rfr_detail, dt_shifted, avg_detail).percent;
 
 			if (*observed != calculated)
