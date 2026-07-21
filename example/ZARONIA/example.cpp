@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 #include <parser.h>
+#include <checker.h>
 
 #include <scaled_value.h>
 #include <fixings.h>
@@ -43,6 +44,7 @@
 #include <ios>
 #include <cassert>
 #include <optional>
+#include <string>
 
 using namespace std;
 using namespace std::chrono;
@@ -376,143 +378,66 @@ int main()
 				<< endl;
 	}
 
-	const auto& ZARONIA_1_week_compounded_calendar = ZARONIA_1_week_compounded.get_calendar();
-	const auto _1_week_dates = ZARONIA_1_week_compounded_calendar.make_business_days_schedule(
-		ZARONIA_1_week_compounded.get_time_series().get_period()
+	const auto ZARONIA_1_week_compounded_label = "ZARONIA 1 Week Compounded Average"s;
+	auto ZARONIA_1_week_compounded_task = make_compounded_average_check_task(
+		ZARONIA,
+		rfd,
+		ZARONIA_1_week_compounded,
+		_1wd,
+		ZARONIA_1_week_compounded_label
 	);
-	for (const auto& d : _1_week_dates.get_dates())
-	{
-		const auto& _1w_avg = ZARONIA_1_week_compounded[d];
-		assert(_1w_avg);
 
-		const auto computed_avg = average(ZARONIA, rfd, d, _1wd).percent;
-		if (*_1w_avg != computed_avg)
-			cout
-				<< fixed
-				<< setprecision(ZARONIA_1_week_compounded.get_decimal_places())
-				<< "For "
-				<< d
-				<< " ZARONIA 1 Week Compounded Average is "
-				<< ZARONIA_1_week_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< computed_avg.get_value()
-				<< endl;
-	}
-
-	const auto& ZARONIA_1_month_compounded_calendar = ZARONIA_1_month_compounded.get_calendar();
-	const auto _1_month_dates = ZARONIA_1_month_compounded_calendar.make_business_days_schedule(
-		ZARONIA_1_month_compounded.get_time_series().get_period()
+	const auto ZARONIA_1_month_compounded_label = "ZARONIA 1 Month Compounded Average"s;
+	auto ZARONIA_1_month_compounded_task = make_compounded_average_check_task(
+		ZARONIA,
+		rfd,
+		ZARONIA_1_month_compounded,
+		_1md,
+		ZARONIA_1_month_compounded_label
 	);
-	for (const auto& d : _1_month_dates.get_dates())
-	{
-		const auto& _1m_avg = ZARONIA_1_month_compounded[d];
-		assert(_1m_avg);
 
-		const auto computed_avg = average(ZARONIA, rfd, d, _1md).percent;
-		if (*_1m_avg != computed_avg)
-			cout
-				<< fixed
-				<< setprecision(ZARONIA_1_month_compounded.get_decimal_places())
-				<< "For "
-				<< d
-				<< " ZARONIA 1 Month Compounded Average is "
-				<< ZARONIA_1_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< computed_avg.get_value()
-				<< endl;
-	}
-
-	const auto& ZARONIA_3_month_compounded_calendar = ZARONIA_3_month_compounded.get_calendar();
-	const auto _3_month_dates = ZARONIA_3_month_compounded_calendar.make_business_days_schedule(
-		ZARONIA_3_month_compounded.get_time_series().get_period()
+	const auto ZARONIA_3_month_compounded_label = "ZARONIA 3 Month Compounded Average"s;
+	auto ZARONIA_3_month_compounded_task = make_compounded_average_check_task(
+		ZARONIA,
+		rfd,
+		ZARONIA_3_month_compounded,
+		_3md,
+		ZARONIA_3_month_compounded_label
 	);
-	for (const auto& d : _3_month_dates.get_dates())
-	{
-		const auto& _3m_avg = ZARONIA_3_month_compounded[d];
-		assert(_3m_avg);
 
-		const auto computed_avg = average(ZARONIA, rfd, d, _3md).percent;
-		if (*_3m_avg != computed_avg)
-			cout
-				<< fixed
-				<< setprecision(ZARONIA_3_month_compounded.get_decimal_places())
-				<< "For "
-				<< d
-				<< " ZARONIA 3 Month Compounded Average is "
-				<< ZARONIA_3_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< computed_avg.get_value()
-				<< endl;
-	}
-
-	const auto& ZARONIA_6_month_compounded_calendar = ZARONIA_6_month_compounded.get_calendar();
-	const auto _6_month_dates = ZARONIA_6_month_compounded_calendar.make_business_days_schedule(
-		ZARONIA_6_month_compounded.get_time_series().get_period()
+	const auto ZARONIA_6_month_compounded_label = "ZARONIA 6 Month Compounded Average"s;
+	auto ZARONIA_6_month_compounded_task = make_compounded_average_check_task(
+		ZARONIA,
+		rfd,
+		ZARONIA_6_month_compounded,
+		_6md,
+		ZARONIA_6_month_compounded_label
 	);
-	for (const auto& d : _6_month_dates.get_dates())
-	{
-		const auto& _6m_avg = ZARONIA_6_month_compounded[d];
-		assert(_6m_avg);
 
-		const auto computed_avg = average(ZARONIA, rfd, d, _6md).percent;
-		if (*_6m_avg != computed_avg)
-			cout
-				<< fixed
-				<< setprecision(ZARONIA_6_month_compounded.get_decimal_places())
-				<< "For "
-				<< d
-				<< " ZARONIA 6 Month Compounded Average is "
-				<< ZARONIA_6_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< computed_avg.get_value()
-				<< endl;
-	}
-
-	const auto& ZARONIA_9_month_compounded_calendar = ZARONIA_9_month_compounded.get_calendar();
-	const auto _9_month_dates = ZARONIA_9_month_compounded_calendar.make_business_days_schedule(
-		ZARONIA_9_month_compounded.get_time_series().get_period()
+	const auto ZARONIA_9_month_compounded_label = "ZARONIA 9 Month Compounded Average"s;
+	auto ZARONIA_9_month_compounded_task = make_compounded_average_check_task(
+		ZARONIA,
+		rfd,
+		ZARONIA_9_month_compounded,
+		_9md,
+		ZARONIA_9_month_compounded_label
 	);
-	for (const auto& d : _9_month_dates.get_dates())
-	{
-		const auto& _9m_avg = ZARONIA_9_month_compounded[d];
-		assert(_9m_avg);
 
-		const auto computed_avg = average(ZARONIA, rfd, d, _9md).percent;
-		if (*_9m_avg != computed_avg)
-			cout
-				<< fixed
-				<< setprecision(ZARONIA_9_month_compounded.get_decimal_places())
-				<< "For "
-				<< d
-				<< " ZARONIA 9 Month Compounded Average is "
-				<< ZARONIA_9_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< computed_avg.get_value()
-				<< endl;
-	}
-
-	const auto& ZARONIA_12_month_compounded_calendar = ZARONIA_12_month_compounded.get_calendar();
-	const auto _12_month_dates = ZARONIA_12_month_compounded_calendar.make_business_days_schedule(
-		ZARONIA_12_month_compounded.get_time_series().get_period()
+	const auto ZARONIA_12_month_compounded_label = "ZARONIA 12 Month Compounded Average"s;
+	auto ZARONIA_12_month_compounded_task = make_compounded_average_check_task(
+		ZARONIA,
+		rfd,
+		ZARONIA_12_month_compounded,
+		_12md,
+		ZARONIA_12_month_compounded_label
 	);
-	for (const auto& d : _12_month_dates.get_dates())
-	{
-		const auto& _12m_avg = ZARONIA_12_month_compounded[d];
-		assert(_12m_avg);
 
-		const auto computed_avg = average(ZARONIA, rfd, d, _12md).percent;
-		if (*_12m_avg != computed_avg)
-			cout
-				<< fixed
-				<< setprecision(ZARONIA_12_month_compounded.get_decimal_places())
-				<< "For "
-				<< d
-				<< " ZARONIA 12 Month Compounded Average is "
-				<< ZARONIA_12_month_compounded[d]->get_value()
-				<< " and the same computed value is "
-				<< computed_avg.get_value()
-				<< endl;
-	}
+	ZARONIA_1_week_compounded_task.get();
+	ZARONIA_1_month_compounded_task.get();
+	ZARONIA_3_month_compounded_task.get();
+	ZARONIA_6_month_compounded_task.get();
+	ZARONIA_9_month_compounded_task.get();
+	ZARONIA_12_month_compounded_task.get();
 
 	return 0;
 }
