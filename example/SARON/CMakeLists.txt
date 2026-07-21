@@ -23,7 +23,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 target_sources(${PROJECT_NAME} PRIVATE
   SARON_calendar_algorithms.h # should target_include_directories take care of a path here?
   SARON_average.h
-  SARON_checker.h
   data/hsrron.csv
   data/h_sar1wc_delayed.csv
   data/h_sar1mc_delayed.csv

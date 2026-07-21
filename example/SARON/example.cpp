@@ -21,9 +21,9 @@
 // SOFTWARE.
 
 #include <parser.h>
+#include <checker.h>
 
 #include "SARON_average.h"
-#include "SARON_checker.h"
 
 #include <scaled_value.h>
 #include <fixings.h>
