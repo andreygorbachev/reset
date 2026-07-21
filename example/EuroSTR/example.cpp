@@ -21,7 +21,7 @@
 // SOFTWARE.
 
 #include "parser.h"
-#include <checker.h>
+#include <checkers.h>
 
 #include <scaled_value.h>
 #include <fixings.h>

@@ -20,8 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include <parser.h>
-#include <checker.h>
+#include <parsers.h>
+#include <checkers.h>
 
 #include "SARON_average.h"
 
