@@ -510,7 +510,7 @@ int main()
 	// look for inconsistencies in the data
 
 	const auto SARON_1_week_compounded_label = "SARON 1 Week Compounded Average"s;
-	auto SARON_1_week_compounded_task = make_check_task<SARON_average>(
+	auto SARON_1_week_compounded_task = make_compounded_average_check_task<SARON_average>(
 		SARON,
 		rfd,
 		SARON_1_week_compounded,
@@ -519,7 +519,7 @@ int main()
 	);
 
 	const auto SARON_1_month_compounded_label = "SARON 1 Month Compounded Average"s;
-	auto SARON_1_month_compounded_task = make_check_task<SARON_average>(
+	auto SARON_1_month_compounded_task = make_compounded_average_check_task<SARON_average>(
 		SARON,
 		rfd,
 		SARON_1_month_compounded,
@@ -528,7 +528,7 @@ int main()
 	);
 
 	const auto SARON_2_month_compounded_label = "SARON 2 Month Compounded Average"s;
-	auto SARON_2_month_compounded_task = make_check_task<SARON_average>(
+	auto SARON_2_month_compounded_task = make_compounded_average_check_task<SARON_average>(
 		SARON,
 		rfd,
 		SARON_2_month_compounded,
@@ -537,7 +537,7 @@ int main()
 	);
 
 	const auto SARON_3_month_compounded_label = "SARON 3 Month Compounded Average"s;
-	auto SARON_3_month_compounded_task = make_check_task<SARON_average>(
+	auto SARON_3_month_compounded_task = make_compounded_average_check_task<SARON_average>(
 		SARON,
 		rfd,
 		SARON_3_month_compounded,
@@ -546,7 +546,7 @@ int main()
 	);
 
 	const auto SARON_6_month_compounded_label = "SARON 6 Month Compounded Average"s;
-	auto SARON_6_month_compounded_task = make_check_task<SARON_average>(
+	auto SARON_6_month_compounded_task = make_compounded_average_check_task<SARON_average>(
 		SARON,
 		rfd,
 		SARON_6_month_compounded,
@@ -555,7 +555,7 @@ int main()
 	);
 
 	const auto SARON_9_month_compounded_label = "SARON 9 Month Compounded Average"s;
-	auto SARON_9_month_compounded_task = make_check_task<SARON_average>(
+	auto SARON_9_month_compounded_task = make_compounded_average_check_task<SARON_average>(
 		SARON,
 		rfd,
 		SARON_9_month_compounded,
@@ -564,7 +564,7 @@ int main()
 	);
 
 	const auto SARON_12_month_compounded_label = "SARON 12 Month Compounded Average"s;
-	auto SARON_12_month_compounded_task = make_check_task<SARON_average>(
+	auto SARON_12_month_compounded_task = make_compounded_average_check_task<SARON_average>(
 		SARON,
 		rfd,
 		SARON_12_month_compounded,

@@ -38,7 +38,7 @@
 
 
 template<auto Average = reset::average> // Average is a callable used to compute the compounded average rate
-auto make_check_task(
+auto make_compounded_average_check_task(
 	const reset::RateFixings& rfr,
 	const reset::rate_fixings_detail& rfr_detail,
 	const reset::RateFixings& avg, // might need a better name, as it is compounded average fixings, not a simple average
