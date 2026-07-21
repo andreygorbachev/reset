@@ -60,7 +60,7 @@ auto _SARON_1_week_average_start(
 ) -> std::chrono::year_month_day;
 
 // from "Swiss Index. Rulebook Swiss Reference Rates."
-inline auto SARON_average(
+[[nodiscard]] inline auto SARON_average(
 	const reset::RateFixings& fix,
 	const reset::rate_fixings_detail& rfd,
 	const std::chrono::year_month_day& ymd,

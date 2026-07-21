@@ -20,6 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
+#include "F-TIIE_index.h"
+
 #include <parsers.h>
 
 #include <scaled_value.h>
@@ -28,13 +30,11 @@
 #include <reset_math.h>
 
 #include <actual_360.h>
-#include <preceding.h>
 
 #include <period.h>
 #include <schedule.h>
 #include <calendar.h>
 #include <calendar_algorithms.h>
-#include <static_data.h>
 
 #include <boost/decimal.hpp>
 
@@ -225,33 +225,6 @@ static auto parse_csv_fixings_FTIIE_compounded_in_advance_182_day() -> RateFixin
 }
 
 
-
-static auto non_business_day_index( // is this important enough to move to the main library?
-	const RateFixings& fix,
-	const rate_fixings_detail& rfd,
-	const std::chrono::year_month_day& ymd,
-	const index_detail& id = index_detail{} // does it need a default?
-)
-{
-	if (fix.get_calendar().is_business_day(ymd))
-		return index(fix, rfd, ymd, id);
-	else
-	{
-		constexpr auto preceding = fin_calendar::preceding{};
-		const auto prev = preceding.adjust(ymd, fix.get_calendar());
-
-		auto indx = index(fix, rfd, prev, id).get_value();
-		index_step_(indx, prev, ymd, fix, rfd, id);
-
-		if (id.final_trunc)
-			indx = trunc_dp(indx, *id.final_trunc);
-
-		if (id.final_round)
-			indx = round_dp(indx, *id.final_round);
-
-		return Value{ indx };
-	}
-}
 
 static auto compounded_in_advance( // is this important enough to move to the main library?
 	const IndexFixings& fix,
@@ -515,13 +488,13 @@ int main()
 		const auto computed_fix = non_business_day_index(FTIIE, rfd, d, bus_id2); // also handles business days
 		if (*fix != computed_fix)
 			cout
-			<< "For "
-			<< d
-			<< " F-TIIE Compounded Index (business days) is "
-			<< fix->get_value()
-			<< " and the same computed value is "
-			<< computed_fix.get_value()
-			<< endl;
+				<< "For "
+				<< d
+				<< " F-TIIE Compounded Index (business days) is "
+				<< fix->get_value()
+				<< " and the same computed value is "
+				<< computed_fix.get_value()
+				<< endl;
 	}
 
 	const auto cal_period = FTIIE_compounded_on_calendar_days_index.get_time_series().get_period();
@@ -556,13 +529,13 @@ int main()
 		const auto computed_fix = index(FTIIE, rfd, d, cal_id2);
 		if (*fix != computed_fix)
 			cout
-			<< "For "
-			<< d
-			<< " F-TIIE Compounded Index (calendar days) is "
-			<< fix->get_value()
-			<< " and the same computed value is "
-			<< computed_fix.get_value()
-			<< endl;
+				<< "For "
+				<< d
+				<< " F-TIIE Compounded Index (calendar days) is "
+				<< fix->get_value()
+				<< " and the same computed value is "
+				<< computed_fix.get_value()
+				<< endl;
 	}
 
 	const auto& _28d_compounded_in_advance_calendar = FTIIE_compounded_in_advance_28_day.get_calendar();
@@ -669,15 +642,15 @@ int main()
 		const auto fb = fallback(FTIIE, target_rate, d, 91_dl);
 		if (*fix != fb)
 			cout
-			<< fixed
-			<< setprecision(TIIE_fallback_91_day.get_decimal_places())
-			<< "For "
-			<< d
-			<< " TIIE Fallback (91 days) is "
-			<< fix->get_value()
-			<< " and the same computed value is "
-			<< fb.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(TIIE_fallback_91_day.get_decimal_places())
+				<< "For "
+				<< d
+				<< " TIIE Fallback (91 days) is "
+				<< fix->get_value()
+				<< " and the same computed value is "
+				<< fb.get_value()
+				<< endl;
 	}
 
 	const auto& _182d_fallback_calendar = TIIE_fallback_182_day.get_calendar();
@@ -692,15 +665,15 @@ int main()
 		const auto fb = fallback(FTIIE, target_rate, d, 182_dl);
 		if (*fix != fb)
 			cout
-			<< fixed
-			<< setprecision(TIIE_fallback_182_day.get_decimal_places())
-			<< "For "
-			<< d
-			<< " TIIE Fallback (182 days) is "
-			<< fix->get_value()
-			<< " and the same computed value is "
-			<< fb.get_value()
-			<< endl;
+				<< fixed
+				<< setprecision(TIIE_fallback_182_day.get_decimal_places())
+				<< "For "
+				<< d
+				<< " TIIE Fallback (182 days) is "
+				<< fix->get_value()
+				<< " and the same computed value is "
+				<< fb.get_value()
+				<< endl;
 	}
 
 	return 0;

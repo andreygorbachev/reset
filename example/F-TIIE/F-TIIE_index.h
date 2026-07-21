@@ -24,33 +24,36 @@
 
 #include <chrono>
 
-#include <preceding.h>
+#include <fixings.h>
+#include <index.h>
+#include <reset_math.h>
+#include <scaled_value.h>
 
-#include <calendar.h>
 
 
-
-// should these 2 functions be in calendar? (or if they are more finance specific in fin-calendar/util?)
-// an appropriate namespace should be also used
-
-[[nodiscard]] inline auto get_last_business_day_of_month(
-	const std::chrono::year_month& ym,
-	const gregorian::calendar& cal
-) -> std::chrono::year_month_day
-{
-	constexpr auto preceding = fin_calendar::preceding{};
-	const auto candidate = std::chrono::year_month_day{ ym / std::chrono::last };
-	return preceding.adjust(candidate, cal);
-}
-
-[[nodiscard]] inline auto is_last_business_day_of_month(
+inline auto non_business_day_index( // is this important enough to move to the main library?
+	const reset::RateFixings& fix,
+	const reset::rate_fixings_detail& rfd,
 	const std::chrono::year_month_day& ymd,
-	const gregorian::calendar& cal
-) -> bool
+	const reset::index_detail& id = reset::index_detail{} // does it need a default?
+) -> reset::Value
 {
-	return ymd == get_last_business_day_of_month(ymd.year() / ymd.month(), cal);
+	if (fix.get_calendar().is_business_day(ymd))
+		return reset::index(fix, rfd, ymd, id);
+	else
+	{
+		constexpr auto preceding = fin_calendar::preceding{};
+		const auto prev = preceding.adjust(ymd, fix.get_calendar());
+
+		auto indx = reset::index(fix, rfd, prev, id).get_value();
+		reset::index_step_(indx, prev, ymd, fix, rfd, id);
+
+		if (id.final_trunc)
+			indx = reset::trunc_dp(indx, *id.final_trunc);
+
+		if (id.final_round)
+			indx = reset::round_dp(indx, *id.final_round);
+
+		return reset::Value{ indx };
+	}
 }
-
-// the same for the first business day of the month (even if that is not needed for SARON)
-
-// do we want these to be functions? or should these be some kind of objects like in chrono

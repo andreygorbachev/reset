@@ -1,6 +1,6 @@
 project("${PROJECT_NAME}_F-TIIE" LANGUAGES CXX)
 
-configure_file("data/CF101.csv" "CF101.csv" COPYONLY)
+configure_file(data/CF101.csv CF101.csv COPYONLY)
 
 add_executable(${PROJECT_NAME}
   example.cpp
@@ -14,5 +14,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 
 # to make IDE to show this file as part of the project
 target_sources(${PROJECT_NAME} PRIVATE
-  "data/CF101.csv"
+  F-TIIE_index.h # should target_include_directories take care of a path here?
+  data/CF101.csv
 )

@@ -38,7 +38,7 @@
 
 
 template<auto Average = reset::average, int ShiftDays = 0> // Average is a callable used to compute the compounded average rate; ShiftDays is days to shift business days
-auto make_compounded_average_check_task(
+[[nodiscard]] auto make_compounded_average_check_task(
 	const reset::RateFixings& rfr,
 	const reset::rate_fixings_detail& rfr_detail,
 	const reset::RateFixings& avg, // might need a better name, as it is compounded average fixings, not a simple average

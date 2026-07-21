@@ -55,7 +55,7 @@ struct parser_detail // should it be called metadata?
 };
 
 template<typename Fixings>
-auto parse_csv_fixings(
+[[nodiscard]] auto parse_csv_fixings(
 	const std::string& fileName,
 	const parser_detail& detail,
 	const std::string& calendar_name, // empty calendar will be created if this string is empty
@@ -159,7 +159,7 @@ inline auto _make_empty_calendar(const parser_detail& detail)
 
 
 template<typename Fixings>
-auto parse_csv_fixings(
+[[nodiscard]] auto parse_csv_fixings(
 	const std::string& fileName,
 	const parser_detail& detail,
 	const std::string& calendar_name,
