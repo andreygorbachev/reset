@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 #include <parser.h>
+#include <checker.h>
 
 #include <scaled_value.h>
 #include <fixings.h>
@@ -44,6 +45,7 @@
 #include <ios>
 #include <cassert>
 #include <optional>
+#include <string>
 
 using namespace std;
 using namespace std::chrono;
@@ -298,74 +300,36 @@ int main()
 		}
 	}
 
-	const auto& SOFR_30_day_average_calendar = SOFR_30_day_average.get_calendar();
-	const auto _30_day_dates = SOFR_30_day_average_calendar.make_business_days_schedule(
-		SOFR_30_day_average.get_time_series().get_period()
+	const auto SOFR_30_day_average_label = "SOFR 30 Day Average"s;
+	auto SOFR_30_day_average_task = make_compounded_average_check_task(
+		SOFR,
+		rfd,
+		SOFR_30_day_average,
+		_30dd,
+		SOFR_30_day_average_label
 	);
-	for (const auto& d : _30_day_dates.get_dates())
-	{
-		const auto& _30d_avg = SOFR_30_day_average[d];
-		assert(_30d_avg);
 
-		const auto computed_avg = average(SOFR, rfd, d, _30dd).percent;
-		if (*_30d_avg != computed_avg)
-			cout
-				<< fixed
-				<< setprecision(SOFR_30_day_average.get_decimal_places())
-				<< "For "
-				<< d
-				<< " SOFR 30 Day Average is "
-				<< SOFR_30_day_average[d]->get_value()
-				<< " and the same computed value is "
-				<< computed_avg.get_value()
-				<< endl;
-	}
-
-	const auto& SOFR_90_day_average_calendar = SOFR_90_day_average.get_calendar();
-	const auto _90_day_dates = SOFR_90_day_average_calendar.make_business_days_schedule(
-		SOFR_90_day_average.get_time_series().get_period()
+	const auto SOFR_90_day_average_label = "SOFR 90 Day Average"s;
+	auto SOFR_90_day_average_task = make_compounded_average_check_task(
+		SOFR,
+		rfd,
+		SOFR_90_day_average,
+		_90dd,
+		SOFR_90_day_average_label
 	);
-	for (const auto& d : _90_day_dates.get_dates())
-	{
-		const auto& _90d_avg = SOFR_90_day_average[d];
-		assert(_90d_avg);
 
-		const auto computed_avg = average(SOFR, rfd, d, _90dd).percent;
-		if (*_90d_avg != computed_avg)
-			cout
-				<< fixed
-				<< setprecision(SOFR_90_day_average.get_decimal_places())
-				<< "For "
-				<< d
-				<< " SOFR 90 Day Average is "
-				<< SOFR_90_day_average[d]->get_value()
-				<< " and the same computed value is "
-				<< computed_avg.get_value()
-				<< endl;
-	}
-
-	const auto& SOFR_180_day_average_calendar = SOFR_180_day_average.get_calendar();
-	const auto _180_day_dates = SOFR_180_day_average_calendar.make_business_days_schedule(
-		SOFR_180_day_average.get_time_series().get_period()
+	const auto SOFR_180_day_average_label = "SOFR 180 Day Average"s;
+	auto SOFR_180_day_average_task = make_compounded_average_check_task(
+		SOFR,
+		rfd,
+		SOFR_180_day_average,
+		_180dd,
+		SOFR_180_day_average_label
 	);
-	for (const auto& d : _180_day_dates.get_dates())
-	{
-		const auto& _180d_avg = SOFR_180_day_average[d];
-		assert(_180d_avg);
 
-		const auto computed_avg = average(SOFR, rfd, d, _180dd).percent;
-		if (*_180d_avg != computed_avg)
-			cout
-				<< fixed
-				<< setprecision(SOFR_180_day_average.get_decimal_places())
-				<< "For "
-				<< d
-				<< " SOFR 180 Day Average is "
-				<< SOFR_180_day_average[d]->get_value()
-				<< " and the same computed value is "
-				<< computed_avg .get_value()
-				<< endl;
-	}
+	SOFR_30_day_average_task.get();
+	SOFR_90_day_average_task.get();
+	SOFR_180_day_average_task.get();
 
 	// interesting case around Good Friday
 	constexpr auto rd = rate_detail{
