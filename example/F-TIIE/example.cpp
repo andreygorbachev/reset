@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 #include "F-TIIE_index.h"
+#include "F-TIIE_compounded.h"
 
 #include <parsers.h>
 
@@ -225,30 +226,6 @@ static auto parse_csv_fixings_FTIIE_compounded_in_advance_182_day() -> RateFixin
 }
 
 
-
-static auto compounded_in_advance( // is this important enough to move to the main library?
-	const IndexFixings& fix,
-	const std::chrono::year_month_day& d,
-	const boost::decimal::decimal128_t& tenor
-)
-{
-	using namespace boost::decimal::literals;
-
-	const auto& _index_d = fix[d];
-	assert(_index_d); // we assume that requests are only made for business days, but actually index is given for all calendar days
-	const auto index_d = static_cast<boost::decimal::decimal128_t>(*_index_d);
-
-	const auto d_28n = sys_days{ d } - days{ 28 };
-	const auto& _index_d_28n = fix[d_28n];
-	assert(_index_d_28n);
-	const auto index_d_28n = static_cast<boost::decimal::decimal128_t>(*_index_d_28n);
-
-	auto rate = (pow(index_d / index_d_28n, tenor / 28_dl) - 1_dl) * 360_dl / tenor; // should we use day count?
-	rate = round_dp(rate, 6u); // or should we be able to apply 4dp to the resulting percentage? (that would be closer to the documentation, which deals in percents)
-	// should round_dp accept units for the power? (6dp or something like that)
-
-	return Percent{ rate };
-}
 
 // or should we call it synthetic?
 static auto fallback( // is this important enough to move to the main library?

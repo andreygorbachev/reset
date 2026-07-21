@@ -23,39 +23,37 @@
 #pragma once
 
 #include <chrono>
+#include <cassert>
 
+#include <boost/decimal.hpp>
+
+#include <rate.h>
 #include <fixings.h>
-#include <index.h>
 #include <reset_math.h>
 #include <scaled_value.h>
 
-#include <preceding.h>
 
 
-
-[[nodiscard]] inline auto non_business_day_index( // is this important enough to move to the main library?
-	const reset::RateFixings& fix,
-	const reset::rate_fixings_detail& rfd,
-	const std::chrono::year_month_day& ymd,
-	const reset::index_detail& id = reset::index_detail{} // does it need a default?
-) -> reset::Value
+[[nodiscard]] inline auto compounded_in_advance( // is this important enough to move to the main library?
+	const reset::IndexFixings& fix,
+	const std::chrono::year_month_day& d,
+	const boost::decimal::decimal128_t& tenor
+) -> reset::Percent // should it return reset::rate?
 {
-	if (fix.get_calendar().is_business_day(ymd))
-		return reset::index(fix, rfd, ymd, id);
-	else
-	{
-		constexpr auto preceding = fin_calendar::preceding{};
-		const auto prev = preceding.adjust(ymd, fix.get_calendar());
+	using namespace boost::decimal::literals;
 
-		auto indx = reset::index(fix, rfd, prev, id).get_value();
-		reset::index_step_(indx, prev, ymd, fix, rfd, id);
+	const auto& _index_d = fix[d];
+	assert(_index_d); // we assume that requests are only made for business days, but actually index is given for all calendar days
+	const auto index_d = static_cast<boost::decimal::decimal128_t>(*_index_d);
 
-		if (id.final_trunc)
-			indx = reset::trunc_dp(indx, *id.final_trunc);
+	const auto d_28n = std::chrono::sys_days{ d } - std::chrono::days{ 28 };
+	const auto& _index_d_28n = fix[d_28n];
+	assert(_index_d_28n);
+	const auto index_d_28n = static_cast<boost::decimal::decimal128_t>(*_index_d_28n);
 
-		if (id.final_round)
-			indx = reset::round_dp(indx, *id.final_round);
+	auto rate = (boost::decimal::pow(index_d / index_d_28n, tenor / 28_dl) - 1_dl) * 360_dl / tenor; // should we use day count?
+	rate = reset::round_dp(rate, 6u); // or should we be able to apply 4dp to the resulting percentage? (that would be closer to the documentation, which deals in percents)
+	// should round_dp accept units for the power? (6dp or something like that)
 
-		return reset::Value{ indx };
-	}
+	return reset::Percent{ rate };
 }

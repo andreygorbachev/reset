@@ -15,5 +15,6 @@ target_link_libraries(${PROJECT_NAME} PRIVATE
 # to make IDE to show this file as part of the project
 target_sources(${PROJECT_NAME} PRIVATE
   F-TIIE_index.h # should target_include_directories take care of a path here?
+  F-TIIE_compounded.h
   data/CF101.csv
 )
