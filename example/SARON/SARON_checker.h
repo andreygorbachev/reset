@@ -36,10 +36,9 @@
 
 #include <calendar_algorithms.h>
 
-#include "SARON_average.h"
 
-
-inline auto make_check_task( // might need a more generic name, as the concept is not only for SARON average
+template<auto Average = reset::average> // Average is a callable used to compute the compounded average rate
+auto make_check_task(
 	const reset::RateFixings& rfr,
 	const reset::rate_fixings_detail& rfr_detail,
 	const reset::RateFixings& avg, // might need a better name, as it is compounded average fixings, not a simple average
@@ -56,7 +55,7 @@ inline auto make_check_task( // might need a more generic name, as the concept i
 			assert(observed);
 
 			const auto dt_shifted = gregorian::shift_business_days(dt, std::chrono::days{ 1 }, cal); // other indices might have a different convention for RRF date vs avg date
-			const auto calculated = SARON_average(rfr, rfr_detail, dt_shifted, avg_detail).percent; // if we template on this we can make the function work (with an appropriate default) for all indices not just SARON
+			const auto calculated = Average(rfr, rfr_detail, dt_shifted, avg_detail).percent;
 
 			if (*observed != calculated)
 			{
