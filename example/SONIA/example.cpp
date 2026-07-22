@@ -21,6 +21,7 @@
 // SOFTWARE.
 
 #include <parsers.h>
+#include <checkers.h>
 
 #include <scaled_value.h>
 #include <fixings.h>
@@ -40,6 +41,7 @@
 #include <ios>
 #include <cassert>
 #include <optional>
+#include <string>
 
 using namespace std;
 using namespace std::chrono;
@@ -142,28 +144,14 @@ int main()
 		<< endl;
 
 	// look for inconsistencies in the index data
-	const auto period = SONIA_compounded_index.get_time_series().get_period();
-	for (
-		auto d = period.get_from();
-		d <= period.get_until();
-		d = sys_days{ d } + days{ 1 }
-	)
-	{
-		const auto& fix = SONIA_compounded_index[d];
-		if (fix)
-		{
-			const auto computed_fix = index(SONIA, rfd, d, id);
-			if (*fix != computed_fix)
-				cout
-					<< "For "
-					<< d
-					<< " SONIA Compounded Index is "
-					<< fix->get_value()
-					<< " and the same computed value is "
-					<< computed_fix.get_value()
-					<< endl;
-		}
-	}
+	const auto SONIA_compounded_index_label = "SONIA Compounded Index"s;
+	make_compounded_index_check_task(
+		SONIA,
+		rfd,
+		SONIA_compounded_index,
+		id,
+		SONIA_compounded_index_label
+	);
 
 	return 0;
 }

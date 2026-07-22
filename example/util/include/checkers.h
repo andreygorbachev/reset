@@ -32,9 +32,48 @@
 #include <cassert>
 
 #include <fixings.h>
+#include <index.h>
 #include <average.h>
 
 #include <calendar_algorithms.h>
+
+
+
+[[nodiscard]] inline void make_compounded_index_check_task(
+	const reset::RateFixings& rfr,
+	const reset::rate_fixings_detail& rfr_detail,
+	const reset::IndexFixings& indx,
+	const reset::index_detail& indx_detail,
+	const std::string& indx_label
+)
+{
+	const auto period = indx.get_time_series().get_period();
+	for (
+		auto d = period.get_from();
+		d <= period.get_until();
+		d = std::chrono::sys_days{ d } + std::chrono::days{ 1 }
+	)
+	{
+		const auto& fix = indx[d];
+		if (fix)
+		{
+			const auto computed_fix = reset::index(rfr, rfr_detail, d, indx_detail);
+			if (*fix != computed_fix)
+				std::cout
+					<< std::fixed
+					<< std::setprecision(indx.get_decimal_places())
+					<< "For "
+					<< d
+					<< " "
+					<< indx_label
+					<< " is "
+					<< fix->get_value()
+					<< " and the same computed value is "
+					<< computed_fix.get_value()
+					<< std::endl;
+		}
+	}
+}
 
 
 template<auto Average = reset::average, int ShiftDays = 0> // Average is a callable used to compute the compounded average rate; ShiftDays is days to shift business days
