@@ -47,31 +47,27 @@
 	const std::string& indx_label
 )
 {
-	const auto period = indx.get_time_series().get_period();
-	for (
-		auto d = period.get_from();
-		d <= period.get_until();
-		d = std::chrono::sys_days{ d } + std::chrono::days{ 1 }
-	)
+	const auto& cal = rfr.get_calendar(); // we can assert that indx and rfr have the same calendar
+	const auto dates = cal.make_business_days_schedule(indx.get_time_series().get_period());
+	for (const auto& dt : dates.get_dates())
 	{
-		const auto& fix = indx[d];
-		if (fix)
-		{
-			const auto computed_fix = reset::index(rfr, rfr_detail, d, indx_detail);
-			if (*fix != computed_fix)
-				std::cout
-					<< std::fixed
-					<< std::setprecision(indx.get_decimal_places())
-					<< "For "
-					<< d
-					<< " "
-					<< indx_label
-					<< " is "
-					<< fix->get_value()
-					<< " and the same computed value is "
-					<< computed_fix.get_value()
-					<< std::endl;
-		}
+		const auto& fix = indx[dt];
+
+		const auto computed_fix = reset::index(rfr, rfr_detail, dt, indx_detail);
+
+		if (*fix != computed_fix)
+			std::cout
+				<< std::fixed
+				<< std::setprecision(indx.get_decimal_places())
+				<< "For "
+				<< dt
+				<< " "
+				<< indx_label
+				<< " is "
+				<< fix->get_value()
+				<< " and the same computed value is "
+				<< computed_fix.get_value()
+				<< std::endl;
 	}
 }
 
