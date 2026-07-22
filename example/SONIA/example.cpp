@@ -145,13 +145,14 @@ int main()
 
 	// look for inconsistencies in the index data
 	const auto SONIA_compounded_index_label = "SONIA Compounded Index"s;
-	make_compounded_index_check_task(
+	auto SONIA_compounded_index_task = make_compounded_index_check_task(
 		SONIA,
 		rfd,
 		SONIA_compounded_index,
 		id,
 		SONIA_compounded_index_label
 	);
+	SONIA_compounded_index_task.get();
 
 	return 0;
 }

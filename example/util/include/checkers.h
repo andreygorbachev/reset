@@ -39,7 +39,7 @@
 
 
 
-[[nodiscard]] inline void make_compounded_index_check_task(
+[[nodiscard]] inline auto make_compounded_index_check_task(
 	const reset::RateFixings& rfr,
 	const reset::rate_fixings_detail& rfr_detail,
 	const reset::IndexFixings& indx,
@@ -47,28 +47,34 @@
 	const std::string& indx_label
 )
 {
-	const auto& cal = rfr.get_calendar(); // we can assert that indx and rfr have the same calendar
-	const auto dates = cal.make_business_days_schedule(indx.get_time_series().get_period());
-	for (const auto& dt : dates.get_dates())
-	{
-		const auto& fix = indx[dt];
+	return std::async(std::launch::async, [&rfr, &rfr_detail, &indx, &indx_detail, &indx_label]() {
+		const auto& cal = rfr.get_calendar(); // we can assert that indx and rfr have the same calendar
+		const auto dates = cal.make_business_days_schedule(indx.get_time_series().get_period());
+		for (const auto& dt : dates.get_dates())
+		{
+			const auto& observed = indx[dt];
+			assert(observed);
 
-		const auto computed_fix = reset::index(rfr, rfr_detail, dt, indx_detail);
+			const auto calculated = reset::index(rfr, rfr_detail, dt, indx_detail);
 
-		if (*fix != computed_fix)
-			std::cout
-				<< std::fixed
-				<< std::setprecision(indx.get_decimal_places())
-				<< "For "
-				<< dt
-				<< " "
-				<< indx_label
-				<< " is "
-				<< fix->get_value()
-				<< " and the same computed value is "
-				<< computed_fix.get_value()
-				<< std::endl;
-	}
+			if (*observed != calculated)
+			{
+				auto scout = std::osyncstream{ std::cout };
+				scout
+					<< std::fixed
+					<< std::setprecision(indx.get_decimal_places())
+					<< "For "
+					<< dt
+					<< " "
+					<< indx_label
+					<< " is "
+					<< observed->get_value()
+					<< " and the same computed value is "
+					<< calculated.get_value()
+					<< std::endl;
+			}
+		}
+	});
 }
 
 
