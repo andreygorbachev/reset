@@ -509,13 +509,13 @@ int main()
 
 	// look for inconsistencies in the data
 
-	const auto SARON_compounded_index_label = "SAION"s;
-	auto SARON_compounded_index_task = make_compounded_index_check_task(
+	const auto SAION_label = "SAION"s;
+	auto SAION_task = make_compounded_index_check_task(
 		SARON,
 		rfd,
 		SAION,
 		id,
-		SARON_compounded_index_label
+		SAION_label
 	);
 
 	const auto current_compounded_index_label = "Current Index"s;
@@ -590,7 +590,7 @@ int main()
 		SARON_12_month_compounded_label
 	);
 
-	SARON_compounded_index_task.get();
+	SAION_task.get();
 	current_compounded_index_task.get();
 	SARON_1_week_compounded_task.get();
 	SARON_1_month_compounded_task.get();
