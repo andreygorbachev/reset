@@ -292,28 +292,14 @@ int main()
 
 	// look for inconsistencies in the data
 
-	const auto period = EuroSTR_compounded_index.get_time_series().get_period();
-	for (
-		auto d = period.get_from();
-		d <= period.get_until();
-		d = sys_days{ d } + days{ 1 }
-	)
-	{
-		const auto& fix = EuroSTR_compounded_index[d];
-		if (fix)
-		{
-			const auto computed_fix = index(EuroSTR, rfd, d, id);
-			if (*fix != computed_fix)
-				cout
-					<< "For "
-					<< d
-					<< " EuroSTR Compounded Index is "
-					<< fix->get_value()
-					<< " and the same computed value is "
-					<< computed_fix.get_value()
-					<< endl;
-		}
-	}
+	const auto EuroSTR_compounded_index_label = "EuroSTR Compounded Index"s;
+	auto EuroSTR_compounded_index_task = make_compounded_index_check_task(
+		EuroSTR,
+		rfd,
+		EuroSTR_compounded_index,
+		id,
+		EuroSTR_compounded_index_label
+	);
 
 	const auto EuroSTR_1_week_compounded_label = "EuroSTR 1 Week Compounded Average"s;
 	auto EuroSTR_1_week_compounded_task = make_compounded_average_check_task(
@@ -360,6 +346,7 @@ int main()
 		EuroSTR_12_month_compounded_label
 	);
 
+	EuroSTR_compounded_index_task.get();
 	EuroSTR_1_week_compounded_task.get();
 	EuroSTR_1_month_compounded_task.get();
 	EuroSTR_3_month_compounded_task.get();
