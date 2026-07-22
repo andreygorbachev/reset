@@ -34,8 +34,6 @@
 
 #include <static_data.h>
 #include <calendar.h>
-#include <schedule.h>
-#include <period.h>
 
 #include <boost/decimal.hpp>
 
@@ -275,30 +273,15 @@ int main()
 	const auto& SIFMA_calendar = locate_calendar("America/SIFMA", date);
 
 	// look for inconsistencies in the data
-	const auto period = SOFR_compounded_index.get_time_series().get_period();
-	for (
-		auto d = period.get_from();
-		d <= period.get_until();
-		d = sys_days{ d } + days{ 1 }
-	)
-	{
-		const auto& fix = SOFR_compounded_index[d];
-		if (fix)
-		{
-			const auto computed_fix = index(SOFR, rfd, d, id);
-			if (*fix != computed_fix)
-				cout
-					<< fixed
-					<< setprecision(SOFR_compounded_index.get_decimal_places())
-					<< "For "
-					<< d
-					<< " SOFR Compounded Index is "
-					<< fix->get_value()
-					<< " and the same computed value is "
-					<< computed_fix.get_value()
-					<< endl;
-		}
-	}
+
+	const auto SOFR_compounded_index_label = "SOFR Compounded Index"s;
+	auto SOFR_compounded_index_task = make_compounded_index_check_task(
+		SOFR,
+		rfd,
+		SOFR_compounded_index,
+		id,
+		SOFR_compounded_index_label
+	);
 
 	const auto SOFR_30_day_average_label = "SOFR 30 Day Average"s;
 	auto SOFR_30_day_average_task = make_compounded_average_check_task(
@@ -327,6 +310,7 @@ int main()
 		SOFR_180_day_average_label
 	);
 
+	SOFR_compounded_index_task.get();
 	SOFR_30_day_average_task.get();
 	SOFR_90_day_average_task.get();
 	SOFR_180_day_average_task.get();

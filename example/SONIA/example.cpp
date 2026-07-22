@@ -29,10 +29,6 @@
 
 #include <actual_365_fixed.h>
 
-#include <static_data.h>
-#include <calendar.h>
-#include <period.h>
-
 #include <boost/decimal.hpp>
 
 #include <chrono>
