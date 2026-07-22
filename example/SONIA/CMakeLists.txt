@@ -5,10 +5,10 @@ configure_file("data/SONIA Compounded Index.csv" "SONIA Compounded Index.csv" CO
 
 add_executable(${PROJECT_NAME}
   example.cpp
-  parser.h
 )
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
+  reset_example_util
   reset
   calendar_static-data
 )

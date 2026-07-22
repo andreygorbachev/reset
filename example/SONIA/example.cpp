@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 
-#include "parser.h"
+#include <parsers.h>
 
 #include <scaled_value.h>
 #include <fixings.h>
@@ -30,7 +30,6 @@
 
 #include <static_data.h>
 #include <calendar.h>
-#include <schedule.h>
 #include <period.h>
 
 #include <boost/decimal.hpp>
@@ -39,9 +38,8 @@
 #include <iostream>
 #include <iomanip>
 #include <ios>
-#include <algorithm>
-#include <iterator>
 #include <cassert>
+#include <optional>
 
 using namespace std;
 using namespace std::chrono;
@@ -62,10 +60,22 @@ using namespace reset;
 static auto parse_csv_fixings_SONIA() -> RateFixings
 {
 	// from https://www.bankofengland.co.uk/markets/sonia-benchmark
+
+	constexpr auto d = parser_detail{
+		.header_lines = 1u,
+		.from = 1997y / January / 1d,
+		.until = 2025y / May / 12d,
+		.date_format = "\"%d %b %y\"",
+		.separator = ',',
+		.padder = '"',
+		.not_available = nullopt,
+		.skip_columns = 0u
+	};
+
 	return parse_csv_fixings<RateFixings>(
 		"SONIA.csv",
-		1997y / January / 1d,
-		2025y / May / 12d,
+		d,
+		"Europe/London",
 		4u
 	);
 }
@@ -73,10 +83,22 @@ static auto parse_csv_fixings_SONIA() -> RateFixings
 static auto parse_csv_fixings_SONIA_compounded_index() -> IndexFixings
 {
 	// from https://www.bankofengland.co.uk/markets/sonia-benchmark
+
+	constexpr auto d = parser_detail{
+		.header_lines = 1u,
+		.from = 2018y / April / 23d,
+		.until = 2025y / May / 13d,
+		.date_format = "\"%d %b %y\"",
+		.separator = ',',
+		.padder = '"',
+		.not_available = nullopt,
+		.skip_columns = 0u
+	};
+
 	return parse_csv_fixings<IndexFixings>(
 		"SONIA Compounded Index.csv",
-		2018y / April / 23d,
-		2025y / May / 13d,
+		d,
+		"Europe/London",
 		8u
 	);
 }

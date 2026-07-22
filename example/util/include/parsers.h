@@ -90,6 +90,7 @@ auto _parse_observation(
 {
 	if (detail.padder)
 		fs.ignore(1, *detail.padder);
+	// I think that padder after the observation is ignored automatically
 
 	auto o = std::string{};
 	std::getline(fs, o);
