@@ -13,3 +13,18 @@ add_subdirectory(F-TIIE)
 add_subdirectory(ZARONIA)
 add_subdirectory(US-CPI)
 add_subdirectory(step_round)
+
+# ToDo:
+# SORA
+# THOR
+# NOWA
+# SWESTR
+# DESTR
+# WIRON
+# RUONA
+# MYOR
+# KOFR
+# HUFONIA
+# CORRA
+# CZEONIA
+# ORR
