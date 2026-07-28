@@ -44,7 +44,7 @@
 	const reset::rate_fixings_detail& rfr_detail,
 	const reset::IndexFixings& indx,
 	const reset::index_detail& indx_detail,
-	const std::string_view indx_label
+	std::string_view indx_label
 )
 {
 	return std::async(std::launch::async, [&rfr, &rfr_detail, &indx, &indx_detail, &indx_label]() {
@@ -84,7 +84,7 @@ template<auto Average = reset::average, int ShiftDays = 0> // Average is a calla
 	const reset::rate_fixings_detail& rfr_detail,
 	const reset::RateFixings& avg, // might need a better name, as it is compounded average fixings, not a simple average
 	const reset::average_detail& avg_detail,
-	const std::string_view avg_label
+	std::string_view avg_label
 )
 {
 	return std::async(std::launch::async, [&rfr, &rfr_detail, &avg, &avg_detail, &avg_label]() {
