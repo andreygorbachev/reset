@@ -23,7 +23,7 @@
 #pragma once
 
 #include <chrono>
-#include <string_view>
+#include <string>
 #include <future>
 #include <syncstream>
 #include <ios>
@@ -44,10 +44,10 @@
 	const reset::rate_fixings_detail& rfr_detail,
 	const reset::IndexFixings& indx,
 	const reset::index_detail& indx_detail,
-	std::string_view indx_label
+	std::string indx_label
 )
 {
-	return std::async(std::launch::async, [&rfr, &rfr_detail, &indx, &indx_detail, &indx_label]() {
+	return std::async(std::launch::async, [&rfr, &rfr_detail, &indx, &indx_detail, label = std::move(indx_label)]() {
 		const auto& cal = rfr.get_calendar(); // we can assert that indx and rfr have the same calendar
 		const auto dates = cal.make_business_days_schedule(indx.get_time_series().get_period());
 		for (const auto& dt : dates.get_dates())
@@ -66,7 +66,7 @@
 					<< "For "
 					<< dt
 					<< " "
-					<< indx_label
+					<< label
 					<< " is "
 					<< observed->get_value()
 					<< " and the same computed value is "
@@ -84,10 +84,10 @@ template<auto Average = reset::average, int ShiftDays = 0> // Average is a calla
 	const reset::rate_fixings_detail& rfr_detail,
 	const reset::RateFixings& avg, // might need a better name, as it is compounded average fixings, not a simple average
 	const reset::average_detail& avg_detail,
-	std::string_view avg_label
+	std::string avg_label
 )
 {
-	return std::async(std::launch::async, [&rfr, &rfr_detail, &avg, &avg_detail, &avg_label]() {
+	return std::async(std::launch::async, [&rfr, &rfr_detail, &avg, &avg_detail, label = std::move(avg_label)]() {
 		const auto& cal = rfr.get_calendar(); // we can assert that avg and rfr have the same calendar
 		const auto dates = cal.make_business_days_schedule(avg.get_time_series().get_period());
 		for (const auto& dt : dates.get_dates())
@@ -107,7 +107,7 @@ template<auto Average = reset::average, int ShiftDays = 0> // Average is a calla
 					<< "For "
 					<< dt_shifted
 					<< " "
-					<< avg_label
+					<< label
 					<< " is "
 					<< observed->get_value()
 					<< " and the same computed value is "
