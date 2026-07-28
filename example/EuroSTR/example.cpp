@@ -292,7 +292,7 @@ int main()
 
 	// look for inconsistencies in the data
 
-	const auto EuroSTR_compounded_index_label = "EuroSTR Compounded Index"s;
+	const auto EuroSTR_compounded_index_label = "EuroSTR Compounded Index";
 	auto EuroSTR_compounded_index_task = make_compounded_index_check_task(
 		EuroSTR,
 		rfd,
@@ -301,7 +301,7 @@ int main()
 		EuroSTR_compounded_index_label
 	);
 
-	const auto EuroSTR_1_week_compounded_label = "EuroSTR 1 Week Compounded Average"s;
+	const auto EuroSTR_1_week_compounded_label = "EuroSTR 1 Week Compounded Average";
 	auto EuroSTR_1_week_compounded_task = make_compounded_average_check_task(
 		EuroSTR,
 		rfd,
@@ -310,7 +310,7 @@ int main()
 		EuroSTR_1_week_compounded_label
 	);
 
-	const auto EuroSTR_1_month_compounded_label = "EuroSTR 1 Month Compounded Average"s;
+	const auto EuroSTR_1_month_compounded_label = "EuroSTR 1 Month Compounded Average";
 	auto EuroSTR_1_month_compounded_task = make_compounded_average_check_task(
 		EuroSTR,
 		rfd,
@@ -319,7 +319,7 @@ int main()
 		EuroSTR_1_month_compounded_label
 	);
 
-	const auto EuroSTR_3_month_compounded_label = "EuroSTR 3 Month Compounded Average"s;
+	const auto EuroSTR_3_month_compounded_label = "EuroSTR 3 Month Compounded Average";
 	auto EuroSTR_3_month_compounded_task = make_compounded_average_check_task(
 		EuroSTR,
 		rfd,
@@ -328,7 +328,7 @@ int main()
 		EuroSTR_3_month_compounded_label
 	);
 
-	const auto EuroSTR_6_month_compounded_label = "EuroSTR 6 Month Compounded Average"s;
+	const auto EuroSTR_6_month_compounded_label = "EuroSTR 6 Month Compounded Average";
 	auto EuroSTR_6_month_compounded_task = make_compounded_average_check_task(
 		EuroSTR,
 		rfd,
@@ -337,7 +337,7 @@ int main()
 		EuroSTR_6_month_compounded_label
 	);
 
-	const auto EuroSTR_12_month_compounded_label = "EuroSTR 12 Month Compounded Average"s;
+	const auto EuroSTR_12_month_compounded_label = "EuroSTR 12 Month Compounded Average";
 	auto EuroSTR_12_month_compounded_task = make_compounded_average_check_task(
 		EuroSTR,
 		rfd,

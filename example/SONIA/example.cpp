@@ -140,7 +140,7 @@ int main()
 		<< endl;
 
 	// look for inconsistencies in the index data
-	const auto SONIA_compounded_index_label = "SONIA Compounded Index"s;
+	const auto SONIA_compounded_index_label = "SONIA Compounded Index";
 	auto SONIA_compounded_index_task = make_compounded_index_check_task(
 		SONIA,
 		rfd,

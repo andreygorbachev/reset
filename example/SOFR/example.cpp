@@ -274,7 +274,7 @@ int main()
 
 	// look for inconsistencies in the data
 
-	const auto SOFR_compounded_index_label = "SOFR Compounded Index"s;
+	const auto SOFR_compounded_index_label = "SOFR Compounded Index";
 	auto SOFR_compounded_index_task = make_compounded_index_check_task(
 		SOFR,
 		rfd,
@@ -283,7 +283,7 @@ int main()
 		SOFR_compounded_index_label
 	);
 
-	const auto SOFR_30_day_average_label = "SOFR 30 Day Average"s;
+	const auto SOFR_30_day_average_label = "SOFR 30 Day Average";
 	auto SOFR_30_day_average_task = make_compounded_average_check_task(
 		SOFR,
 		rfd,
@@ -292,7 +292,7 @@ int main()
 		SOFR_30_day_average_label
 	);
 
-	const auto SOFR_90_day_average_label = "SOFR 90 Day Average"s;
+	const auto SOFR_90_day_average_label = "SOFR 90 Day Average";
 	auto SOFR_90_day_average_task = make_compounded_average_check_task(
 		SOFR,
 		rfd,
@@ -301,7 +301,7 @@ int main()
 		SOFR_90_day_average_label
 	);
 
-	const auto SOFR_180_day_average_label = "SOFR 180 Day Average"s;
+	const auto SOFR_180_day_average_label = "SOFR 180 Day Average";
 	auto SOFR_180_day_average_task = make_compounded_average_check_task(
 		SOFR,
 		rfd,

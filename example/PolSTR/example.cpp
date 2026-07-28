@@ -267,7 +267,7 @@ int main()
 		}
 	}
 
-	const auto PolSTR_1_month_compounded_label = "PolSTR 1 Month Compounded Average"s;
+	const auto PolSTR_1_month_compounded_label = "PolSTR 1 Month Compounded Average";
 	auto PolSTR_1_month_compounded_task = make_compounded_average_check_task(
 		PolSTR,
 		rfd,
@@ -276,7 +276,7 @@ int main()
 		PolSTR_1_month_compounded_label
 	);
 
-	const auto PolSTR_3_month_compounded_label = "PolSTR 3 Month Compounded Average"s;
+	const auto PolSTR_3_month_compounded_label = "PolSTR 3 Month Compounded Average";
 	auto PolSTR_3_month_compounded_task = make_compounded_average_check_task(
 		PolSTR,
 		rfd,
@@ -285,7 +285,7 @@ int main()
 		PolSTR_3_month_compounded_label
 	);
 
-	const auto PolSTR_6_month_compounded_label = "PolSTR 6 Month Compounded Average"s;
+	const auto PolSTR_6_month_compounded_label = "PolSTR 6 Month Compounded Average";
 	auto PolSTR_6_month_compounded_task = make_compounded_average_check_task(
 		PolSTR,
 		rfd,

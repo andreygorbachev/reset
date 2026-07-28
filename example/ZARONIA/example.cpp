@@ -378,7 +378,7 @@ int main()
 				<< endl;
 	}
 
-	const auto ZARONIA_1_week_compounded_label = "ZARONIA 1 Week Compounded Average"s;
+	const auto ZARONIA_1_week_compounded_label = "ZARONIA 1 Week Compounded Average";
 	auto ZARONIA_1_week_compounded_task = make_compounded_average_check_task(
 		ZARONIA,
 		rfd,
@@ -387,7 +387,7 @@ int main()
 		ZARONIA_1_week_compounded_label
 	);
 
-	const auto ZARONIA_1_month_compounded_label = "ZARONIA 1 Month Compounded Average"s;
+	const auto ZARONIA_1_month_compounded_label = "ZARONIA 1 Month Compounded Average";
 	auto ZARONIA_1_month_compounded_task = make_compounded_average_check_task(
 		ZARONIA,
 		rfd,
@@ -396,7 +396,7 @@ int main()
 		ZARONIA_1_month_compounded_label
 	);
 
-	const auto ZARONIA_3_month_compounded_label = "ZARONIA 3 Month Compounded Average"s;
+	const auto ZARONIA_3_month_compounded_label = "ZARONIA 3 Month Compounded Average";
 	auto ZARONIA_3_month_compounded_task = make_compounded_average_check_task(
 		ZARONIA,
 		rfd,
@@ -405,7 +405,7 @@ int main()
 		ZARONIA_3_month_compounded_label
 	);
 
-	const auto ZARONIA_6_month_compounded_label = "ZARONIA 6 Month Compounded Average"s;
+	const auto ZARONIA_6_month_compounded_label = "ZARONIA 6 Month Compounded Average";
 	auto ZARONIA_6_month_compounded_task = make_compounded_average_check_task(
 		ZARONIA,
 		rfd,
@@ -414,7 +414,7 @@ int main()
 		ZARONIA_6_month_compounded_label
 	);
 
-	const auto ZARONIA_9_month_compounded_label = "ZARONIA 9 Month Compounded Average"s;
+	const auto ZARONIA_9_month_compounded_label = "ZARONIA 9 Month Compounded Average";
 	auto ZARONIA_9_month_compounded_task = make_compounded_average_check_task(
 		ZARONIA,
 		rfd,
@@ -423,7 +423,7 @@ int main()
 		ZARONIA_9_month_compounded_label
 	);
 
-	const auto ZARONIA_12_month_compounded_label = "ZARONIA 12 Month Compounded Average"s;
+	const auto ZARONIA_12_month_compounded_label = "ZARONIA 12 Month Compounded Average";
 	auto ZARONIA_12_month_compounded_task = make_compounded_average_check_task(
 		ZARONIA,
 		rfd,
