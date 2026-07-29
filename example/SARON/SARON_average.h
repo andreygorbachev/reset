@@ -95,8 +95,9 @@ auto _SARON_1_week_average_start(
 	// assert that it is not empty?
 
 	auto dates = schedule.get_dates(); // we might consider something not making a copy as most use cases would not need to insert
-	if (!dates.contains(average_start)) // or we can just have a look at cbegin(), which is O(1) operation on most platforms, rather than O(log n)
-		dates.insert(average_start); // do it with hint?
+	// assert that dates are not empty (and ordered?)
+	if (dates.front() != average_start)
+		dates.insert(dates.begin(), average_start);
 
 	auto val = 1_dl;
 

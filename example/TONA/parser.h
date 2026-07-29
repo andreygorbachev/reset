@@ -37,6 +37,7 @@
 #include <utility>
 #include <optional>
 #include <cassert>
+#include <vector>
 
 
 inline auto _parse_date(std::istream& fs)
@@ -102,7 +103,8 @@ auto _make_calendar(const typename Fixings::storage& ts)
 		d = std::chrono::sys_days{ d } + std::chrono::days{ 1 }
 	)
 		if (ts[d] == std::nullopt)
-			hols.insert(d);
+//			hols.insert(d);
+			hols.push_back(d);
 
 	return gregorian::calendar{
 		gregorian::NoWeekend,
