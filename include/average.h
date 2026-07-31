@@ -91,7 +91,7 @@ namespace reset
 
 		auto dates = schedule.get_dates(); // we might consider something not making a copy as most use cases would not need to insert
 		// assert that dates are not empty (and ordered?)
-		if (dates.front() != average_start)
+		if (*dates.cbegin() != average_start)
 			dates.insert(dates.begin(), average_start);
 
 		auto val = 1_dl;

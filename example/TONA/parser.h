@@ -103,8 +103,7 @@ auto _make_calendar(const typename Fixings::storage& ts)
 		d = std::chrono::sys_days{ d } + std::chrono::days{ 1 }
 	)
 		if (ts[d] == std::nullopt)
-//			hols.insert(d);
-			hols.push_back(d);
+			hols.insert(d);
 
 	return gregorian::calendar{
 		gregorian::NoWeekend,

@@ -80,7 +80,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 
 		auto dates = schedule.get_dates(); // we might consider something not making a copy as most use cases would not need to insert
 		// assert that dates are not empty (and ordered?)
-		if (dates.front() != rd.start)
+		if (*dates.cbegin() != rd.start)
 			dates.insert(dates.begin(), rd.start);
 
 		auto val = 1_dl;
