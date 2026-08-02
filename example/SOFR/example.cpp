@@ -332,7 +332,7 @@ int main()
 		<< rd.start
 		<< " and "
 		<< rd.end
-		<< " from compounded indexe is "
+		<< " from compounded index is "
 		<< compounded(SOFR_compounded_index, rd).percent.get_value()
 		<< " and the \"long formula\" rate over the same period is "
 		<< compounded(SOFR, rfd, cd, rd).percent.get_value()
