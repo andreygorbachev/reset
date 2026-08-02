@@ -328,9 +328,13 @@ int main()
 	cout
 		<< fixed
 		<< setprecision(rd.round) // should be 5 rather than 7
-		<< "Compounded SOFR average rate between x and y is "
+		<< "Compounded SOFR average rate between "
+		<< rd.start
+		<< " and "
+		<< rd.end
+		<< " from compounded indexe is "
 		<< compounded(SOFR_compounded_index, rd).percent.get_value()
-		<< " and the same \"long formula\" rate is "
+		<< " and the \"long formula\" rate over the same period is "
 		<< compounded(SOFR, rfd, cd, rd).percent.get_value()
 		<< endl;
 
