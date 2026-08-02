@@ -30,6 +30,8 @@
 #include <iomanip>
 #include <iostream>
 #include <cassert>
+#include <utility>
+#include <algorithm>
 
 #include <fixings.h>
 #include <index.h>
