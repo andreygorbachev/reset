@@ -32,7 +32,7 @@ FetchContent_MakeAvailable(
 FetchContent_Declare(
   Boost_decimal
   GIT_REPOSITORY https://github.com/boostorg/decimal.git
-  GIT_TAG        boost-1.91.0
+  GIT_TAG        boost-1.92.0
 )
 
 FetchContent_MakeAvailable(
