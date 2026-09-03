@@ -275,7 +275,7 @@ int main()
 	// look for inconsistencies in the data
 
 	const auto SOFR_compounded_index_label = "SOFR Compounded Index";
-	auto SOFR_compounded_index_task = make_compounded_index_check_task(
+	auto SOFR_compounded_index_task = make_compounded_index_from_start_check_task(
 		SOFR,
 		rfd,
 		SOFR_compounded_index,

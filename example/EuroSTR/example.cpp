@@ -293,7 +293,7 @@ int main()
 	// look for inconsistencies in the data
 
 	const auto EuroSTR_compounded_index_label = "EuroSTR Compounded Index";
-	auto EuroSTR_compounded_index_task = make_compounded_index_check_task(
+	auto EuroSTR_compounded_index_task = make_compounded_index_from_start_check_task(
 		EuroSTR,
 		rfd,
 		EuroSTR_compounded_index,

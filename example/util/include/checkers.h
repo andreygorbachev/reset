@@ -41,7 +41,7 @@
 
 
 
-[[nodiscard]] inline auto make_compounded_index_check_task(
+[[nodiscard]] inline auto make_compounded_index_from_start_check_task(
 	const reset::RateFixings& rfr,
 	const reset::rate_fixings_detail& rfr_detail,
 	const reset::IndexFixings& indx,
