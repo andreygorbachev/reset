@@ -116,7 +116,7 @@ namespace reset
 		// test outside calendar
 	}
 
-	TEST(fixings, with_fallback)
+	TEST(fixings, with_fallback1)
 	{
 		auto ts = time_series<optional<Percent>>{ days_period{ 2023y / January / 1d, 2023y / January / 3d } };
 		ts[2023y / January / 3d] = Percent{ "3.4269" };
@@ -126,9 +126,44 @@ namespace reset
 		const auto fix = fixings{ move(ts), move(c), 4u };
 
 		EXPECT_EQ(Percent{ "3.4269" }, fix.with_fallback(2023y / January / 3d));
+	}
 
+	TEST(fixings, with_fallback2)
+	{
 		// test actual move when we ask for a non-business day (do we need to distinguish between non-business day and missing reset?)
+
+		// Thu 4/2 has a fixing; Fri 4/3 is a holiday; Sat 4/4 and Sun 4/5 are weekend.
+		// So asking with_fallback for any of Fri/Sat/Sun should walk back over more
+		// than one non-business day and land on Thursday's published fixing.
+		auto ts = time_series<optional<Percent>>{ days_period{ 2026y / April / 2d, 2026y / April / 5d } };
+		ts[2026y / April / 2d] = Percent{ "3.4" };
+		// Fri 4/3 (holiday), Sat 4/4, Sun 4/5 all left empty (non-business, no fixing)
+
+		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), { 2026y / April / 3d } } };
+
+		const auto fix = fixings{ move(ts), move(c), 2u };
+
+		EXPECT_EQ(Percent{ "3.4" }, fix.with_fallback(2026y / April / 3d)); // holiday, 1 day back
+		EXPECT_EQ(Percent{ "3.4" }, fix.with_fallback(2026y / April / 4d)); // Saturday, 2 days back
+		EXPECT_EQ(Percent{ "3.4" }, fix.with_fallback(2026y / April / 5d)); // Sunday, 3 days back
+	}
+
+	TEST(fixings, with_fallback3)
+	{
 		// test move before the start of fixings (is that possible?)
+
+		// Asking for a fallback before the very first date we have any fixing (or
+		// calendar knowledge) for at all - there is nothing to fall back to, so this
+		// should throw rather than recurse indefinitely.
+		auto ts = time_series<optional<Percent>>{ days_period{ 2026y / April / 2d, 2026y / April / 3d } };
+		ts[2026y / April / 2d] = Percent{ "3.4" };
+		ts[2026y / April / 3d] = Percent{ "3.5" };
+
+		auto c = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
+
+		const auto fix = fixings{ move(ts), move(c), 2u };
+
+		EXPECT_THROW(static_cast<void>(fix.with_fallback(2026y / April / 1d)), out_of_range);
 	}
 /*
 	TEST(fixings, last_reset_year_month_day)
