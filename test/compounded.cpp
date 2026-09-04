@@ -37,6 +37,7 @@
 
 #include <chrono>
 #include <utility>
+#include <stdexcept>
 
 using namespace std;
 using namespace std::chrono;
@@ -81,10 +82,32 @@ namespace reset
 
 	TEST(compounded, compounded2)
 	{
-		// from the compounded index
+		// Create a tiny SONIA-like IndexFixings around a single weekend
+		// Period: 2026-04-02 .. 2026-04-06
+		auto ts = IndexFixings::storage{ days_period{ 2026y / April / 2d, 2026y / April / 6d } };
+		// Business days: 2026-04-02 (Thu), 2026-04-03 (Fri), 2026-04-06 (Mon)
+		ts[2026y / April / 2d] = Value{ "100" };
+		ts[2026y / April / 3d] = Value{ "100.005" };
+		// weekend 4/4 and 4/5 left empty (non-business, no fixing)
+		ts[2026y / April / 6d] = Value{ "100.010" };
 
-		// test that we get an exception on a non business day (start/end)
-		// (but maybe that is not correct and there is some fallback kicks in in this case)
+		auto cal = calendar{ SaturdaySundayWeekend, schedule{ ts.get_period(), {} } };
+
+		const auto fix = fixings{ std::move(ts), std::move(cal), 3u };
+
+		constexpr auto dc = actual_360<decimal128_t>{};
+
+		// compounded(const IndexFixings&, rate_detail) currently uses fix[ymd] (plain
+		// lookup, no fallback) for both the start and end date - so requesting a start
+		// or end date that falls on a non business day throws, it does NOT fall back
+		// to the preceding business day's published index value.
+		const auto detail1 = rate_detail{ 2026y / April / 4d, 2026y / April / 6d, dc, 5u }; // Saturday start
+		EXPECT_THROW(static_cast<void>(compounded(fix, detail1)), runtime_error); // or should a fallback kick in?
+
+		const auto detail2 = rate_detail{ 2026y / April / 2d, 2026y / April / 5d, dc, 5u }; // Sunday end
+		EXPECT_THROW(static_cast<void>(compounded(fix, detail2)), runtime_error); // or should a fallback kick in?
+
+		// should we also test a good run?
 	}
 
 }
