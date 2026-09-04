@@ -509,85 +509,76 @@ int main()
 
 	// look for inconsistencies in the data
 
-	const auto SAION_label = "SAION";
 	auto SAION_task = make_compounded_index_from_previous_business_day_check_task(
 		SARON,
 		rfd,
 		SAION,
 		id,
-		SAION_label
+		"SAION"
 	);
 
-	const auto current_compounded_index_label = "Current Index";
 	auto current_compounded_index_task = make_compounded_index_from_previous_business_day_check_task(
 		current_rate,
 		rfd,
 		current_index,
 		id,
-		current_compounded_index_label
+		"Current Index"
 	);
 
-	const auto SARON_1_week_compounded_label = "SARON 1 Week Compounded Average";
 	auto SARON_1_week_compounded_task = make_compounded_average_check_task<SARON_average, 1>(
 		SARON,
 		rfd,
 		SARON_1_week_compounded,
 		_1wd,
-		SARON_1_week_compounded_label
+		"SARON 1 Week Compounded Average"
 	);
 
-	const auto SARON_1_month_compounded_label = "SARON 1 Month Compounded Average";
 	auto SARON_1_month_compounded_task = make_compounded_average_check_task<SARON_average, 1>(
 		SARON,
 		rfd,
 		SARON_1_month_compounded,
 		_1md,
-		SARON_1_month_compounded_label
+		"SARON 1 Month Compounded Average"
 	);
 
-	const auto SARON_2_month_compounded_label = "SARON 2 Month Compounded Average";
 	auto SARON_2_month_compounded_task = make_compounded_average_check_task<SARON_average, 1>(
 		SARON,
 		rfd,
 		SARON_2_month_compounded,
 		_2md,
-		SARON_2_month_compounded_label
+		"SARON 2 Month Compounded Average"
 	);
 
-	const auto SARON_3_month_compounded_label = "SARON 3 Month Compounded Average";
 	auto SARON_3_month_compounded_task = make_compounded_average_check_task<SARON_average, 1>(
 		SARON,
 		rfd,
 		SARON_3_month_compounded,
 		_3md,
-		SARON_3_month_compounded_label
+		"SARON 3 Month Compounded Average"
 	);
 
-	const auto SARON_6_month_compounded_label = "SARON 6 Month Compounded Average";
 	auto SARON_6_month_compounded_task = make_compounded_average_check_task<SARON_average, 1>(
 		SARON,
 		rfd,
 		SARON_6_month_compounded,
 		_6md,
-		SARON_6_month_compounded_label
+		"SARON 6 Month Compounded Average"
 	);
 
-	const auto SARON_9_month_compounded_label = "SARON 9 Month Compounded Average";
 	auto SARON_9_month_compounded_task = make_compounded_average_check_task<SARON_average, 1>(
 		SARON,
 		rfd,
 		SARON_9_month_compounded,
 		_9md,
-		SARON_9_month_compounded_label
+		"SARON 9 Month Compounded Average"
 	);
 
-	const auto SARON_12_month_compounded_label = "SARON 12 Month Compounded Average";
 	auto SARON_12_month_compounded_task = make_compounded_average_check_task<SARON_average, 1>(
 		SARON,
 		rfd,
 		SARON_12_month_compounded,
 		_12md,
-		SARON_12_month_compounded_label
+		"SARON 12 Month Compounded Average"
 	);
 
 	SAION_task.get();
