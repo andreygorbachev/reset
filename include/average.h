@@ -96,7 +96,7 @@ namespace reset
 
 		auto val = 1_dl;
 
-		for (const auto& [start, end] : dates | std::views::adjacent<2uz>)
+		for (const auto& [start, end] : dates | std::views::pairwise)
 			average_step_(val, start, end, fix, rfd);
 
 		const auto year_fraction = fin_calendar::fraction(schedule.get_period(), rfd.day_count);

@@ -91,7 +91,7 @@ namespace reset
 
 		auto indx = static_cast<boost::decimal::decimal128_t>(id.initial_value); // or should intial_value not be a Value? (we do not need to convert it to decimal128_t if it is a Value)
 
-		for (const auto& [start, end] : dates | std::views::adjacent<2uz>)
+		for (const auto& [start, end] : dates | std::views::pairwise)
 			index_step_(indx, start, end, fix, rfd, id);
 
 		if (id.final_trunc)

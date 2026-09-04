@@ -32,6 +32,7 @@
 #include <cassert>
 #include <utility>
 #include <algorithm>
+#include <ranges>
 
 #include <fixings.h>
 #include <index.h>
@@ -58,6 +59,51 @@
 			assert(observed);
 
 			const auto calculated = reset::index(rfr, rfr_detail, dt, indx_detail);
+
+			if (*observed != calculated)
+			{
+				auto scout = std::osyncstream{ std::cout };
+				scout
+					<< std::fixed
+					<< std::setprecision(indx.get_decimal_places())
+					<< "For "
+					<< dt
+					<< " "
+					<< label
+					<< " is "
+					<< observed->get_value()
+					<< " and the same computed value is "
+					<< calculated.get_value()
+					<< std::endl;
+			}
+		}
+	});
+}
+
+
+[[nodiscard]] inline auto make_compounded_index_from_previous_business_day_check_task(
+	const reset::RateFixings& rfr,
+	const reset::rate_fixings_detail& rfr_detail,
+	const reset::IndexFixings& indx,
+	const reset::index_detail& indx_detail,
+	std::string indx_label
+)
+{
+	return std::async(std::launch::async, [&rfr, &rfr_detail, &indx, &indx_detail, label = std::move(indx_label)]() {
+		const auto& cal = rfr.get_calendar(); // we can assert that indx and rfr have the same calendar
+		const auto dates = cal.make_business_days_schedule(indx.get_time_series().get_period());
+		for (const auto& [prev_dt, dt] : dates.get_dates() | std::views::pairwise)
+		{
+			const auto& observed = indx[dt];
+			assert(observed);
+
+			// build a new index_detail that uses the current date as the initial date
+			// and the observed compounded index value as the initial value
+			auto local_indx_detail = indx_detail;
+			local_indx_detail.initial_date = prev_dt;
+			local_indx_detail.initial_value = indx[prev_dt]->get_value();
+
+			const auto calculated = reset::index(rfr, rfr_detail, dt, local_indx_detail);
 
 			if (*observed != calculated)
 			{

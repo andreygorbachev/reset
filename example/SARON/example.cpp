@@ -510,7 +510,7 @@ int main()
 	// look for inconsistencies in the data
 
 	const auto SAION_label = "SAION";
-	auto SAION_task = make_compounded_index_from_start_check_task(
+	auto SAION_task = make_compounded_index_from_previous_business_day_check_task(
 		SARON,
 		rfd,
 		SAION,
@@ -519,7 +519,7 @@ int main()
 	);
 
 	const auto current_compounded_index_label = "Current Index";
-	auto current_compounded_index_task = make_compounded_index_from_start_check_task(
+	auto current_compounded_index_task = make_compounded_index_from_previous_business_day_check_task(
 		current_rate,
 		rfd,
 		current_index,

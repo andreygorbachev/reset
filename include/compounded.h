@@ -85,7 +85,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 
 		auto val = 1_dl;
 
-		for (const auto& [start, end] : dates | std::views::adjacent<2uz>)
+		for (const auto& [start, end] : dates | std::views::pairwise)
 			compounded_step_(val, start, end, fix, rfd);
 
 		const auto year_fraction = fin_calendar::fraction(
