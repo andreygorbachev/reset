@@ -105,7 +105,7 @@ namespace reset // maybe should be in a separate lib (as it uses resets, so one 
 	}
 
 
-	[[nodicard]] inline auto compounded(
+	[[nodiscard]] inline auto compounded(
 		const IndexFixings& fix,
 		rate_detail detail
 	) -> rate
