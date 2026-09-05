@@ -63,7 +63,7 @@ namespace reset
 
 	TEST(compound_annualized, interest)
 	{
-		const auto& c = locate_calendar("America/ANBIMA"s, 2025y / January / 1d);
+		const auto& c = locate_calendar("America/ANBIMA", 2025y / January / 1d);
 
 		const auto r = compound_annualized{ 6.0 };
 
@@ -79,7 +79,7 @@ namespace reset
 
 	TEST(accrued, accrued)
 	{
-		const auto& c = locate_calendar("America/ANBIMA"s, 2023y / January / 1d);
+		const auto& c = locate_calendar("America/ANBIMA", 2023y / January / 1d);
 
 		const auto a1 = accrued<decimal128_t>{ simple_annualized{ 5_dl } };
 		const auto dc1 = actual_365_fixed<decimal128_t>{};
