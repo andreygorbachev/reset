@@ -26,6 +26,8 @@
 #include <static_data.h>
 
 #include <day_count.h>
+#include <actual_365_fixed.h>
+#include <calculation_252.h>
 
 #include <accrued.h>
 
