@@ -48,7 +48,7 @@
 
 	const auto d_28n = std::chrono::sys_days{ d } - std::chrono::days{ 28 };
 	const auto& _index_d_28n = fix[d_28n];
-	assert(_index_d_28n);
+	assert(_index_d_28n); // this might not be a business day, but we assume that the index is published for all calendar days
 	const auto index_d_28n = static_cast<boost::decimal::decimal128_t>(*_index_d_28n);
 
 	auto rate = (boost::decimal::pow(index_d / index_d_28n, tenor / 28_dl) - 1_dl) * 360_dl / tenor; // should we use day count?
